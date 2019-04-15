@@ -16,7 +16,7 @@ public class Task {
 
     private String settime;//设置时间
 
-    private int status;
+    private int status;//0表示未进行，1表示进行中，2表示已完成
 
     private int continuance;//持续天数，可选
 
@@ -24,7 +24,6 @@ public class Task {
 
     private String finishtime;
 
-    private int duration;//分钟为单位
 
     public int getId() {
         return id;
@@ -98,11 +97,5 @@ public class Task {
         this.finishtime = finishtime;
     }
 
-    public int getDuration() {
-        return duration;
-    }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
 }

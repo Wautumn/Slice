@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.slice.dao.TaskDAO">
+    <resultMap id="BaseResultMap" type="com.example.slice.entity.Task">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="userid" property="userid" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="settime" property="settime" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="continuance" property="continuance" jdbcType="INTEGER"/>
+        <result column="starttime" property="starttime" jdbcType="VARCHAR"/>
+        <result column="finishtime" property="finishtime" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+
+    <select id="findTaskById" parameterType="Integer" resultType="com.example.slice.entity.Task">
+  select *
+  from Task
+  where id=#{id}
+  </select>
+
+    <select id="findTaskByUserid" parameterType="Integer" resultType="com.example.slice.entity.Task">
+    select *
+    from Task
+    where userid=#{userid}
+  </select>
+
+    <insert id="insertNewTask" useGeneratedKeys="true" keyProperty="id" parameterType="com.example.slice.entity.Task">
+  insert into Task(userid,name,description,settime,status,continuance)
+  values (#{userid},#{name},#{description},#{settime},#{status},#{continuance})
+  </insert>
+
+
+    <delete id="deleteTask">
+        delete from Task
+        where id=#{id}
+    </delete>
+
+    <!--  <select id="FindBookByType" parameterType="String" resultType="com.wang.store.entity.Book">
+    select *
+    from Book
+    where type like "%"#{type}"%"
+    </select>
+
+
+
+      <insert id="InsertAndGetId" useGeneratedKeys="true" keyProperty="id" parameterType="com.wang.store.entity.Book">
+     insert into Book(name,type,picture,introduction,
+      author,preprice,nowprice,stock,monthsales,subtitle,
+      page,press,presstime,isbn,authorcontent,catelog)
+      values (#{name},#{type},#{picture},#{introduction},
+      #{author},#{preprice},#{nowprice},#{stock},#{monthsales},#{subtitle},
+      #{page},#{press},#{presstime},#{isbn},#{authorcontent},#{catelog})
+    </insert>
+
+
+      <update id="UpdateMonthsales">
+      update Book
+      set
+        monthsales=#{monthsales}
+      where id=#{id}
+    </update>-->
+
+</mapper>
