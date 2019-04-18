@@ -35,7 +35,7 @@ public class TaskController {
     @RequestMapping(value = "/insertTask", method = RequestMethod.POST)
     public int insertTask(@RequestBody JSONObject jsonObject) {
         Task task = new Task();
-        Date date=new Date();
+        Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         int userid = Integer.parseInt(jsonObject.get("userid").toString());
@@ -55,9 +55,31 @@ public class TaskController {
 
     }
 
-    @RequestMapping(value = "/deleteTask", method = RequestMethod.POST)
-    public void deleteTask(int id) {
-       taskService.deleteTask(id);
+    @RequestMapping(value = "/deleteTask", method = RequestMethod.DELETE)
+    public String deleteTask(int id) {
+        String response;
+        Task task = taskService.findTaskById(id);
+        if(task==null)
+            response="sorry,not exist this task";
+        else {
+            taskService.deleteTask(id);
+            response="delete success!";
+        }
+        return response;
+
+    }
+
+    @RequestMapping(value = "/changeTaskName", method = RequestMethod.GET)
+    public String changeTaskName(int id,String name) {
+        String response;
+        Task task = taskService.findTaskById(id);
+        if(task==null)
+            response="sorry,not exist this task";
+        else {
+            taskService.changeTask(id,name);
+            response="change success!";
+        }
+        return response;
 
     }
 }

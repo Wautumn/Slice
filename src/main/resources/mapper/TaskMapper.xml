@@ -37,6 +37,12 @@
         delete from Task
         where id=#{id}
     </delete>
+    <update id="changeTask">
+      update Task
+      set
+        name=#{name}
+      where id=#{id}
+    </update>
 
     <!--  <select id="FindBookByType" parameterType="String" resultType="com.wang.store.entity.Book">
     select *

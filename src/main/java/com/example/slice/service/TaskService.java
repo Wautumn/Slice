@@ -36,4 +36,8 @@ public class TaskService {
         taskDAO.deleteTask(id);
     }
 
+    public void changeTask(int id,String name){
+        taskDAO.changeTask(id,name);
+    }
+
 }

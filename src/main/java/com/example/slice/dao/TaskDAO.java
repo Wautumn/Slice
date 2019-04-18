@@ -21,4 +21,6 @@ public interface TaskDAO {
     int insertNewTask(Task task);
 
     void deleteTask(int taskid);
+
+    void changeTask(int id,String name);
 }
