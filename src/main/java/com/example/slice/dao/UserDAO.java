@@ -1,5 +1,6 @@
 package com.example.slice.dao;
 
+import com.example.slice.entity.Token;
 import com.example.slice.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -39,13 +40,13 @@ public class UserDAO{
     public User findUserByName(String username) {
         try {
             Object[] params = new Object[]{username};
-            String sql = "SELECT * FROM user WHERE username = ?";
+            String sql = "SELECT id, email FROM user WHERE username = ?";
             User user = jdbcTemplate.queryForObject(sql, params, new RowMapper<User>() {
                 public User mapRow(ResultSet resultSet, int paramInt)
                         throws SQLException {
                     User user = new User();
                     user.setId(Integer.parseInt(resultSet.getString("id")));
-                    user.setUsername(resultSet.getString("username"));
+                    user.setUsername(username);
                     user.setEmail(resultSet.getString("email"));
                     return user;
                 }
@@ -59,14 +60,14 @@ public class UserDAO{
     public User findUserByEmail(String email){
         try {
             Object[] params = new Object[]{email};
-            String sql = "SELECT * FROM user WHERE email = ?";
+            String sql = "SELECT id, username FROM user WHERE email = ?";
             User user = jdbcTemplate.queryForObject(sql, params, new RowMapper<User>() {
                 public User mapRow(ResultSet resultSet, int paramInt)
                         throws SQLException {
                     User user = new User();
                     user.setId(Integer.parseInt(resultSet.getString("id")));
                     user.setUsername(resultSet.getString("username"));
-                    user.setEmail(resultSet.getString("email"));
+                    user.setEmail(email);
                     return user;
                 }
             });
@@ -76,6 +77,16 @@ public class UserDAO{
         }
     }
 
+    public int findIdByName(String username){
+        try {
+            Object[] params = new Object[]{username};
+            String sql = "SELECT id FROM user WHERE username = ?";
+            int id = jdbcTemplate.queryForObject(sql, params, Integer.class);
+            return id;
+        } catch (Exception exception) {
+            return -1;
+        }
+    }
     public int deleteUser(String username){
         try {
             jdbcTemplate.update("DELETE FROM user WHERE username = ?",
@@ -89,5 +100,23 @@ public class UserDAO{
             return 2;   //deletion error
         }
         return 1;   //success
+    }
+    public Token findToken(int userid){
+        try {
+            Object[] params = new Object[]{userid};
+            String sql = "SELECT * FROM token WHERE userid = ?";
+            Token token = jdbcTemplate.queryForObject(sql, params, new RowMapper<Token>() {
+                public Token mapRow(ResultSet resultSet, int paramInt)
+                        throws SQLException {
+                    Token token = new Token();
+                    token.setUserid(userid);
+                    token.setToken(resultSet.getString("token"));
+                    return token;
+                }
+            });
+            return token;
+        } catch (Exception exception) {
+            return null;
+        }
     }
 }

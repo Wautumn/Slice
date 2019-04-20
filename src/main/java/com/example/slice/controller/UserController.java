@@ -1,7 +1,7 @@
 package com.example.slice.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.slice.dao.UserDAO;
+import com.example.slice.entity.Token;
 import com.example.slice.entity.User;
 import com.example.slice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,25 +36,25 @@ public class UserController{
 
     //status code :
     //1 for success
-    //2 for wrong password
-    //3 for non-existent user
+    //2 for wrong token
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public int login(@RequestBody JSONObject jsonObject){
-        String username = jsonObject.get("username").toString();
-        String password = jsonObject.get("password").toString();
+        int userid = Integer.parseInt(jsonObject.get("userid").toString());
+        String token = jsonObject.get("token").toString();
 
-        User user = userService.findUserByName(username);
-        if(user == null) {
+        Token realToken = userService.findTokenById(userid);
+        String realValue = realToken.getToken();
+
+        if(token.equals(realValue)){
+            return 1;
+        }else{
             return 2;
-        }else if(!user.getPassword().equals(password)){
-            return 3;
         }
-        return 1;
     }
 
     @RequestMapping(value = "/findUserByName", method = RequestMethod.GET)
-    public User findUserByName(String name){
-        User user = userService.findUserByName(name);
+    public User findUserByName(String username){
+        User user = userService.findUserByName(username);
         return user;
     }
 
@@ -64,6 +64,14 @@ public class UserController{
         return user;
     }
 
+    //result:
+    //-1 for non-existent user
+    //other value for user id
+    @RequestMapping(value = "/findUserid", method = RequestMethod.GET)
+    public int findUserid(String username){
+        int id = userService.findIdByName(username);
+        return id;
+    }
 
     //status code :
     //1 for success

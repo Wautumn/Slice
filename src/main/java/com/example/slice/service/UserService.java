@@ -1,6 +1,7 @@
 package com.example.slice.service;
 
 import com.example.slice.dao.UserDAO;
+import com.example.slice.entity.Token;
 import com.example.slice.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,11 @@ public class UserService{
         return userDAO.findUserByEmail(email);
     }
 
+    public int findIdByName(String username){return userDAO.findIdByName(username);}
+
     public int deleteUser(String username){
         return userDAO.deleteUser(username);
     }
 
+    public Token findTokenById(int userid){return userDAO.findToken(userid);}
 }
