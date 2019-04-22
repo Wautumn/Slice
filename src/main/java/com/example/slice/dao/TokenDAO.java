@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -70,5 +71,32 @@ public class TokenDAO {
             return null;
         }
         return token;
+    }
+
+    public int verifyToken(String token){
+        try {
+            Object[] params = new Object[]{token};
+            String sql = "SELECT userid FROM token WHERE token = ?";
+            int userid = jdbcTemplate.queryForObject(sql, params, Integer.class);
+
+            return userid;
+        } catch (Exception exception) {
+            return -1;
+        }
+    }
+
+    public int verifyPassword(String username, String password){
+        try {
+            Object[] params = new Object[]{username};
+            String sql = "SELECT password FROM user WHERE username = ?";
+            String realPassword = jdbcTemplate.queryForObject(sql, params, String.class);
+            if (password.equals(realPassword)) {
+                return 1;
+            } else {
+                return 2;
+            }
+        }catch (Exception exception){
+            return 3;
+        }
     }
 }

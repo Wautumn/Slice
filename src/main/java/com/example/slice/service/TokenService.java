@@ -13,4 +13,12 @@ public class TokenService {
     public String createToken(int userid, String username, String password){
         return tokenDAO.createToken(userid, username, password);
     }
+
+    public int verifyPassword(String username, String password){
+        return tokenDAO.verifyPassword(username, password);
+    }
+
+    public int verifyToken(String token){
+        return tokenDAO.verifyToken(token);
+    }
 }
