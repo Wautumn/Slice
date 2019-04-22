@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.slice.dao.MemoryDAO">
+    <resultMap id="BaseResultMap" type="com.example.slice.entity.Memory">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="userid" property="userid" jdbcType="INTEGER"/>
+        <result column="date" property="date" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+
+    <select id="findMemoryByUser" parameterType="Integer" resultType="com.example.slice.entity.Memory">
+  select *
+  from Memory
+  where userid=#{userid}
+  </select>
+
+
+    <insert id="addMemory" useGeneratedKeys="true" keyProperty="id" parameterType="com.example.slice.entity.Memory">
+  insert into Memory(userid,date,content)
+  values (#{userid},#{date},#{content}})
+  </insert>
+
+
+    <delete id="deleteMemory">
+        delete from Memory
+        where id=#{id}
+    </delete>
+    <update id="updateMemory">
+      update Memory
+      set
+        content=#{content}
+      where id=#{id}
+    </update>
+
+    <!--  <select id="FindBookByType" parameterType="String" resultType="com.wang.store.entity.Book">
+    select *
+    from Book
+    where type like "%"#{type}"%"
+    </select>
+
+
+
+      <insert id="InsertAndGetId" useGeneratedKeys="true" keyProperty="id" parameterType="com.wang.store.entity.Book">
+     insert into Book(name,type,picture,introduction,
+      author,preprice,nowprice,stock,monthsales,subtitle,
+      page,press,presstime,isbn,authorcontent,catelog)
+      values (#{name},#{type},#{picture},#{introduction},
+      #{author},#{preprice},#{nowprice},#{stock},#{monthsales},#{subtitle},
+      #{page},#{press},#{presstime},#{isbn},#{authorcontent},#{catelog})
+    </insert>
+
+
+      <update id="UpdateMonthsales">
+      update Book
+      set
+        monthsales=#{monthsales}
+      where id=#{id}
+    </update>-->
+
+</mapper>
