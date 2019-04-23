@@ -14,11 +14,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class UserDAO{
+public class UserDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public int createUser(User user){
+    public int createUser(User user) {
         try {
             jdbcTemplate.update("INSERT INTO user(username, password, email) VALUES(?, ?, ?)",
                     new PreparedStatementSetter() {
@@ -29,9 +29,9 @@ public class UserDAO{
                             preparedStatement.setString(3, user.getEmail());
                         }
                     });
-        }catch(DuplicateKeyException exception){
+        } catch (DuplicateKeyException exception) {
             return 2;   //user already exists
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return 3;   //insertion error
         }
         return 1;   //success
@@ -57,7 +57,7 @@ public class UserDAO{
         }
     }
 
-    public User findUserByEmail(String email){
+    public User findUserByEmail(String email) {
         try {
             Object[] params = new Object[]{email};
             String sql = "SELECT id, username FROM user WHERE email = ?";
@@ -77,7 +77,7 @@ public class UserDAO{
         }
     }
 
-    public int findIdByName(String username){
+    public int findIdByName(String username) {
         try {
             Object[] params = new Object[]{username};
             String sql = "SELECT id FROM user WHERE username = ?";
@@ -87,7 +87,8 @@ public class UserDAO{
             return -1;
         }
     }
-    public int deleteUser(String username){
+
+    public int deleteUser(String username) {
         try {
             jdbcTemplate.update("DELETE FROM user WHERE username = ?",
                     new PreparedStatementSetter() {
@@ -96,12 +97,13 @@ public class UserDAO{
                             preparedStatement.setString(1, username);
                         }
                     });
-        }catch(Exception exception){
+        } catch (Exception exception) {
             return 2;   //deletion error
         }
         return 1;   //success
     }
-    public Token findToken(int userid){
+
+    public Token findToken(int userid) {
         try {
             Object[] params = new Object[]{userid};
             String sql = "SELECT * FROM token WHERE userid = ?";

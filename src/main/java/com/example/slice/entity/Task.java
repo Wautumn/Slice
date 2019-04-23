@@ -18,11 +18,7 @@ public class Task {
 
     private int status;//0表示未进行，1表示进行中，2表示已完成
 
-    private int continuance;//持续天数，可选
-
-    private String starttime;
-
-    private String finishtime;
+    private String deadline;//截止日期
 
 
     public int getId() {
@@ -73,29 +69,12 @@ public class Task {
         this.status = status;
     }
 
-    public int getContinuance() {
-        return continuance;
+
+    public String getDeadline() {
+        return deadline;
     }
 
-    public void setContinuance(int continuance) {
-        this.continuance = continuance;
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
     }
-
-    public String getStarttime() {
-        return starttime;
-    }
-
-    public void setStarttime(String starttime) {
-        this.starttime = starttime;
-    }
-
-    public String getFinishtime() {
-        return finishtime;
-    }
-
-    public void setFinishtime(String finishtime) {
-        this.finishtime = finishtime;
-    }
-
-
 }

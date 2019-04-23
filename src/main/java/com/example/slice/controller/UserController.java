@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UserController{
+public class UserController {
     @Autowired
     UserService userService;
 
@@ -20,7 +20,7 @@ public class UserController{
     //2 for existing user
     //3 for insertion error
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public int register(@RequestBody JSONObject jsonObject){
+    public int register(@RequestBody JSONObject jsonObject) {
         User user = new User();
 
         String username = jsonObject.get("username").toString();
@@ -38,28 +38,28 @@ public class UserController{
     //1 for success
     //2 for wrong token
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public int login(@RequestBody JSONObject jsonObject){
+    public int login(@RequestBody JSONObject jsonObject) {
         int userid = Integer.parseInt(jsonObject.get("userid").toString());
         String token = jsonObject.get("token").toString();
 
         Token realToken = userService.findTokenById(userid);
         String realValue = realToken.getToken();
 
-        if(token.equals(realValue)){
+        if (token.equals(realValue)) {
             return 1;
-        }else{
+        } else {
             return 2;
         }
     }
 
     @RequestMapping(value = "/findUserByName", method = RequestMethod.GET)
-    public User findUserByName(String username){
+    public User findUserByName(String username) {
         User user = userService.findUserByName(username);
         return user;
     }
 
     @RequestMapping(value = "/findUserByEmail", method = RequestMethod.GET)
-    public User findUserByEmail(String email){
+    public User findUserByEmail(String email) {
         User user = userService.findUserByEmail(email);
         return user;
     }
@@ -68,7 +68,7 @@ public class UserController{
     //-1 for non-existent user
     //other value for user id
     @RequestMapping(value = "/findUserid", method = RequestMethod.GET)
-    public int findUserid(String username){
+    public int findUserid(String username) {
         int id = userService.findIdByName(username);
         return id;
     }
@@ -77,7 +77,7 @@ public class UserController{
     //1 for success
     //2 for deletion error
     @RequestMapping(value = "/deleteUser", method = RequestMethod.GET)
-    public int deleteUser(String username){
+    public int deleteUser(String username) {
         return userService.deleteUser(username);
     }
 }

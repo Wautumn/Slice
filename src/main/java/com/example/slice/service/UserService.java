@@ -7,29 +7,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService{
+public class UserService {
     @Autowired
     private UserDAO userDAO;
 
-    public int createUser(User user){
+    public int createUser(User user) {
         return userDAO.createUser(user);
     }
 
-    public User findUserByName(String username){
+    public User findUserByName(String username) {
         return userDAO.findUserByName(username);
     }
 
-    public User findUserByEmail(String email){
+    public User findUserByEmail(String email) {
         return userDAO.findUserByEmail(email);
     }
 
-    public int findIdByName(String username){return userDAO.findIdByName(username);}
+    public int findIdByName(String username) {
+        return userDAO.findIdByName(username);
+    }
 
-    public int deleteUser(String username){
+    public int deleteUser(String username) {
         return userDAO.deleteUser(username);
     }
 
-    public Token findTokenById(int userid){return userDAO.findToken(userid);}
+    public Token findTokenById(int userid) {
+        return userDAO.findToken(userid);
+    }
 
 
 }

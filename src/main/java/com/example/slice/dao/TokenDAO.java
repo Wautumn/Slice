@@ -73,7 +73,7 @@ public class TokenDAO {
         return token;
     }
 
-    public int verifyToken(String token){
+    public int verifyToken(String token) {
         try {
             Object[] params = new Object[]{token};
             String sql = "SELECT userid FROM token WHERE token = ?";
@@ -85,7 +85,7 @@ public class TokenDAO {
         }
     }
 
-    public int verifyPassword(String username, String password){
+    public int verifyPassword(String username, String password) {
         try {
             Object[] params = new Object[]{username};
             String sql = "SELECT password FROM user WHERE username = ?";
@@ -95,7 +95,7 @@ public class TokenDAO {
             } else {
                 return 2;
             }
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return 3;
         }
     }

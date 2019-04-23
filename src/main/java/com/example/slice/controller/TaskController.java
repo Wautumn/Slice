@@ -25,10 +25,16 @@ public class TaskController {
 
 
     @RequestMapping(value = "/getTasksByUserid", method = RequestMethod.GET)
-    public List<Task> insertTask(int userid) {
+    public List<Task> getAllTasks(int userid) {
         List<Task> tasks = taskService.findTaskByUserId(userid);
         return tasks;
 
+    }
+
+    @RequestMapping(value = "/getTodayTasksByUserid", method = RequestMethod.GET)
+    public List<Task> getTodayTasks(int userid) {
+        List<Task> tasks = taskService.getTodayTask(userid);
+        return tasks;
     }
 
 
@@ -36,22 +42,27 @@ public class TaskController {
     public int insertTask(@RequestBody JSONObject jsonObject) {
         Task task = new Task();
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         int userid = Integer.parseInt(jsonObject.get("userid").toString());
         String name = jsonObject.get("name").toString();
-        int continuance = Integer.parseInt(jsonObject.get("continuance").toString());
         String description = jsonObject.get("description").toString();
-        int status = 0;
-        task.setUserid(userid);
-        task.setName(name);
-        task.setDescription(description);
-        task.setContinuance(continuance);
-        task.setStatus(status);
-        task.setSettime(sdf.format(date));
+        String deadline = jsonObject.get("deadline").toString();
 
-        taskService.insertTask(task);
-        return task.getId();
+        if (taskService.ifExistSameNameTask(userid, name) == 0) {
+            return -1;//插入失败
+        } else {
+            int status = 0;
+            task.setDeadline(deadline);
+            task.setUserid(userid);
+            task.setName(name);
+            task.setDescription(description);
+            task.setStatus(status);
+            task.setSettime(sdf.format(date));
+
+            taskService.insertTask(task);
+            return task.getId();
+        }
 
     }
 
@@ -59,25 +70,27 @@ public class TaskController {
     public String deleteTask(int id) {
         String response;
         Task task = taskService.findTaskById(id);
-        if(task==null)
-            response="sorry,not exist this task";
+        if (task == null)
+            response = "sorry,not exist this task";
         else {
             taskService.deleteTask(id);
-            response="delete success!";
+            response = "delete success!";
         }
         return response;
 
     }
 
-    @RequestMapping(value = "/changeTaskName", method = RequestMethod.GET)
-    public String changeTaskName(int id,String name) {
+    @RequestMapping(value = "/changeTaskDescription", method = RequestMethod.POST)
+    public String changeTaskDes(@RequestBody JSONObject jsonObject) {
+        int id = Integer.parseInt(jsonObject.getString("id"));
+        String des = jsonObject.getString("description");
         String response;
         Task task = taskService.findTaskById(id);
-        if(task==null)
-            response="sorry,not exist this task";
+        if (task == null)
+            response = "sorry,not exist this task";
         else {
-            taskService.changeTask(id,name);
-            response="change success!";
+            taskService.changeTaskDes(id, des);
+            response = "change success!";
         }
         return response;
 

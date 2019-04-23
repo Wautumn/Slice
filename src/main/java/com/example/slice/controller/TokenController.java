@@ -16,15 +16,16 @@ public class TokenController {
     TokenService tokenService;
 
     private UserService userService = new UserService();
+
     @RequestMapping(value = "/getToken", method = RequestMethod.POST)
-    public String getToken(@RequestBody JSONObject jsonObject){
+    public String getToken(@RequestBody JSONObject jsonObject) {
         String username = jsonObject.get("username").toString();
         String password = jsonObject.get("password").toString();
 
         int userid = Integer.parseInt(jsonObject.get("userid").toString());
-        if(tokenService.verifyPassword(username, password) == 1){
+        if (tokenService.verifyPassword(username, password) == 1) {
             return tokenService.createToken(userid, username, password);
-        }else{
+        } else {
             return "";
         }
 
@@ -34,7 +35,7 @@ public class TokenController {
     //-1 for non-existent token
     //other values for matching user id
     @RequestMapping(value = "verifyToken", method = RequestMethod.POST)
-    public int verifyToken(@RequestBody JSONObject jsonObject){
+    public int verifyToken(@RequestBody JSONObject jsonObject) {
         String token = jsonObject.get("token").toString();
 
         return tokenService.verifyToken(token);

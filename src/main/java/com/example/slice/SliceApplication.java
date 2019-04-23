@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class SliceApplication  extends SpringBootServletInitializer {
+public class SliceApplication extends SpringBootServletInitializer {
 
-    @RequestMapping(value = "/",method = RequestMethod.GET)
-    public String home(){
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String home() {
         return "hello,Slice!";
     }
 
@@ -21,6 +21,7 @@ public class SliceApplication  extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(SliceApplication.class);
     }
+
     public static void main(String[] args) {
         SpringApplication.run(SliceApplication.class, args);
     }

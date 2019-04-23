@@ -1,5 +1,7 @@
 package com.example.slice.other;
 
+import org.springframework.stereotype.Service;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,6 +12,7 @@ import java.util.Date;
  * @Author: WHQ
  * @Date: 2019/4/22 0:32
  */
+@Service
 public class ConvertDate {
 
     public LocalDate StringToLocalDate(String date) {

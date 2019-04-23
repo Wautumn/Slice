@@ -8,9 +8,7 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="settime" property="settime" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
-        <result column="continuance" property="continuance" jdbcType="INTEGER"/>
-        <result column="starttime" property="starttime" jdbcType="VARCHAR"/>
-        <result column="finishtime" property="finishtime" jdbcType="VARCHAR"/>
+        <result column="deadline" property="deadline" jdbcType="VARCHAR"/>
 
     </resultMap>
 
@@ -28,8 +26,8 @@
   </select>
 
     <insert id="insertNewTask" useGeneratedKeys="true" keyProperty="id" parameterType="com.example.slice.entity.Task">
-  insert into Task(userid,name,description,settime,status,continuance)
-  values (#{userid},#{name},#{description},#{settime},#{status},#{continuance})
+  insert into Task(userid,name,description,settime,status,deadline)
+  values (#{userid},#{name},#{description},#{settime},#{status},#{deadline})
   </insert>
 
 
@@ -37,10 +35,10 @@
         delete from Task
         where id=#{id}
     </delete>
-    <update id="changeTask">
+    <update id="changeTaskDes">
       update Task
       set
-        name=#{name}
+        description=#{des}
       where id=#{id}
     </update>
 
