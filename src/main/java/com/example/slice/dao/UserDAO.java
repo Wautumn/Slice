@@ -5,10 +5,14 @@ import com.example.slice.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,15 +24,20 @@ public class UserDAO {
 
     public int createUser(User user) {
         try {
-            jdbcTemplate.update("INSERT INTO user(username, password, email) VALUES(?, ?, ?)",
-                    new PreparedStatementSetter() {
-                        @Override
-                        public void setValues(PreparedStatement preparedStatement) throws SQLException {
-                            preparedStatement.setString(1, user.getUsername());
-                            preparedStatement.setString(2, user.getPassword());
-                            preparedStatement.setString(3, user.getEmail());
-                        }
-                    });
+            String sql = "INSERT INTO user(username, password, email) VALUES(?, ?, ?)";
+            KeyHolder holder = new GeneratedKeyHolder();
+            jdbcTemplate.update(new PreparedStatementCreator() {
+                                    @Override
+                                    public PreparedStatement createPreparedStatement(Connection con)
+                                            throws SQLException {
+                                        PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+                                        ps.setString(1, user.getUsername());
+                                        ps.setString(2, user.getPassword());
+                                        ps.setString(3, user.getEmail());
+                                        return ps;
+                                    }
+                                }, holder);
+//            int id = holder.getKey().intValue();
         } catch (DuplicateKeyException exception) {
             return 2;   //user already exists
         } catch (Exception exception) {
