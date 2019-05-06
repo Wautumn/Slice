@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 @Controller
 public class TodoController {
     @Autowired
@@ -29,5 +31,25 @@ public class TodoController {
     @ResponseBody
     public int deleteTodo(int id){
         return todoService.deleteTodoItem(id);
+    }
+
+    @RequestMapping(value = "/changeTodo", method = RequestMethod.GET)
+    @ResponseBody
+    public int changeTodo(int id, String name){
+        return todoService.changeTodoItem(id, name);
+    }
+
+    @RequestMapping(value = "/findTodo", method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> findTodo(int userid){
+        List<String> result = todoService.findTodoByUser(userid);
+        return result;
+    }
+
+    @RequestMapping(value = "/findTodoByName", method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> findTodoByName(String username){
+        List<String> result = todoService.findTodoByUser(username);
+        return result;
     }
 }

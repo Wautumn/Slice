@@ -5,6 +5,8 @@ import com.example.slice.entity.TodoItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TodoService {
     @Autowired
@@ -17,4 +19,9 @@ public class TodoService {
     public int deleteTodoItem(int id){
         return todoItemDAO.deleteTodoItem(id);
     }
+
+    public int changeTodoItem(int id, String name){return todoItemDAO.changeName(id, name);}
+
+    public List<String> findTodoByUser(int userid){return todoItemDAO.findTodoByUser(userid);}
+    public List<String> findTodoByUser(String username){return todoItemDAO.findTodoByUser(username);}
 }

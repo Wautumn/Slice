@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class TodoItemDAO {
@@ -40,13 +40,36 @@ public class TodoItemDAO {
         }
     }
 
-//    public List<TodoItem> findTodoByUser(int userid){
-//
-//    }
-//
-//    public List<TodoItem> findTodoByUser(String username){
-//
-//    }
+    public List<String> findTodoByUser(int userid){
+        try{
+            Object[] params = new Object[]{userid};
+            String sql = "SELECT name FROM todoitem WHERE userid = ?";
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<String> results = new ArrayList<>();
+
+            for(Map<String, Object> i : rs){
+                results.add(i.get("name").toString());
+            }
+            return results;
+        }catch(Exception exception){
+            return null;
+        }
+    }
+
+    public List<String> findTodoByUser(String username){
+        try {
+            Object[] params = new Object[]{username};
+            String sql = "SELECT id FROM user WHERE username = ?";
+            int id = jdbcTemplate.queryForObject(sql, params, Integer.class);
+
+            if (id > 0) {
+                return findTodoByUser(id);
+            }
+        }catch (Exception exception){
+            return null;
+        }
+        return null;
+    }
 
     public int deleteTodoItem(int id) {
         try {
@@ -63,7 +86,19 @@ public class TodoItemDAO {
         return 1;
     }
 
-//    public int changeName(int id, String name){
-//
-//    }
+    public int changeName(int id, String name){
+        try{
+            jdbcTemplate.update("UPDATE todoitem SET name = ? WHERE id = ?",
+                    new PreparedStatementSetter() {
+                        @Override
+                        public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                            preparedStatement.setString(1, name);
+                            preparedStatement.setInt(2, id);
+                        }
+                    });
+        }catch (Exception exception){
+            return 2;
+        }
+        return 1;
+    }
 }
