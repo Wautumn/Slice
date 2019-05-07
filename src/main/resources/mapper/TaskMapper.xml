@@ -8,7 +8,8 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="settime" property="settime" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
-        <result column="deadline" property="deadline" jdbcType="VARCHAR"/>
+        <result column="starttime" property="starttime" jdbcType="VARCHAR"/>
+        <result column="finishtime" property="finishtime" jdbcType="VARCHAR"/>
 
     </resultMap>
 
@@ -26,8 +27,8 @@
   </select>
 
     <insert id="insertNewTask" useGeneratedKeys="true" keyProperty="id" parameterType="com.example.slice.entity.Task">
-  insert into Task(userid,name,description,settime,status,deadline)
-  values (#{userid},#{name},#{description},#{settime},#{status},#{deadline})
+  insert into Task(userid,name,description,settime,status,starttime,finishtime)
+  values (#{userid},#{name},#{description},#{settime},#{status},#{starttime},#{finishtime})
   </insert>
 
 
