@@ -64,6 +64,8 @@ routes.push({
   component: () => import(`@/components/FeedList`),
 })
 
+
+
 routes.push({
   path: `/Admin`,
   name: 'FeedHandle',
@@ -75,6 +77,17 @@ routes.push({
   name: 'MonthView',
   component: () => import(`@/components/MonthView1`),
 })
+routes.push({
+  path: `/Project`,
+  name: 'Project',
+  component: () => import(`@/views/Project`),
+})
+routes.push({
+  path: `/AddProject`,
+  name: 'AddProject',
+  component: () => import(`@/components/AddProject`),
+})
+
 
 routes.push({
   path: `/AnalyHis`,
