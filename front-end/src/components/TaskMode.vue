@@ -297,7 +297,7 @@ export default {
       // this.currentFinishedPomo = msg.tomatoCompleted;
       // this.currentTotalPomo = parseInt(msg.expectedTomato);
       this.currentTaskDetail = msg.description;
-      // this.currentDeadline = msg.deadline;
+      this.currentDeadline = msg.finishtime;
       this.currentStatus = msg.status;
       this.currentCondition = false;
       // if (
