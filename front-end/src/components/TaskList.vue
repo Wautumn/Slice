@@ -22,14 +22,11 @@
             <el-form-item label="任务状态：">
               <span>{{tableRowStatus(props.row.status)}}</span>
             </el-form-item>
-            <el-form-item label="设置时间：">
-              <span>{{props.row.setTime}}</span>
-            </el-form-item>
-            <el-form-item label="提醒时间：">
-              <span>{{props.row.remindTime}}</span>
+            <el-form-item label="开始时间：">
+              <span>{{props.row.starttime}}</span>
             </el-form-item>
             <el-form-item label="截止时间：">
-              <span>{{props.row.deadline}}</span>
+              <span>{{props.row.finishtime}}</span>
             </el-form-item>
           </el-form>
         </template>
@@ -204,7 +201,9 @@ export default {
             name:this.newTaskName,
             description:this.newTaskDescription,
             // continuance:this.newTaskTime[0],
-            deadline:"1",
+            // deadline:"1",
+            starttime:currentTime,
+            finishtime:this.newTaskTime[1],
             userid:"1"
             // name:"test",
             // description:"test",
