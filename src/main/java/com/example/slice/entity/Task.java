@@ -18,7 +18,9 @@ public class Task {
 
     private int status;//0表示未进行，1表示进行中，2表示已完成
 
-    private String deadline;//截止日期
+    private String starttime;
+
+    private String finishtime;
 
 
     public int getId() {
@@ -69,12 +71,19 @@ public class Task {
         this.status = status;
     }
 
-
-    public String getDeadline() {
-        return deadline;
+    public String getStarttime() {
+        return starttime;
     }
 
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
+    public void setStarttime(String starttime) {
+        this.starttime = starttime;
+    }
+
+    public String getFinishtime() {
+        return finishtime;
+    }
+
+    public void setFinishtime(String finishtime) {
+        this.finishtime = finishtime;
     }
 }

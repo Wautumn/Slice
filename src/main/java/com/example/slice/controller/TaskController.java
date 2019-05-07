@@ -47,13 +47,15 @@ public class TaskController {
         int userid = Integer.parseInt(jsonObject.get("userid").toString());
         String name = jsonObject.get("name").toString();
         String description = jsonObject.get("description").toString();
-        String deadline = jsonObject.get("deadline").toString();
+        String starttime = jsonObject.get("starttime").toString();
+        String finishtime = jsonObject.get("finishtime").toString();
 
         if (taskService.ifExistSameNameTask(userid, name) == 0) {
             return -1;//插入失败
         } else {
             int status = 0;
-            task.setDeadline(deadline);
+            task.setStarttime(starttime);
+            task.setFinishtime(finishtime);
             task.setUserid(userid);
             task.setName(name);
             task.setDescription(description);

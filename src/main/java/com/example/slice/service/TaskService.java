@@ -3,6 +3,7 @@ package com.example.slice.service;
 import com.example.slice.dao.TaskDAO;
 import com.example.slice.entity.Task;
 import com.example.slice.other.ConvertDate;
+import com.example.slice.service.util.DateConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ public class TaskService {
     @Autowired
     ConvertDate convertDate;
 
+    @Autowired
+    DateConvert dateConvert;
+
     public Task findTaskById(int id) {
         Task task = taskDAO.findTaskById(id);
         return task;
@@ -29,7 +33,20 @@ public class TaskService {
     }
 
     public List<Task> findTaskByUserId(int userid) {
+        List<Task> result = new LinkedList<>();
+        LocalDate localDate = LocalDate.now();
+        LocalDate now = LocalDate.now();
         List<Task> tasks = taskDAO.findTaskByUserid(userid);
+//        for(Task task:tasks){
+//            String starttime=task.getStarttime();
+//            String endtime=task.getFinishtime();
+//            LocalDate start=dateConvert.StringToLD(starttime);//开始的日期
+//            LocalDate end=dateConvert.StringToLD(endtime);//结束的日期
+//            if((now.isEqual(start)||now.isAfter(start))&&(now.equals(end)||now.isBefore(end))){
+//                result.add(task);
+//            }
+//
+//        }
         return tasks;
     }
 
@@ -67,18 +84,27 @@ public class TaskService {
     public List<Task> getTodayTask(int userid) {
         List<Task> tasks = taskDAO.findTaskByUserid(userid);
         List<Task> usefulTasks = new LinkedList<>();
-        LocalDate localDate = LocalDate.now();
+        List<Task> result = new LinkedList<>();
+        LocalDate now = LocalDate.now();
         for (Task task : tasks) {
-            String settime = task.getSettime();
-            String deadline = task.getDeadline();
-            LocalDate setdate = convertDate.StringToLocalDate(settime);
-            LocalDate deaddate = convertDate.StringToLocalDate(deadline);
-            if (deaddate.isAfter(localDate) || deaddate.equals(localDate)) {
-                usefulTasks.add(task);
+            String starttime = task.getStarttime();
+            String endtime = task.getFinishtime();
+            if (starttime == null || endtime == null) {
+                break;
+            }
+            LocalDate start = dateConvert.StringToLD(starttime);//开始的日期
+            LocalDate end = dateConvert.StringToLD(endtime);//结束的日期
+            System.out.println(start);
+            System.out.println(end);
+            System.out.println("now" + now);
+            System.out.println(now.equals(start));
+            System.out.println(now.equals(end));
+            if ((now.isEqual(start) || now.isAfter(start)) && (now.equals(end) || now.isBefore(end))) {
+                result.add(task);
             }
 
         }
-        return usefulTasks;
+        return result;
     }
 
 }
