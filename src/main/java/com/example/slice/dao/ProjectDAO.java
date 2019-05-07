@@ -2,6 +2,7 @@ package com.example.slice.dao;
 
 import com.example.slice.entity.Project;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -38,6 +39,7 @@ public class ProjectDAO {
             int id = holder.getKey().intValue();
 
             if (id > 0) {
+
                 jdbcTemplate.update("INSERT INTO project_member(projectid, userid) VALUES(?, ?)",
                         new PreparedStatementSetter() {
                             @Override
@@ -47,7 +49,13 @@ public class ProjectDAO {
                             }
                         });
 
-                addMembers(id, members);
+
+                int mem_result = addMembers(id, members);
+                if (mem_result == 0) {
+                    String sql = "DELETE FROM project WHERE id = " + id;
+                    jdbcTemplate.update(sql);
+                    return -1;
+                }
                 return id;
             }
         } catch (Exception exception) {
@@ -62,14 +70,19 @@ public class ProjectDAO {
                 Object[] params = new Object[]{s};
                 String sql = "SELECT id FROM user WHERE username = ?";
                 int mem_id = jdbcTemplate.queryForObject(sql, params, Integer.class);
-                jdbcTemplate.update("INSERT INTO project_member(projectid, userid) VALUES(?, ?)",
-                        new PreparedStatementSetter() {
-                            @Override
-                            public void setValues(PreparedStatement preparedStatement) throws SQLException {
-                                preparedStatement.setInt(1, projectid);
-                                preparedStatement.setInt(2, mem_id);
-                            }
-                        });
+
+                try {
+                    jdbcTemplate.update("INSERT INTO project_member(projectid, userid) VALUES(?, ?)",
+                            new PreparedStatementSetter() {
+                                @Override
+                                public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                                    preparedStatement.setInt(1, projectid);
+                                    preparedStatement.setInt(2, mem_id);
+                                }
+                            });
+                } catch (DuplicateKeyException exception) {
+
+                }
             }
         } catch (Exception exception) {
             return 0;

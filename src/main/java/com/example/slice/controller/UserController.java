@@ -70,6 +70,15 @@ public class UserController {
         return id;
     }
 
+    //result:
+    //String for user name
+    //null for non-existent user
+    @RequestMapping(value = "/findNameById", method = RequestMethod.GET)
+    public String findNameById(int id){
+        String username = userService.findNameById(id);
+        return username;
+    }
+
     //status code :
     //1 for success
     //2 for deletion error

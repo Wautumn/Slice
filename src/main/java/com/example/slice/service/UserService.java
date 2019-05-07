@@ -27,6 +27,8 @@ public class UserService {
         return userDAO.findIdByName(username);
     }
 
+    public String findNameById(int id){return userDAO.findNameById(id);}
+
     public int deleteUser(String username) {
         return userDAO.deleteUser(username);
     }

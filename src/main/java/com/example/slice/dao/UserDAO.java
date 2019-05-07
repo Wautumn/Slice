@@ -97,6 +97,17 @@ public class UserDAO {
         }
     }
 
+    public String findNameById(int id){
+        try{
+            Object[] params = new Object[]{id};
+            String sql = "SELECT username FROM user WHERE id = ?";
+            String username = jdbcTemplate.queryForObject(sql, params, String.class);
+            return username;
+        }catch (Exception exception){
+            return null;
+        }
+    }
+
     public int deleteUser(String username) {
         try {
             jdbcTemplate.update("DELETE FROM user WHERE username = ?",
