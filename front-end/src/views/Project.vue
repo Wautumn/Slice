@@ -9,13 +9,24 @@
           <el-menu-item-group>
 
             <el-menu-item index="1-1" @click="cli($event)">{{typeitem[0]}}</el-menu-item>
-            <el-menu-item index="1-2" @click="cli($event)">{{typeitem[1]}}</el-menu-item>
+            <!--<el-menu-item index="1-2" @click="cli($event)">{{typeitem[1]}}</el-menu-item>-->
 
 
           </el-menu-item-group>
 
         </el-submenu>
         <el-submenu index="2">
+          <template slot="title">
+            <i class="el-icon-tickets"></i>我创建的团队项目
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="1-1">项目1</el-menu-item>
+
+          </el-menu-item-group>
+
+        </el-submenu>
+
+        <el-submenu index="3">
           <template slot="title">
             <i class="el-icon-date"></i>我参与的团队项目
           </template>
@@ -77,7 +88,7 @@
         address: '上海市普陀区金沙江路 1518 弄'
       };
       return {
-        typeitem: ["新建", "查看"],
+        typeitem: ["新建"],
         type: 0,
         tableData: Array(20).fill(item)
       }

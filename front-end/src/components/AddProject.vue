@@ -47,14 +47,16 @@
 
       <el-form-item label="开始时间">
         <el-col :span="11">
-          <el-date-picker type="datetime" placeholder="选择时间" v-model="form.starttime" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          <el-date-picker type="datetime" placeholder="选择时间" v-model="form.starttime" style="width: 100%;"
+                          value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </el-col>
 
       </el-form-item>
 
       <el-form-item label="结束时间">
         <el-col :span="11">
-          <el-date-picker type="datetime" placeholder="选择时间" v-model="form.finishtime" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          <el-date-picker type="datetime" placeholder="选择时间" v-model="form.finishtime" style="width: 100%;"
+                          value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </el-col>
 
       </el-form-item>
@@ -80,14 +82,14 @@
         newprojecturl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT//createProject",
         fingpeopleurl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/findUserid",
         joinerid: [],
-        addpeopleresult:0,
+        addpeopleresult: 0,
         form: {
           name: '',
           description: '',
           joiner: [],
           subtask: [],
-          starttime:'',
-          finishtime:''
+          starttime: '',
+          finishtime: ''
         }
       }
 
@@ -97,21 +99,21 @@
         console.log('submit!');
         this.$http
           .post(this.newprojecturl, {
-            userid:10 ,//this.userid,
-            name:this.form.name,
+            userid: 10,//this.userid,
+            name: this.form.name,
             description: this.form.description,
-            members:this.form.joiner,
+            members: this.form.joiner,
             subtasks: this.form.subtask,
-            starttime:this.form.starttime,
-            endtime:this.form.finishtime
+            starttime: this.form.starttime,
+            endtime: this.form.finishtime
           },).then(response => {
           console.log(response.data);
           if (response.data == -1) {
-            this.$alert( '添加失败', {
+            this.$alert('添加失败', {
               confirmButtonText: '确定',
             });
-          }else {
-            this.$alert( '新建成功', {
+          } else {
+            this.$alert('新建成功', {
               confirmButtonText: '确定',
             });
           }
@@ -122,12 +124,12 @@
           .get(this.fingpeopleurl, {params: {username: this.nowpeople}})
           .then(response => {
             console.log(response.data)
-            if(response.data==-1){
+            if (response.data == -1) {
               this.$alert('此用户不存在！', '添加失败', {
                 confirmButtonText: '确定',
               });
-            }else {
-              this.$alert('已添加'+this.nowpeople, '添加成功', {
+            } else {
+              this.$alert('已添加' + this.nowpeople, '添加成功', {
                 confirmButtonText: '确定',
               });
               this.joinerid.push(response.data)
@@ -136,7 +138,7 @@
           }),
 
 
-        console.log(this.nowpeople)
+          console.log(this.nowpeople)
       },
       addsubtask: function () {
         this.form.subtask.push(this.nowsubtask)
