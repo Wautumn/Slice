@@ -162,7 +162,7 @@
         // endTaskUrl: "http://localhost:8080/task/endTask",
         // dailySummaryUrl: "http://localhost:8080/summary/save",
 
-        taskRequestUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/getTasksByUserid",
+        taskRequestUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/getTodayTasksByUserid",
         deleteTaskUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/deleteTask",
 
         taskStartUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/task/startTask",
