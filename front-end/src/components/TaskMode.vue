@@ -41,7 +41,7 @@
           <br>
           <h1 v-show="selected" style="margin-top: 10px;">任务时间</h1>
           <div style="margin-top: 10px; margin-bottom: 10px; margin-left: 20px;">
-            <h2>至{{currentDeadline}}</h2>
+            <h2>{{startTime}}至{{currentDeadline}}</h2>
           </div>
           <h1 v-show="selected">任务详情</h1>
           <div style="margin-top: 20px">
@@ -114,6 +114,7 @@ export default {
       currentStatus: -2,
       currentDeadline: null,
       taskData: [],
+      startTime: null,
       // taskRequestUrl: "http://localhost:8080/task/getTask",
       // taskStartUrl: "http://localhost:8080/task/startTask",
       // tomatoStartUrl: "http://localhost:8080/startTomato",
@@ -299,6 +300,7 @@ export default {
       this.currentTaskDetail = msg.description;
       this.currentDeadline = msg.finishtime;
       this.currentStatus = msg.status;
+      this.startTime=msg.starttime;
       this.currentCondition = false;
       // if (
       //   this.taskData[this.currentTask].tomatoCompleted ==
