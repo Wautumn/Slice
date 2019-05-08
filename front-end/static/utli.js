@@ -32,17 +32,16 @@ Date.prototype.format = function (fmt) {
     return fmt;
 };
 
+//当前月份的任务
 function date_slice(start_date, end_date, source) {
     //从数据源切割,假设source有序
     var result = [];
     for (let j = 0; j < source.length; j++) {
         var item = source[j];
-        //debugger;
-        if (item.date >= start_date && item.date <= end_date) {
+        
+        if (item.settime >= start_date && item.settime <= end_date) {
             result.push(item);
-        } else if (item.date > end_date) {
-            break;
-        }
+        } 
     }
     return result;
 }
