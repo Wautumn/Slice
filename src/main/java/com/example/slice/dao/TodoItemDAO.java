@@ -40,15 +40,20 @@ public class TodoItemDAO {
         }
     }
 
-    public List<String> findTodoByUser(int userid){
+    public List<TodoItem> findTodoByUser(int userid){
         try{
             Object[] params = new Object[]{userid};
-            String sql = "SELECT name FROM todoitem WHERE userid = ?";
+            String sql = "SELECT * FROM todoitem WHERE userid = ?";
             List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
-            ArrayList<String> results = new ArrayList<>();
+            ArrayList<TodoItem> results = new ArrayList<>();
 
             for(Map<String, Object> i : rs){
-                results.add(i.get("name").toString());
+                TodoItem todoItem = new TodoItem();
+                todoItem.setId(Integer.parseInt(i.get("id").toString()));
+                todoItem.setUserid(userid);
+                todoItem.setName(i.get("name").toString());
+
+                results.add(todoItem);
             }
             return results;
         }catch(Exception exception){
@@ -56,7 +61,7 @@ public class TodoItemDAO {
         }
     }
 
-    public List<String> findTodoByUser(String username){
+    public List<TodoItem> findTodoByUser(String username){
         try {
             Object[] params = new Object[]{username};
             String sql = "SELECT id FROM user WHERE username = ?";

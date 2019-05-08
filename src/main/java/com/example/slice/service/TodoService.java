@@ -22,6 +22,6 @@ public class TodoService {
 
     public int changeTodoItem(int id, String name){return todoItemDAO.changeName(id, name);}
 
-    public List<String> findTodoByUser(int userid){return todoItemDAO.findTodoByUser(userid);}
-    public List<String> findTodoByUser(String username){return todoItemDAO.findTodoByUser(username);}
+    public List<TodoItem> findTodoByUser(int userid){return todoItemDAO.findTodoByUser(userid);}
+    public List<TodoItem> findTodoByUser(String username){return todoItemDAO.findTodoByUser(username);}
 }
