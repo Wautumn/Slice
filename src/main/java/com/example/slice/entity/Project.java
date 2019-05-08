@@ -13,6 +13,8 @@ public class Project {
 
     private String endtime;
 
+    private int status;
+
     public int getId(){return id;}
     public void setId(int id){this.id = id;}
 
@@ -30,4 +32,7 @@ public class Project {
 
     public String getEndtime(){return endtime;}
     public void setEndtime(String endtime){this.endtime = endtime;}
+
+    public int getStatus(){return status;}
+    public void setStatus(int status){this.status = status;}
 }

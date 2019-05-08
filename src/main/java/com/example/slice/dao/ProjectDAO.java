@@ -6,20 +6,25 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ProjectDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public int createProject(Project project, String[] members) {
+    public int createProject(Project project, String[] members, String[] tasks) {
         try {
             String sql_project = "INSERT INTO project(userid, name, description, starttime, endtime) " +
                     "VALUES(?, ?, ?, ?, ?)";
@@ -39,7 +44,6 @@ public class ProjectDAO {
             int id = holder.getKey().intValue();
 
             if (id > 0) {
-
                 jdbcTemplate.update("INSERT INTO project_member(projectid, userid) VALUES(?, ?)",
                         new PreparedStatementSetter() {
                             @Override
@@ -51,7 +55,8 @@ public class ProjectDAO {
 
 
                 int mem_result = addMembers(id, members);
-                if (mem_result == 0) {
+                int task_result = addTasks(id, tasks);
+                if (mem_result == 0 || task_result == 0) {
                     String sql = "DELETE FROM project WHERE id = " + id;
                     jdbcTemplate.update(sql);
                     return -1;
@@ -88,6 +93,106 @@ public class ProjectDAO {
             return 0;
         }
         return 1;
+    }
+
+    public int addTasks(int projectid, String[] tasks){
+        try{
+            for(String s : tasks){
+                jdbcTemplate.update("INSERT INTO project_task(name, projectid) VALUES(?, ?)",
+                        new PreparedStatementSetter() {
+                            @Override
+                            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                                preparedStatement.setString(1, s);
+                                preparedStatement.setInt(2, projectid);
+                            }
+                        });
+            }
+        }catch (Exception exception){
+            return 0;
+        }
+        return 1;
+    }
+
+    public List<Integer> findProjectByUser(int userid){
+        try{
+            Object[] params = new Object[]{userid};
+            String sql = "SELECT id FROM project WHERE userid = ?";
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<Integer> results = new ArrayList<>();
+
+            for(Map<String, Object> i : rs){
+                results.add(Integer.parseInt(i.get("id").toString()));
+            }
+
+            return results;
+        }catch (Exception exception){
+            return null;
+        }
+    }
+
+    public List<Integer> findUserByProject(int projectid){
+        try{
+            Object[] params = new Object[]{projectid};
+            String sql = "SELECT userid FROM project_member WHERE projectid = ?";
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<Integer> results = new ArrayList<>();
+
+            for(Map<String, Object> i : rs){
+                results.add(Integer.parseInt(i.get("userid").toString()));
+            }
+
+            return results;
+        }catch (Exception exception){
+            return null;
+        }
+    }
+
+    public Project findProjectByName(String name){
+        try{
+            Object[] params = new Object[]{name};
+            String sql = "SELECT * FROM project WHERE name = ?";
+            Project project = jdbcTemplate.queryForObject(sql, params, new RowMapper<Project>() {
+                @Override
+                public Project mapRow(ResultSet resultSet, int i) throws SQLException {
+                    Project project = new Project();
+                    project.setId(resultSet.getInt("id"));
+                    project.setName(resultSet.getString("name"));
+                    project.setDescription(resultSet.getString("description"));
+                    project.setUserid(resultSet.getInt("userid"));
+                    project.setStarttime(resultSet.getString("starttime"));
+                    project.setEndtime(resultSet.getString("endtime"));
+                    project.setStatus(resultSet.getInt("status"));
+                    return project;
+                }
+            });
+            return project;
+        }catch (Exception exception){
+            return null;
+        }
+    }
+
+    public Project findProjectById(int id){
+        try{
+            Object[] params = new Object[]{id};
+            String sql = "SELECT * FROM project WHERE id = ?";
+            Project project = jdbcTemplate.queryForObject(sql, params, new RowMapper<Project>() {
+                @Override
+                public Project mapRow(ResultSet resultSet, int i) throws SQLException {
+                    Project project = new Project();
+                    project.setId(resultSet.getInt("id"));
+                    project.setName(resultSet.getString("name"));
+                    project.setDescription(resultSet.getString("description"));
+                    project.setUserid(resultSet.getInt("userid"));
+                    project.setStarttime(resultSet.getString("starttime"));
+                    project.setEndtime(resultSet.getString("endtime"));
+                    project.setStatus(resultSet.getInt("status"));
+                    return project;
+                }
+            });
+            return project;
+        }catch (Exception exception){
+            return null;
+        }
     }
 }
 
