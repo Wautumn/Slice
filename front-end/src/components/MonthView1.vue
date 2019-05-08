@@ -1,21 +1,13 @@
 <template>
   <div>
-    <full-calendar :events="fcEvents" locale="en" @changeMonth="TimeChange"></full-calendar>
+    <full-calendar :events="fcEvents" locale="en" @changeMonth="TimeChange" @eventClick="eventClick"></full-calendar>
+      <template slot="fc-event-card" scope="p">
+            <p><i class="fa">sadfsd</i> {{ p.event.title }} test</p>
+        </template>
   </div>
 </template>
 
 <script>
-//测试数据
-var demoEvents = [
-  {
-    title: "Sunny Out of Office",
-    start: "2018-12-06"
-  },
-  {
-    title: "Sunny Out of Office",
-    start: "2018-12-08"
-  }
-];
 
 //得到的每个月的最后一天
 //投机做法
@@ -26,9 +18,9 @@ function getLastMonthDay(firstDay) {
 }
 
 var now = new Date(); //当前时刻
-var nowTime = now.format("yyyy-MM-dd");
-var monthAgo = now.format("yyyy-MM") + "-01";
-var monthStart = new Date(monthAgo);
+var nowTime = now.format("yyyy-MM-dd");//当前日期
+var monthAgo = now.format("yyyy-MM") + "-01";//当月1日
+var monthStart = new Date(monthAgo);//当月1日
 
 const historyurl = "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/getTasksByUserid";
 
@@ -37,16 +29,23 @@ export default {
     return {
       fcEvents: [],
       storedTaskYear: [],
-      date: [monthAgo, nowTime],
-      userID: 2
+      date: [monthAgo, nowTime],//[当月1日，当前日期]
+      userID: 1,
+      description:[]
     };
   },
   beforeCreate() {
-    // console.log("刷新");
+    console.log("刷新");
     localStorage.clear();
   },
   //该组件在mounted之前就调用了TimeChange所以一些操作需要提前到created来做
   created() {
+    //++++++++++++++++dev++++++++++++++++++++++++
+        // deleteDB("weekDB");
+        // deleteDB("daySumDB");
+        // deleteDB("dayTaskDB");
+        // deleteDB("dayTomoDB");
+    //--------------------------------------------
     sessionStorage.userId="1";
     this.userID = sessionStorage.userId;
     openDB("dayTaskDB");
@@ -74,60 +73,88 @@ export default {
     "full-calendar": require("vue-fullcalendar")
   },
   methods: {
+
+      eventClick(event, jsEvent, pos) {
+       console.log('eventClick', event, jsEvent, pos)
+      
+        this.$alert(this.description[event.cellIndex-1], event.title, {
+          confirmButtonText: '确定',
+          callback: action => {
+            // this.$message({
+            //   type: 'info',
+            //   message: `action: ${ action }`
+            // });
+          }
+        })
+    },
+
+    //月份切换
     TimeChange(start, end, current) {
       console.log("Month:时间变化");
       this.date = [current, getLastMonthDay(current)];
       let year = current.split("-")[0];
+      console.log("current month")
+      console.log(current)
       if (this.storedTaskYear.indexOf(year) == -1) {
         console.log("Month:没有目标缓存");
-        //debugger;
         this.requestData(year, 2);
       } else {
         console.log("Month:有目标缓存");
         searchData(
-          current,
-          getLastMonthDay(current),
+          // current,
+          // getLastMonthDay(current),
           () => {
-            var selectedData = dbData;
-            this.updateData(selectedData);
+          // var selectedData = dbData;
+          let beginDate = this.date[0];//当月1日
+          let finishDate = this.date[1];//当前日期
+          let tmpData = date_slice(beginDate,finishDate,dbData);
+          this.updateData(tmpData);
+            
+            console.log("month change")
+            console.log(dbData)
+
+          
           },
           "dayTaskDB"
         );
       }
     },
+
     updateData(selectedData) {
       this.fcEvents = [];
-      console.log("selectedData is")
+      console.log("in updateData function, selectedData is")
       console.log(selectedData);
       for (let i = 0; i < selectedData.length; i++) {
         let item = selectedData[i];
-        let date = item.date;
-        let dayEvents = item.tempResult;
-        for (let j = 0; j < dayEvents.length; j++) {
-          // let css;
-          // switch (dayEvents[j].status) {
-          //   case 0:
-          //     css = "waiting";
-          //     break;
-          //   case -1:
-          //     css = "abandoned";
-          //     break;
-          //   case 1:
-          //     css = "running";
-          //     break;
-          //   case 2:
-          //     css = "completed";
-          //     break;
-          //   default:
-          //     break;
-          // }
-          //debugger;
+        // let date = item.settime;
+        // let dayEvents = item.tempResult;
+        // for (let j = 0; j < dayEvents.length; j++) {
+          let css;
+          switch (item.status) {
+            case 0:
+              css = "waiting";
+              break;
+            case -1:
+              css = "abandoned";
+              break;
+            case 1:
+              css = "running";
+              break;
+            case 2:
+              css = "completed";
+              break;
+            default:
+              break;
+          }
+          this.description=[]
+          this.description.push(item.description)
           this.fcEvents.push({
-            start: dayEvents[j].settime,
-            title: dayEvents[j].name,
-            // cssClass: css
+            start: item.starttime,
+            title: item.name,
+            end:item.finishtime,
+            cssClass: css
           });
-        }
+       // }
       }
     },
     //direction参数用来确定请求情况
@@ -135,11 +162,11 @@ export default {
     //1为下溢出
     //2为全部溢出
     requestData(year, direction) {
+      console.log("requestData function");
       this.$http
         .get(historyurl, {
           params: {
-            userid: this.userID,
-            
+            userid: this.userID,       
           }
         })
         .then(res => {
@@ -147,36 +174,40 @@ export default {
           console.log("requestData");
           console.log(res.body);
           var returnData = res.body;
-          for(var item in returnData)
-          {
-            settime=item.settime;
-            deadline=item.deadline;
-            name=item.name;
-            description=item.description;
+          // for(var item in returnData)
+          // {
+          //   settime=item.settime;//起始时间
+          //   deadline=item.deadline;//截止时间
+          //   name=item.name;//名字
+          //   description=item.description;//描述
+          // }
+          var startDate = this.date[0];//当月1日
+          var endDate = this.date[1];//当前日期
+          if (direction === 0) {
+            //上溢出更新起始日期
+            startDate = year + "-01-01";
+          } else if (direction === 1) {
+            //下溢出更新截止日期
+            endDate = year + "-12-31";
           }
-          var startDate = this.date[0];
-          var endDate = this.date[1];
-          // if (direction === 0) {
-          //   //上溢出更新起始日期
-          //   settime = year + "-01-01";
-          // } else if (direction === 1) {
-          //   //下溢出更新截止日期
-          //   deadline = year + "-12-31";
-          // }
+          console.log("startDate"+startDate)
+          console.log("endDate"+endDate)
           //完全溢出什么都不更新
-          var selectedData = date_slice(settime, deadline, returnData);
-          //debugger;
+          console.log("date_slice begin:")
+          var selectedData = date_slice(startDate,endDate,returnData);
+          console.log("data_slice result:")
+          console.log(selectedData)
+          console.log("data_slice result!")
           this.updateData(selectedData);
-          // for (var i of returnData) {
-          //   //debugger;
-          //   saveData(i, "dayTaskDB");
-          // }
+          for (var i of returnData) {
+            console.log("now begin to save data")
+            saveData(i, "dayTaskDB");
+          }
+          console.log("here store the year")
           this.storedTaskYear.push(year);
           localStorage.storedTaskYear = JSON.stringify(this.storedTaskYear);
-        })
-        .catch(() => {
-          console.log("获取信息失败");
         });
+        
     }
   }
 };
