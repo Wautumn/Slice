@@ -77,7 +77,7 @@
         userid: 1,
         nowpeople: '',
         nowsubtask: '',
-        newprojecturl: "http://localhost:8080//createProject",
+        newprojecturl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT//createProject",
         fingpeopleurl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/findUserid",
         joinerid: [],
         addpeopleresult:0,
@@ -101,7 +101,7 @@
             name:this.form.name,
             description: this.form.description,
             members:this.form.joiner,
-            // subtask: this.form.subtask,
+            subtasks: this.form.subtask,
             starttime:this.form.starttime,
             endtime:this.form.finishtime
           },).then(response => {
