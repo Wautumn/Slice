@@ -41,15 +41,15 @@ public class TodoController {
 
     @RequestMapping(value = "/findTodo", method = RequestMethod.GET)
     @ResponseBody
-    public List<String> findTodo(int userid){
-        List<String> result = todoService.findTodoByUser(userid);
+    public List<TodoItem> findTodo(int userid){
+        List<TodoItem> result = todoService.findTodoByUser(userid);
         return result;
     }
 
     @RequestMapping(value = "/findTodoByName", method = RequestMethod.GET)
     @ResponseBody
-    public List<String> findTodoByName(String username){
-        List<String> result = todoService.findTodoByUser(username);
+    public List<TodoItem> findTodoByName(String username){
+        List<TodoItem> result = todoService.findTodoByUser(username);
         return result;
     }
 }
