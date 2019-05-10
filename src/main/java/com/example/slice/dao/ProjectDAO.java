@@ -130,6 +130,25 @@ public class ProjectDAO {
         }
     }
 
+    public List<Integer> findProjectAttend(int userid){
+        try{
+            Object[] params = new Object[]{userid};
+            String sql = "SELECT projectid FROM project_member WHERE userid = ? " +
+                    "AND userid NOT IN (SELECT userid FROM project WHERE project.id = project_member.projectid)";
+
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<Integer> results = new ArrayList<>();
+
+            for(Map<String, Object> i : rs){
+                results.add(Integer.parseInt(i.get("projectid").toString()));
+            }
+
+            return results;
+        }catch (Exception exception){
+            return null;
+        }
+    }
+
     public List<Integer> findUserByProject(int projectid){
         try{
             Object[] params = new Object[]{projectid};
@@ -139,6 +158,23 @@ public class ProjectDAO {
 
             for(Map<String, Object> i : rs){
                 results.add(Integer.parseInt(i.get("userid").toString()));
+            }
+
+            return results;
+        }catch (Exception exception){
+            return null;
+        }
+    }
+
+    public List<Integer> findAllTasks(int projectid){
+        try{
+            Object[] params = new Object[]{projectid};
+            String sql = "SELECT id FROM project_task WHERE projectid = ?";
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<Integer> results = new ArrayList<>();
+
+            for(Map<String, Object> i : rs){
+                results.add(Integer.parseInt(i.get("id").toString()));
             }
 
             return results;
@@ -193,6 +229,53 @@ public class ProjectDAO {
         }catch (Exception exception){
             return null;
         }
+    }
+
+    public int setProjectName(int id, String name){
+        return setProjectContent(id, "name", name);
+    }
+
+    public int setProjectDescription(int id, String description){
+        return setProjectContent(id, "description", description);
+    }
+
+    public int setStarttime(int id, String starttime){
+        return setProjectContent(id, "starttime", starttime);
+    }
+
+    public int setEndtime(int id, String endtime){
+        return setProjectContent(id, "endtime", endtime);
+    }
+
+    private int setProjectContent(int id, String attribute, String content){
+        String sql = "";
+        switch (attribute){
+            case "name":
+                sql = "UPDATE project SET name = ? WHERE id = ?";
+                break;
+            case "description":
+                sql = "UPDATE project SET description = ? WHERE id = ?";
+                break;
+            case "starttime":
+                sql = "UPDATE project SET starttime = ? WHERE id = ?";
+                break;
+            case "endtime":
+                sql = "UPDATE project SET endtime = ? WHERE id = ?";
+                break;
+        }
+        try{
+            jdbcTemplate.update(sql,
+                    new PreparedStatementSetter() {
+                        @Override
+                        public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                            preparedStatement.setString(1, content);
+                            preparedStatement.setInt(2, id);
+                        }
+                    });
+        }catch (Exception exception){
+            return 2;
+        }
+        return 1;
     }
 }
 
