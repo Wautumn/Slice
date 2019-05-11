@@ -65,7 +65,7 @@ public class ProjectTaskController {
 
     @RequestMapping(value = "/findProjectTaskByName", method = RequestMethod.GET)
     @ResponseBody
-    public ProjectTask findTaskByName(String name, int projectid){
+    public List<Integer> findTaskByName(String name, int projectid){
         return projectTaskService.findTasksByName(projectid, name);
     }
 

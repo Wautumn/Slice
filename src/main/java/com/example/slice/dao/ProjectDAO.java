@@ -183,25 +183,18 @@ public class ProjectDAO {
         }
     }
 
-    public Project findProjectByName(String name){
+    public List<Integer> findProjectByName(String name){
         try{
-            Object[] params = new Object[]{name};
-            String sql = "SELECT * FROM project WHERE name = ?";
-            Project project = jdbcTemplate.queryForObject(sql, params, new RowMapper<Project>() {
-                @Override
-                public Project mapRow(ResultSet resultSet, int i) throws SQLException {
-                    Project project = new Project();
-                    project.setId(resultSet.getInt("id"));
-                    project.setName(resultSet.getString("name"));
-                    project.setDescription(resultSet.getString("description"));
-                    project.setUserid(resultSet.getInt("userid"));
-                    project.setStarttime(resultSet.getString("starttime"));
-                    project.setEndtime(resultSet.getString("endtime"));
-                    project.setStatus(resultSet.getInt("status"));
-                    return project;
-                }
-            });
-            return project;
+            Object[] params = new Object[]{"%" + name + "%"};
+            String sql = "SELECT id FROM project WHERE name LIKE ?";
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<Integer> results = new ArrayList<>();
+
+            for(Map<String, Object> i : rs){
+                results.add(Integer.parseInt(i.get("id").toString()));
+            }
+
+            return results;
         }catch (Exception exception){
             return null;
         }

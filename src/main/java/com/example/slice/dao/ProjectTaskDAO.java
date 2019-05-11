@@ -116,27 +116,19 @@ public class ProjectTaskDAO {
         }
     }
 
-    public ProjectTask findTasksByName(String name, int projectid){
-        try{
-            Object[] params = new Object[]{name, projectid};
-            String sql = "SELECT * FROM project_task WHERE name = ? AND projectid = ?";
-            ProjectTask projectTask = jdbcTemplate.queryForObject(sql, params, new RowMapper<ProjectTask>() {
-                @Override
-                public ProjectTask mapRow(ResultSet resultSet, int i) throws SQLException {
-                    ProjectTask projectTask = new ProjectTask();
-                    projectTask.setId(resultSet.getInt("id"));
-                    projectTask.setName(resultSet.getString("name"));
-                    projectTask.setDescription(resultSet.getString("description"));
-                    projectTask.setProjectid(resultSet.getInt("projectid"));
-                    projectTask.setUserid(resultSet.getInt("userid"));
-                    projectTask.setStarttime(resultSet.getString("starttime"));
-                    projectTask.setEndtime(resultSet.getString("endtime"));
-                    projectTask.setStatus(resultSet.getInt("status"));
-                    return projectTask;
-                }
-            });
-            return projectTask;
-        }catch (Exception exception){
+    public List<Integer> findTasksByName(String name, int projectid) {
+        try {
+            Object[] params = new Object[]{"%" + name + "%", projectid};
+            String sql = "SELECT id FROM project_task WHERE name LIKE ? AND projectid = ?";
+
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<Integer> results = new ArrayList<>();
+
+            for (Map<String, Object> i : rs) {
+                results.add(Integer.parseInt(i.get("id").toString()));
+            }
+            return results;
+        } catch (Exception exception) {
             return null;
         }
     }

@@ -28,7 +28,7 @@ public class ProjectTaskService {
 
     public ProjectTask findTasksById(int id){return projectTaskDAO.findTasksById(id);}
 
-    public ProjectTask findTasksByName(int projectid, String name){return projectTaskDAO.findTasksByName(name, projectid);}
+    public List<Integer> findTasksByName(int projectid, String name){return projectTaskDAO.findTasksByName(name, projectid);}
 
     public int setTask(int id, String description, String starttime, String endtime, int userid){
         return projectTaskDAO.setTask(id, description, starttime, endtime, userid);

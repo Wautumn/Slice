@@ -26,7 +26,7 @@ public class ProjectService {
 
     public List<Integer> findUserByProject(int projectid){return projectDAO.findUserByProject(projectid);}
 
-    public Project findProjectByName(String name){return projectDAO.findProjectByName(name);}
+    public List<Integer> findProjectByName(String name){return projectDAO.findProjectByName(name);}
 
     public Project findProjectById(int id){return projectDAO.findProjectById(id);}
 

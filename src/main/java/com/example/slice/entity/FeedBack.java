@@ -1,7 +1,6 @@
 package com.example.slice.entity;
 
 public class FeedBack {
-    //反馈	用户增删改查，管理员获取所有反馈，处理反馈（回复反馈）
     private int id;
     private String title;
     private String content;

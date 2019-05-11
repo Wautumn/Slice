@@ -82,7 +82,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/findProjectByName", method = RequestMethod.GET)
     @ResponseBody
-    public Project findProjectByName(String name) {
+    public List<Integer> findProjectByName(String name) {
         return projectService.findProjectByName(name);
     }
 
