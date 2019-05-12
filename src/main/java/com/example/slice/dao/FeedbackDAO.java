@@ -110,15 +110,26 @@ public class FeedbackDAO {
         }
     }
 
-    public List<Integer> findFeedbackByUser(int userid){
+    public List<FeedBack> findFeedbackByUser(int userid){
         try{
             Object[] params = new Object[]{userid};
-            String sql = "SELECT id FROM feedback WHERE userid = ?";
+            String sql = "SELECT * FROM feedback WHERE userid = ?";
             List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
-            ArrayList<Integer> results = new ArrayList<>();
+            ArrayList<FeedBack> results = new ArrayList<>();
 
             for(Map<String, Object> i : rs){
-                results.add(Integer.parseInt(i.get("id").toString()));
+                FeedBack feedBack = new FeedBack();
+                feedBack.setId(Integer.parseInt(i.get("id").toString()));
+                feedBack.setContent(i.get("content").toString());
+                feedBack.setTitle(i.get("title").toString());
+                feedBack.setSettime(i.get("settime").toString());
+                feedBack.setUserid(Integer.parseInt(i.get("userid").toString()));
+                feedBack.setStatus(Integer.parseInt(i.get("status").toString()));
+                if(feedBack.getStatus() == 2) {
+                    feedBack.setReplytime(i.get("replytime").toString());
+                    feedBack.setAnswer(i.get("answer").toString());
+                }
+                results.add(feedBack);
             }
             return results;
         }catch(Exception exception){

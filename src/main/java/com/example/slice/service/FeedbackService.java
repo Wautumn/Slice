@@ -25,7 +25,7 @@ public class FeedbackService {
         return feedbackDAO.findFeedbackById(id);
     }
 
-    public List<Integer> findFeedbackByUser(int userid){
+    public List<FeedBack> findFeedbackByUser(int userid){
         return feedbackDAO.findFeedbackByUser(userid);
     }
 

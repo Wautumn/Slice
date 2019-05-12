@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.slice.dao.FeedbackDAO;
 import com.example.slice.entity.FeedBack;
 import com.example.slice.service.FeedbackService;
+import com.example.slice.utility.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -19,13 +21,13 @@ public class FeedbackController {
     FeedbackService feedbackService;
 
     //Normal User
-    @RequestMapping(value = "/createFeedback", method = RequestMethod.POST)
+    @RequestMapping(value = "/addFeedback", method = RequestMethod.POST)
     @ResponseBody
     public int createFeedback(@RequestBody JSONObject jsonObject){
         String title = jsonObject.getString("title");
         String content = jsonObject.getString("content");
         int userid = jsonObject.getInteger("userid");
-        String settime = jsonObject.getString("settime");
+        String settime = DateUtil.getCurrentTime();
 
         FeedBack feedBack = new FeedBack();
         feedBack.setUserid(userid);
@@ -48,9 +50,9 @@ public class FeedbackController {
         return feedbackService.findFeedbackById(id);
     }
 
-    @RequestMapping(value = "/findFeedbackByUser", method = RequestMethod.GET)
+    @RequestMapping(value = "/feedbackList", method = RequestMethod.GET)
     @ResponseBody
-    public List<Integer> findFeedbackByUser(int userid){
+    public List<FeedBack> findFeedbackByUser(int userid){
         return feedbackService.findFeedbackByUser(userid);
     }
 
@@ -85,7 +87,7 @@ public class FeedbackController {
     }
 
     //Administrator
-    @RequestMapping(value = "/findAllFeedbackAdmin", method = RequestMethod.GET)
+    @RequestMapping(value = "/adminGetFeedback", method = RequestMethod.GET)
     @ResponseBody
     public List<FeedBack> findAllFeedback(){
         return feedbackService.findFeedback();
@@ -97,25 +99,25 @@ public class FeedbackController {
         return feedbackService.findFeedbackByStatus(status);
     }
 
-    @RequestMapping(value = "/replyFeedback", method = RequestMethod.POST)
+    @RequestMapping(value = "/handleFeedback", method = RequestMethod.POST)
     @ResponseBody
     public int replyFeedback(@RequestBody JSONObject jsonObject){
         int id = jsonObject.getInteger("id");
         String answer = jsonObject.getString("answer");
-        String replytime = jsonObject.getString("replytime");
+        String replytime = DateUtil.getCurrentTime();
 
         int real_status = feedbackService.getStatus(id);
         if(real_status == 2){
-            return 3;
+            return -1;
         }
 
         int result_a = feedbackService.setFeedbackAnswer(id, answer);
         if(result_a != 1){
-            return 2;
+            return -1;
         }
         int result_r = feedbackService.setFeedbackReplytime(id, replytime);
         if(result_r != 1){
-            return 2;
+            return -1;
         }
 
         int result_s = feedbackService.setFeedbackStatus(id, 2);

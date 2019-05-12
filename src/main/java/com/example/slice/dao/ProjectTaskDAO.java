@@ -25,8 +25,8 @@ public class ProjectTaskDAO {
 
     public int createProjectTask(ProjectTask projectTask){
         try{
-            String sql = "INSERT INTO project_task(name, description, starttime, endtime, projectid, userid)" +
-                    " VALUES(?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO project_task(name, description, starttime, endtime, projectid)" +
+                    " VALUES(?, ?, ?, ?, ?)";
             KeyHolder holder = new GeneratedKeyHolder();
             jdbcTemplate.update(new PreparedStatementCreator() {
                 @Override
@@ -37,7 +37,6 @@ public class ProjectTaskDAO {
                     ps.setString(3, projectTask.getStarttime());
                     ps.setString(4, projectTask.getEndtime());
                     ps.setInt(5, projectTask.getProjectid());
-                    ps.setInt(6, projectTask.getUserid());
                     return ps;
                 }
             }, holder);
@@ -161,10 +160,10 @@ public class ProjectTaskDAO {
             return -1;
         }
 
-        int result_u = setTaskUserid(id, userid);
-        if(result_u != 1){
-            return -1;
-        }
+//        int result_u = setTaskUserid(id, userid);
+//        if(result_u != 1){
+//            return -1;
+//        }
 
         return 1;
     }
@@ -185,9 +184,12 @@ public class ProjectTaskDAO {
         return setTaskContent(id, "endtime", endtime);
     }
 
-    public int setTaskUserid(int id, int userid){
+    public int setTaskUserid(int projectid, int taskid, String username){
         try{
-            int projectid = findProjectId(id);
+            Object[] params = new Object[]{username};
+            String sql_userid = "SELECT id FROM user WHERE username = ?";
+            int userid = jdbcTemplate.queryForObject(sql_userid, params, Integer.class);
+
             String sql = "SELECT userid FROM project_member WHERE projectid = " + projectid;
             List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql);
             ArrayList<Integer> results = new ArrayList<>();
@@ -197,18 +199,18 @@ public class ProjectTaskDAO {
             }
 
             if(!results.contains(userid)){
-                return 3;
+                return -1;
             }
             jdbcTemplate.update("UPDATE project_task SET userid = ? WHERE id = ?",
                     new PreparedStatementSetter() {
                         @Override
                         public void setValues(PreparedStatement preparedStatement) throws SQLException {
                             preparedStatement.setInt(1, userid);
-                            preparedStatement.setInt(2, id);
+                            preparedStatement.setInt(2, taskid);
                         }
                     });
         }catch (Exception exception){
-            return 2;
+            return -1;
         }
         return 1;
     }
@@ -242,6 +244,28 @@ public class ProjectTaskDAO {
             return 2;
         }
         return 1;
+    }
+
+    public List<Map<String, Object>> getDistributeTask(int projectid) {
+        try {
+            String sql = "SELECT * FROM project_task WHERE projectid = " + projectid;
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql);
+
+            for (Map<String, Object> i : rs) {
+                try {
+                    int userid = Integer.parseInt(i.get("userid").toString());
+                    String sql_username = "SELECT username FROM user WHERE id = " + userid;
+                    String username = jdbcTemplate.queryForObject(sql_username, String.class);
+                    i.put("username", username);
+                }catch(Exception exception){
+                    i.put("username", "");
+                }
+            }
+
+            return rs;
+        } catch (Exception exception) {
+            return null;
+        }
     }
 }
 

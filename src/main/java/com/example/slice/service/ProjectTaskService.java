@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProjectTaskService {
@@ -50,7 +51,11 @@ public class ProjectTaskService {
         return projectTaskDAO.setEndtime(id, endtime);
     }
 
-    public int setTaskUserid(int id, int userid){
-        return projectTaskDAO.setTaskUserid(id, userid);
+    public int setTaskUserid(int projectid, int taskid, String username){
+        return projectTaskDAO.setTaskUserid(projectid, taskid, username);
+    }
+
+    public List<Map<String, Object>> getDistributeTask(int projectid){
+        return projectTaskDAO.getDistributeTask(projectid);
     }
 }

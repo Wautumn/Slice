@@ -22,15 +22,15 @@ public class ProjectService {
 
     public List<Integer> findAllTasks(int projectid){return projectDAO.findAllTasks(projectid);}
 
-    public List<Integer> findProjectByUser(int userid){return projectDAO.findProjectByUser(userid);}
+    public List<Project> findProjectByUser(int userid){return projectDAO.findProjectByUser(userid);}
 
-    public List<Integer> findUserByProject(int projectid){return projectDAO.findUserByProject(projectid);}
+    public List<String> findUserByProject(int projectid){return projectDAO.findUserByProject(projectid);}
 
     public List<Integer> findProjectByName(String name){return projectDAO.findProjectByName(name);}
 
     public Project findProjectById(int id){return projectDAO.findProjectById(id);}
 
-    public List<Integer> findProjectAttend(int userid){return projectDAO.findProjectAttend(userid);}
+    public List<Project> findProjectAttend(int userid){return projectDAO.findProjectAttend(userid);}
 
     public int setProjectName(int id, String name){
         return projectDAO.setProjectName(id, name);

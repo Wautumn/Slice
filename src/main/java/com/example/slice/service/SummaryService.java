@@ -39,4 +39,8 @@ public class SummaryService {
     public List<Integer> findSummaryByUser(int userid){
         return summaryDAO.findSummaryByUser(userid);
     }
+
+    public int changeSummary(int id, String content, int score){
+        return summaryDAO.changeSummary(id, content, score);
+    }
 }

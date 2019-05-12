@@ -151,4 +151,21 @@ public class SummaryDAO {
             return null;
         }
     }
+
+    public int changeSummary(int id, String content, int score){
+        try{
+            jdbcTemplate.update("UPDATE summary SET content = ?, score = ? WHERE id = ?",
+                    new PreparedStatementSetter() {
+                        @Override
+                        public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                            preparedStatement.setString(1, content);
+                            preparedStatement.setInt(2, score);
+                            preparedStatement.setInt(3, id);
+                        }
+                    });
+        }catch (Exception exception){
+            return -1;
+        }
+        return 1;
+    }
 }

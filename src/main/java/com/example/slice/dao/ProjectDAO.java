@@ -113,15 +113,25 @@ public class ProjectDAO {
         return 1;
     }
 
-    public List<Integer> findProjectByUser(int userid){
+    public List<Project> findProjectByUser(int userid){
         try{
             Object[] params = new Object[]{userid};
-            String sql = "SELECT id FROM project WHERE userid = ?";
+            String sql = "SELECT * FROM project WHERE userid = ?";
+
             List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
-            ArrayList<Integer> results = new ArrayList<>();
+            ArrayList<Project> results = new ArrayList<>();
 
             for(Map<String, Object> i : rs){
-                results.add(Integer.parseInt(i.get("id").toString()));
+                Project project = new Project();
+                project.setId(Integer.parseInt(i.get("id").toString()));
+                project.setName(i.get("name").toString());
+                project.setDescription(i.get("description").toString());
+                project.setStarttime(i.get("starttime").toString());
+                project.setEndtime(i.get("endtime").toString());
+                project.setUserid(Integer.parseInt(i.get("userid").toString()));
+                project.setStatus(Integer.parseInt(i.get("status").toString()));
+
+                results.add(project);
             }
 
             return results;
@@ -130,17 +140,26 @@ public class ProjectDAO {
         }
     }
 
-    public List<Integer> findProjectAttend(int userid){
+    public List<Project> findProjectAttend(int userid){
         try{
             Object[] params = new Object[]{userid};
-            String sql = "SELECT projectid FROM project_member WHERE userid = ? " +
-                    "AND userid NOT IN (SELECT userid FROM project WHERE project.id = project_member.projectid)";
+            String sql = "SELECT * FROM project WHERE id in (SELECT id FROM project_member WHERE userid = ? " +
+                    "AND userid NOT IN (SELECT userid FROM project WHERE project.id = project_member.projectid))";
 
             List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
-            ArrayList<Integer> results = new ArrayList<>();
+            ArrayList<Project> results = new ArrayList<>();
 
             for(Map<String, Object> i : rs){
-                results.add(Integer.parseInt(i.get("projectid").toString()));
+                Project project = new Project();
+                project.setId(Integer.parseInt(i.get("id").toString()));
+                project.setName(i.get("name").toString());
+                project.setDescription(i.get("description").toString());
+                project.setStarttime(i.get("starttime").toString());
+                project.setEndtime(i.get("endtime").toString());
+                project.setUserid(Integer.parseInt(i.get("userid").toString()));
+                project.setStatus(Integer.parseInt(i.get("status").toString()));
+
+                results.add(project);
             }
 
             return results;
@@ -149,15 +168,15 @@ public class ProjectDAO {
         }
     }
 
-    public List<Integer> findUserByProject(int projectid){
+    public List<String> findUserByProject(int projectid){
         try{
             Object[] params = new Object[]{projectid};
-            String sql = "SELECT userid FROM project_member WHERE projectid = ?";
+            String sql = "SELECT username FROM user WHERE id IN (SELECT userid FROM project_member WHERE projectid = ?)";
             List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
-            ArrayList<Integer> results = new ArrayList<>();
+            ArrayList<String> results = new ArrayList<>();
 
             for(Map<String, Object> i : rs){
-                results.add(Integer.parseInt(i.get("userid").toString()));
+                results.add(i.get("username").toString());
             }
 
             return results;

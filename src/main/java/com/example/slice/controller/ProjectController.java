@@ -64,7 +64,7 @@ public class ProjectController {
         return projectService.addMembers(projectid, mem_name);
     }
 
-    @RequestMapping(value ="/addSubTasks", method = RequestMethod.POST)
+    @RequestMapping(value ="/addSubTask", method = RequestMethod.POST)
     @ResponseBody
     public int addTasks(@RequestBody JSONObject jsonObject){
         int projectid = jsonObject.getInteger("projectid");
@@ -93,23 +93,23 @@ public class ProjectController {
     }
 
     //查找用户创建的项目
-    @RequestMapping(value="/findProjectByUser", method = RequestMethod.GET)
+    @RequestMapping(value="/getCreatedProject", method = RequestMethod.GET)
     @ResponseBody
-    public List<Integer> findProjectByUser(int userid){
+    public List<Project> findProjectByUser(int userid){
         return projectService.findProjectByUser(userid);
     }
 
     //查找项目成员
-    @RequestMapping(value="/findUserByProject", method = RequestMethod.GET)
+    @RequestMapping(value="/getProjectUser", method = RequestMethod.GET)
     @ResponseBody
-    public List<Integer> findUserByProject(int projectid){
+    public List<String> findUserByProject(int projectid){
         return projectService.findUserByProject(projectid);
     }
 
     //查找用户参与的项目（不含创建）
-    @RequestMapping(value = "/findProjectAttend", method = RequestMethod.GET)
+    @RequestMapping(value = "/getJoinedProject", method = RequestMethod.GET)
     @ResponseBody
-    public List<Integer> findProjectAttend(int userid){
+    public List<Project> findProjectAttend(int userid){
         return projectService.findProjectAttend(userid);
     }
 

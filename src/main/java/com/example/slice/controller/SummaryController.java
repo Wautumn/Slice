@@ -3,6 +3,7 @@ package com.example.slice.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.slice.entity.Summary;
 import com.example.slice.service.SummaryService;
+import com.example.slice.utility.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,13 +18,14 @@ public class SummaryController {
     @Autowired
     private SummaryService summaryService;
 
-    @RequestMapping(value = "/createSummary", method = RequestMethod.POST)
+    @RequestMapping(value = "/writeSummary", method = RequestMethod.POST)
     @ResponseBody
     public int createSummary(@RequestBody JSONObject jsonObject){
         int userid = jsonObject.getInteger("userid");
-        String date = jsonObject.getString("date");
         int score = jsonObject.getInteger("score");
         String content = jsonObject.getString("content");
+
+        String date = DateUtil.getCurrentDate();
 
         Summary summary = new Summary();
         summary.setUserid(userid);
@@ -37,6 +39,16 @@ public class SummaryController {
     @ResponseBody
     public int deleteSummary(int id){
         return summaryService.deleteSummary(id);
+    }
+
+    @RequestMapping(value = "/changeSummary", method = RequestMethod.POST)
+    @ResponseBody
+    public int changeSummary(@RequestBody JSONObject jsonObject){
+        int id = jsonObject.getInteger("id");
+        String content = jsonObject.getString("content");
+        int score = jsonObject.getInteger("score");
+
+        return summaryService.changeSummary(id, content, score);
     }
 
     @RequestMapping(value = "/setSummaryContent", method = RequestMethod.GET)

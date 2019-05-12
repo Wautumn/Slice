@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ProjectTaskController {
     @Autowired
     ProjectTaskService projectTaskService;
 
-    @RequestMapping(value = "/createProjectTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/addSubTasks", method = RequestMethod.POST)
     @ResponseBody
     public int createProjectTask(@RequestBody JSONObject jsonObject){
         ProjectTask projectTask = new ProjectTask();
@@ -27,14 +28,13 @@ public class ProjectTaskController {
         String starttime = jsonObject.getString("starttime");
         String endtime = jsonObject.getString("endtime");
         int projectid = jsonObject.getInteger("projectid");
-        int userid = jsonObject.getInteger("userid");
+
 
         projectTask.setName(name);
         projectTask.setDescription(description);
         projectTask.setStarttime(starttime);
         projectTask.setEndtime(endtime);
         projectTask.setProjectid(projectid);
-        projectTask.setUserid(userid);
 
         return projectTaskService.createProjectTask(projectTask);
     }
@@ -105,9 +105,15 @@ public class ProjectTaskController {
         return projectTaskService.setTaskEndtime(id, endtime);
     }
 
-    @RequestMapping(value = "/setTaskUserid", method = RequestMethod.GET)
+    @RequestMapping(value = "/distributeTask", method = RequestMethod.GET)
     @ResponseBody
-    public int setTaskUserid(int id, int userid){
-        return projectTaskService.setTaskUserid(id, userid);
+    public int setTaskUserid(int projectid, int taskid, String username){
+        return projectTaskService.setTaskUserid(projectid, taskid, username);
+    }
+
+    @RequestMapping(value = "/getDistributeTask", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Map<String, Object>> getDistributeTask(int projectid){
+        return projectTaskService.getDistributeTask(projectid);
     }
 }
