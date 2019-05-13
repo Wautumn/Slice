@@ -2,6 +2,7 @@ package com.example.slice.service;
 
 import com.example.slice.dao.SummaryDAO;
 import com.example.slice.entity.Summary;
+import com.example.slice.utility.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +43,10 @@ public class SummaryService {
 
     public int changeSummary(int id, String content, int score){
         return summaryDAO.changeSummary(id, content, score);
+    }
+
+    public Summary findSummaryToday(int userid){
+        String date = DateUtil.getCurrentDate();
+        return summaryDAO.findSummary(userid, date);
     }
 }

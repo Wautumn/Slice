@@ -2,6 +2,7 @@ package com.example.slice.dao;
 
 import com.example.slice.entity.Summary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -23,8 +24,23 @@ public class SummaryDAO {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    public int summaryExists(int userid, String date){
+        try {
+            Object[] params = new Object[]{userid, date};
+            String pre_sql = "SELECT id FROM summary WHERE userid = ? AND date = ?";
+            int pre_id = jdbcTemplate.queryForObject(pre_sql, params, Integer.class);
+
+            return pre_id;
+        }catch (Exception exception){
+            return -1;
+        }
+    }
     public int createSummary(Summary summary){
         try{
+            int pre_id = summaryExists(summary.getUserid(), summary.getDate());
+            if(pre_id != -1){
+                return -2;
+            }
             String sql = "INSERT INTO summary(userid, score, date, content) VALUES(?, ?, ?, ?)";
             KeyHolder holder = new GeneratedKeyHolder();
             jdbcTemplate.update(new PreparedStatementCreator() {

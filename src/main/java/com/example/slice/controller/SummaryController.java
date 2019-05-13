@@ -81,4 +81,9 @@ public class SummaryController {
         return summaryService.findSummaryByUser(userid);
     }
 
+    @RequestMapping(value = "/getTodaysSummary", method = RequestMethod.GET)
+    @ResponseBody
+    public Summary findSummaryToday(int userid){
+        return summaryService.findSummaryToday(userid);
+    }
 }
