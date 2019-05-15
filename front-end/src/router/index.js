@@ -64,12 +64,10 @@ routes.push({
   component: () => import(`@/components/FeedList`),
 })
 
-
-
 routes.push({
   path: `/Admin`,
-  name: 'FeedHandle',
-  component: () => import(`@/components/AdminFeedHandle`),
+  name: 'Admin',
+  component: () => import(`@/components/Admin`),
 })
 
 routes.push({
@@ -77,6 +75,7 @@ routes.push({
   name: 'MonthView',
   component: () => import(`@/components/MonthView1`),
 })
+
 routes.push({
   path: `/Project`,
   name: 'Project',
@@ -93,6 +92,14 @@ routes.push({
   path: `/AnalyHis`,
   name: 'AnalyHis',
   component: () => import(`@/components/AnalyHis`),
+
+
+})
+
+routes.push({
+  path: `/TodoList`,
+  name: 'TodoList',
+  component: () => import(`@/components/TodoList`),
 })
 
 export default new Router({

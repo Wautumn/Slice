@@ -22,7 +22,7 @@ var nowTime = now.format("yyyy-MM-dd");//当前日期
 var monthAgo = now.format("yyyy-MM") + "-01";//当月1日
 var monthStart = new Date(monthAgo);//当月1日
 
-const historyurl = "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/getTasksByUserid";
+const historyurl = "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTasksByUserid";
 
 export default {
   data() {
@@ -129,19 +129,24 @@ export default {
         // let date = item.settime;
         // let dayEvents = item.tempResult;
         // for (let j = 0; j < dayEvents.length; j++) {
-          let css;
+          let ccolor;
+          console.log("status")
+          console.log(item.status)
           switch (item.status) {
-            case 0:
-              css = "waiting";
-              break;
-            case -1:
-              css = "abandoned";
-              break;
             case 1:
-              css = "running";
+              ccolor ="yellow"; //"waiting";
+              break;
+            case 4:
+              ccolor ="red";// "abandoned";
               break;
             case 2:
-              css = "completed";
+              ccolor = "green";//"running";
+              break;
+            case 3:
+              ccolor = "blue";//"completed";
+              break;
+            case 5:
+              ccolor = "black";//"break";
               break;
             default:
               break;
@@ -152,7 +157,7 @@ export default {
             start: item.starttime,
             title: item.name,
             end:item.finishtime,
-            cssClass: css
+            color: ccolor
           });
        // }
       }

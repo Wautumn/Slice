@@ -84,7 +84,7 @@
 </el-row>
 
         <el-footer height="60px" style="margin-top: 30px;">
-          <h1>每日小结 {{getcurrentTime}}</h1>
+          <h1>每日小结</h1>
           <Rate show-text allow-half v-model="selfRating">
             <span style="color: #f5a632">{{selfRating}}</span>
           </Rate>
@@ -92,8 +92,16 @@
             type="textarea"
             v-model="dailySummary"
             style="margin-top: 10px; margin-bottom:10px;"
-          ></el-input>
-          <el-button type="primary" @click="saveDailySummary" style="float: right;">提交</el-button>
+          >
+          </el-input>
+            <!-- <el-button
+            type="warning"
+            v-show="!currentSummaryCondition"
+            :disabled="!summaryCountOn"
+            @click="changeSummary"
+          >修改
+          </el-button> -->
+          <el-button type="primary" @click="saveDailySummary" style="float: right;">{{currentSummaryText}}</el-button>
         </el-footer>
       </el-main>
     </el-container>
@@ -128,11 +136,13 @@
         endfinish3: 0,//second
         endfinish4: 0,//hour
 
+        currentSummaryText:"提交",
         tomoStartTime: "",
         dailySummary: "",
         selfRating: 0,
         countButtonType: "success",
         countOn: false,
+        summaryCountOn: false,
         selected: false,
         selectCancel: false,
         count: "0",
@@ -147,10 +157,12 @@
         currentFinishedPomo: null,
         currentTotalPomo: null,
         currentCondition: false,
+        currentSummaryCondition: false,
         currentStatus: -2,
         currentDeadline: null,
         currentStarttime: null,
         taskData: [],
+        currentSummaryId:null,
         // taskRequestUrl: "http://localhost:8080/task/getTask",
         // taskStartUrl: "http://localhost:8080/task/startTask",
         // tomatoStartUrl: "http://localhost:8080/startTomato",
@@ -162,17 +174,20 @@
         // endTaskUrl: "http://localhost:8080/task/endTask",
         // dailySummaryUrl: "http://localhost:8080/summary/save",
 
-        taskRequestUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/getTodayTasksByUserid",
-        deleteTaskUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/deleteTask",
+        taskRequestUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTodayTasksByUserid",
+        deleteTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/deleteTask",
+        dailySummaryUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/writeSummary",
+        summaryRequestUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTodaysSummary",
+        changeDailySummaryUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/changeSummary",
 
-        taskStartUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/task/startTask",
-        tomatoStartUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/startTomato",
-        tomatoBreakUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/breakTomato",
-        tomatoEndUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/endTomato",
-        modifyTaskUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/changeTaskDescription",
-        breakTaskUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/task/breakTask",
-        endTaskUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/task/endTask",
-        dailySummaryUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/summary/save"
+        taskStartUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/task/startTask",
+        tomatoStartUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/startTomato",
+        tomatoBreakUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/breakTomato",
+        tomatoEndUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/endTomato",
+        modifyTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/changeTaskDescription",
+        breakTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/task/breakTask",
+        endTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/task/endTask",
+    
       };
     },
     //加载
@@ -204,7 +219,7 @@
 
       sessionStorage.listLock = "false";
       console.log(this.getcurrentTime);
-
+      this.getSummary();
 
     },
     methods: {
@@ -575,16 +590,20 @@
         return this.dateFtt("yyyy-MM-dd hh:mm:ss", time);
       },
       saveDailySummary() {
-        this.$http
-          .get(this.dailySummaryUrl, {
-            params: {
-              userid: sessionStorage.userId,
+        if(this.currentSummaryText=="提交")
+        {
+          this.$http
+          .post(this.dailySummaryUrl, {
+          
+              // userid: sessionStorage.userId,
+              userid:"8",
               content: this.dailySummary,
-              time: this.getcurrentTime,
-              selfRating: this.selfRating
-            }
-          })
-          .then(() => {
+              // date: this.getcurrentTime,
+              score: this.selfRating
+            
+          },)
+          .then(response => {
+            this.currentSummaryId=response.data
             this.$http
               .get(this.taskRequestUrl, {
                 params: {userid: sessionStorage.userId}
@@ -593,7 +612,7 @@
                 this.taskData = response.data;
                 var nlist = [];
                 for (var item of this.taskData) {
-                  if (item.deadline >= this.getcurrentTime) nlist.push(item);
+                   nlist.push(item);
                 }
                 this.taskData = nlist;
                 this.$message({
@@ -605,6 +624,67 @@
                 console.log(failed);
               };
           });
+        }
+        else{
+          this.changeSummary()
+        }
+      },
+      changeSummary(){
+        this.$http
+          .post(this.changeDailySummaryUrl, {
+          
+            
+              id:this.currentSummaryId,
+              content: this.dailySummary,
+              score: this.selfRating
+            
+          },)
+          .then(() => {
+            this.$http
+              .get(this.taskRequestUrl, {
+                params: {userid: sessionStorage.userId}
+              })
+              .then(response => {
+                this.taskData = response.data;
+                var nlist = [];
+                for (var item of this.taskData) {
+                   nlist.push(item);
+                }
+                this.taskData = nlist;
+                this.$message({
+                  message: "保存成功！",
+                  type: "success"
+                });
+              }),
+              response => {
+                console.log(failed);
+              };
+          });
+
+      },
+      getSummary(){
+          this.$http
+              .get(this.summaryRequestUrl, {
+                params: {userid:8}
+              })
+              .then(response => {
+                //如果有小结
+                console.log("summary")
+                if(response.data)
+                {
+                  this.currentSummaryText="修改"
+                  this.dailySummary=response.data.content
+                  this.selfRating=response.data.score
+                  this.currentSummaryId=response.data.id
+                }
+                else{
+                this.currentSummaryText="提交"
+                }
+                //设置按钮状态
+              }),
+              response => {
+                console.log(failed);
+              };      
       }
     }
   };
