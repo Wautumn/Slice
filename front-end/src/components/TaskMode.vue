@@ -10,11 +10,11 @@
          <el-col :span="12">
 
         <div style="text-align: center">
-          <strong
-            style="font-size: 20px; line-height: 200px; color: #409eff"
-          >当前时间：{{date.format("yyyy-MM-dd hh:mm:ss")}}</strong>
+          <div
+            style="font-size: 15px; line-height: 100px; color: slategrey;"
+          >当前时间：{{date.format("yyyy-MM-dd hh:mm:ss")}}</div>
+          <clock :time="clocktime"></clock>
           <br>
-
           <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left" v-if="ifstart==0">距离任务开始:
             {{endstart1}}天 {{endstart2}}时 {{endstart3}}分 {{endstart4}}秒</strong>
           <strong style="font-size: 20px;line-height: 80px; color: slategrey ;text-align: left" v-if="ifstart==1">距离任务结束:
@@ -115,14 +115,17 @@
   import {setInterval} from "timers";
   import TaskList from "@/components/TaskList";
   import TodoList from "@/components/TodoList"
+  import Clock from 'vue-clock2';
   export default {
     components: {
       tasklist: TaskList,
-      todolist:TodoList
+      todolist:TodoList,
+      Clock
     },
     data() {
       return {
         date: new Date(),
+        // clocktime:null,
         ifstart: 0,
         endstart: null,//未开始任务，距离任务开始时间
         endstart1: null,//day
@@ -198,6 +201,7 @@
 
 
       }, 1000);
+
 
 
       sessionStorage.userId = "1";

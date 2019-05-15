@@ -20,11 +20,31 @@ public class ProjectService {
 
     public int addTasks(int projectid, String[] tasks){return projectDAO.addTasks(projectid, tasks);}
 
-    public List<Integer> findProjectByUser(int userid){return projectDAO.findProjectByUser(userid);}
+    public List<Integer> findAllTasks(int projectid){return projectDAO.findAllTasks(projectid);}
 
-    public List<Integer> findUserByProject(int projectid){return projectDAO.findUserByProject(projectid);}
+    public List<Project> findProjectByUser(int userid){return projectDAO.findProjectByUser(userid);}
 
-    public Project findProjectByName(String name){return projectDAO.findProjectByName(name);}
+    public List<String> findUserByProject(int projectid){return projectDAO.findUserByProject(projectid);}
+
+    public List<Integer> findProjectByName(String name){return projectDAO.findProjectByName(name);}
 
     public Project findProjectById(int id){return projectDAO.findProjectById(id);}
+
+    public List<Project> findProjectAttend(int userid){return projectDAO.findProjectAttend(userid);}
+
+    public int setProjectName(int id, String name){
+        return projectDAO.setProjectName(id, name);
+    }
+
+    public int setProjectDescription(int id, String description){
+        return projectDAO.setProjectDescription(id, description);
+    }
+
+    public int setProjectStarttime(int id, String starttime){
+        return projectDAO.setStarttime(id, starttime);
+    }
+
+    public int setProjectEndtime(int id, String endtime){
+        return projectDAO.setEndtime(id, endtime);
+    }
 }

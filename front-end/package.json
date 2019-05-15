@@ -19,9 +19,11 @@
     "iview": "^3.1.5",
     "v-charts": "^1.19.0",
     "vue": "^2.5.2",
+    "vue-clock2": "^1.1.5",
     "vue-fullcalendar": "^1.0.9",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
+    "vuejs-dialog": "^1.4.0",
     "vuex": "^3.0.1",
     "webpack-dev-server": "^2.11.5"
   },

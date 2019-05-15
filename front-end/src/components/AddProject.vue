@@ -28,12 +28,35 @@
       </el-form-item>
 
       <el-form-item label="子任务">
+        <el-row :span="24">
+          <el-form-item label="子任务名称：">
+            <el-input v-model="form.name"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row :span="24">
+          <el-form-item label="子任务描述：">
+            <el-input v-model="form.name"></el-input>
+          </el-form-item>
+        </el-row>
+        <!--<el-col class="line" :span="2">-</el-col>-->
+        <el-form-item label="开始时间">
+          <el-row :span="11">
+            <el-date-picker type="datetime" placeholder="选择时间" v-model="form.starttime" style="width: 100%;"
+                            value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          </el-row>
+        </el-form-item>
+        <el-form-item label="结束时间">
+          <el-row :span="11">
+            <el-date-picker type="datetime" placeholder="选择时间" v-model="form.starttime" style="width: 100%;"
+                            value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          </el-row>
+        </el-form-item>
+        <!--<el-col :span="12">结束时间-->
+          <!--<el-date-picker type="datetime" placeholder="选择时间" v-model="form.starttime" style="width: 100%;"-->
+                          <!--value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
+        <!--</el-col>-->
         <el-col :span="11">
-          <el-input v-model="nowsubtask" clearable></el-input>
-        </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-button @click="addsubtask">添加</el-button>
+          <el-button @click="addsubtask">确认添加</el-button>
         </el-col>
       </el-form-item>
 
@@ -76,11 +99,11 @@
     name: "addProject",
     data() {
       return {
-        userid: 1,
+        userid: 10,
         nowpeople: '',
         nowsubtask: '',
-        newprojecturl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT//createProject",
-        fingpeopleurl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/findUserid",
+        newprojecturl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//createProject",
+        fingpeopleurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findUserid",
         joinerid: [],
         addpeopleresult: 0,
         form: {

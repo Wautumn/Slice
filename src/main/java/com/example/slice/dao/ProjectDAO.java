@@ -113,10 +113,82 @@ public class ProjectDAO {
         return 1;
     }
 
-    public List<Integer> findProjectByUser(int userid){
+    public List<Project> findProjectByUser(int userid){
         try{
             Object[] params = new Object[]{userid};
-            String sql = "SELECT id FROM project WHERE userid = ?";
+            String sql = "SELECT * FROM project WHERE userid = ?";
+
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<Project> results = new ArrayList<>();
+
+            for(Map<String, Object> i : rs){
+                Project project = new Project();
+                project.setId(Integer.parseInt(i.get("id").toString()));
+                project.setName(i.get("name").toString());
+                project.setDescription(i.get("description").toString());
+                project.setStarttime(i.get("starttime").toString());
+                project.setEndtime(i.get("endtime").toString());
+                project.setUserid(Integer.parseInt(i.get("userid").toString()));
+                project.setStatus(Integer.parseInt(i.get("status").toString()));
+
+                results.add(project);
+            }
+
+            return results;
+        }catch (Exception exception){
+            return null;
+        }
+    }
+
+    public List<Project> findProjectAttend(int userid){
+        try{
+            Object[] params = new Object[]{userid};
+            String sql = "SELECT * FROM project WHERE id in (SELECT id FROM project_member WHERE userid = ? " +
+                    "AND userid NOT IN (SELECT userid FROM project WHERE project.id = project_member.projectid))";
+
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<Project> results = new ArrayList<>();
+
+            for(Map<String, Object> i : rs){
+                Project project = new Project();
+                project.setId(Integer.parseInt(i.get("id").toString()));
+                project.setName(i.get("name").toString());
+                project.setDescription(i.get("description").toString());
+                project.setStarttime(i.get("starttime").toString());
+                project.setEndtime(i.get("endtime").toString());
+                project.setUserid(Integer.parseInt(i.get("userid").toString()));
+                project.setStatus(Integer.parseInt(i.get("status").toString()));
+
+                results.add(project);
+            }
+
+            return results;
+        }catch (Exception exception){
+            return null;
+        }
+    }
+
+    public List<String> findUserByProject(int projectid){
+        try{
+            Object[] params = new Object[]{projectid};
+            String sql = "SELECT username FROM user WHERE id IN (SELECT userid FROM project_member WHERE projectid = ?)";
+            List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
+            ArrayList<String> results = new ArrayList<>();
+
+            for(Map<String, Object> i : rs){
+                results.add(i.get("username").toString());
+            }
+
+            return results;
+        }catch (Exception exception){
+            return null;
+        }
+    }
+
+    public List<Integer> findAllTasks(int projectid){
+        try{
+            Object[] params = new Object[]{projectid};
+            String sql = "SELECT id FROM project_task WHERE projectid = ?";
             List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
             ArrayList<Integer> results = new ArrayList<>();
 
@@ -130,42 +202,18 @@ public class ProjectDAO {
         }
     }
 
-    public List<Integer> findUserByProject(int projectid){
+    public List<Integer> findProjectByName(String name){
         try{
-            Object[] params = new Object[]{projectid};
-            String sql = "SELECT userid FROM project_member WHERE projectid = ?";
+            Object[] params = new Object[]{"%" + name + "%"};
+            String sql = "SELECT id FROM project WHERE name LIKE ?";
             List<Map<String, Object>> rs = jdbcTemplate.queryForList(sql, params);
             ArrayList<Integer> results = new ArrayList<>();
 
             for(Map<String, Object> i : rs){
-                results.add(Integer.parseInt(i.get("userid").toString()));
+                results.add(Integer.parseInt(i.get("id").toString()));
             }
 
             return results;
-        }catch (Exception exception){
-            return null;
-        }
-    }
-
-    public Project findProjectByName(String name){
-        try{
-            Object[] params = new Object[]{name};
-            String sql = "SELECT * FROM project WHERE name = ?";
-            Project project = jdbcTemplate.queryForObject(sql, params, new RowMapper<Project>() {
-                @Override
-                public Project mapRow(ResultSet resultSet, int i) throws SQLException {
-                    Project project = new Project();
-                    project.setId(resultSet.getInt("id"));
-                    project.setName(resultSet.getString("name"));
-                    project.setDescription(resultSet.getString("description"));
-                    project.setUserid(resultSet.getInt("userid"));
-                    project.setStarttime(resultSet.getString("starttime"));
-                    project.setEndtime(resultSet.getString("endtime"));
-                    project.setStatus(resultSet.getInt("status"));
-                    return project;
-                }
-            });
-            return project;
         }catch (Exception exception){
             return null;
         }
@@ -193,6 +241,53 @@ public class ProjectDAO {
         }catch (Exception exception){
             return null;
         }
+    }
+
+    public int setProjectName(int id, String name){
+        return setProjectContent(id, "name", name);
+    }
+
+    public int setProjectDescription(int id, String description){
+        return setProjectContent(id, "description", description);
+    }
+
+    public int setStarttime(int id, String starttime){
+        return setProjectContent(id, "starttime", starttime);
+    }
+
+    public int setEndtime(int id, String endtime){
+        return setProjectContent(id, "endtime", endtime);
+    }
+
+    private int setProjectContent(int id, String attribute, String content){
+        String sql = "";
+        switch (attribute){
+            case "name":
+                sql = "UPDATE project SET name = ? WHERE id = ?";
+                break;
+            case "description":
+                sql = "UPDATE project SET description = ? WHERE id = ?";
+                break;
+            case "starttime":
+                sql = "UPDATE project SET starttime = ? WHERE id = ?";
+                break;
+            case "endtime":
+                sql = "UPDATE project SET endtime = ? WHERE id = ?";
+                break;
+        }
+        try{
+            jdbcTemplate.update(sql,
+                    new PreparedStatementSetter() {
+                        @Override
+                        public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                            preparedStatement.setString(1, content);
+                            preparedStatement.setInt(2, id);
+                        }
+                    });
+        }catch (Exception exception){
+            return 2;
+        }
+        return 1;
     }
 }
 

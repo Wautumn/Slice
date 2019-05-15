@@ -2,12 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Menus from '@/config/header-config'
 import menus from '@/config/menu-config'
+import ProjectDetail from "../components/ProjectDetail";
 
 Vue.use(Router)
 
 var routes = [];
 var croutes = [];
-
 
 
 Menus.forEach(element => {
@@ -64,10 +64,23 @@ routes.push({
   component: () => import(`@/components/FeedList`),
 })
 
+// routes.push({
+//   path: `/Admin`,
+//   name: 'Admin',
+//   component: () => import(`@/components/Admin`),
+
 routes.push({
   path: `/Admin`,
   name: 'Admin',
   component: () => import(`@/components/Admin`),
+  // path: `/Admin`,
+  // name: 'FeedHandle',
+  // component: () => import(`@/components/AdminFeedHandle`),
+  children:[{
+    path:'detail',
+    name:'detail',
+    component:ProjectDetail,
+  }]
 })
 
 routes.push({

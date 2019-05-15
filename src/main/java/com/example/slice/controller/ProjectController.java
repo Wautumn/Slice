@@ -64,7 +64,7 @@ public class ProjectController {
         return projectService.addMembers(projectid, mem_name);
     }
 
-    @RequestMapping(value ="/addSubTasks", method = RequestMethod.POST)
+    @RequestMapping(value ="/addSubTask", method = RequestMethod.POST)
     @ResponseBody
     public int addTasks(@RequestBody JSONObject jsonObject){
         int projectid = jsonObject.getInteger("projectid");
@@ -74,21 +74,15 @@ public class ProjectController {
         return projectService.addTasks(projectid, task_name);
     }
 
-    @RequestMapping(value="/findProjectByUser", method = RequestMethod.GET)
+    @RequestMapping(value = "/findAllSubTasks", method = RequestMethod.GET)
     @ResponseBody
-    public List<Integer> findProjectByUser(int userid){
-        return projectService.findProjectByUser(userid);
-    }
-
-    @RequestMapping(value="/findUserByProject", method = RequestMethod.GET)
-    @ResponseBody
-    public List<Integer> findUserByProject(int projectid){
-        return projectService.findUserByProject(projectid);
+    public List<Integer> findAllTasks(int projectid){
+        return projectService.findAllTasks(projectid);
     }
 
     @RequestMapping(value = "/findProjectByName", method = RequestMethod.GET)
     @ResponseBody
-    public Project findProjectByName(String name) {
+    public List<Integer> findProjectByName(String name) {
         return projectService.findProjectByName(name);
     }
 
@@ -96,5 +90,50 @@ public class ProjectController {
     @ResponseBody
     public Project findProjectById(int id){
         return projectService.findProjectById(id);
+    }
+
+    //查找用户创建的项目
+    @RequestMapping(value="/getCreatedProject", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Project> findProjectByUser(int userid){
+        return projectService.findProjectByUser(userid);
+    }
+
+    //查找项目成员
+    @RequestMapping(value="/getProjectUser", method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> findUserByProject(int projectid){
+        return projectService.findUserByProject(projectid);
+    }
+
+    //查找用户参与的项目（不含创建）
+    @RequestMapping(value = "/getJoinedProject", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Project> findProjectAttend(int userid){
+        return projectService.findProjectAttend(userid);
+    }
+
+    @RequestMapping(value = "/setProjectName", method = RequestMethod.GET)
+    @ResponseBody
+    public int setProjectName(int id, String name){
+        return projectService.setProjectName(id, name);
+    }
+
+    @RequestMapping(value = "/setProjectDescription", method = RequestMethod.GET)
+    @ResponseBody
+    public int setProjectDescription(int id, String description){
+        return projectService.setProjectDescription(id, description);
+    }
+
+    @RequestMapping(value = "/setProjectStarttime", method = RequestMethod.GET)
+    @ResponseBody
+    public int setProjectStarttime(int id, String starttime){
+        return projectService.setProjectStarttime(id, starttime);
+    }
+
+    @RequestMapping(value = "/setProjectEndtime", method = RequestMethod.GET)
+    @ResponseBody
+    public int setProjectEndtime(int id, String endtime){
+        return projectService.setProjectEndtime(id, endtime);
     }
 }
