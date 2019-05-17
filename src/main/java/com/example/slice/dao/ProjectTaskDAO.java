@@ -199,7 +199,7 @@ public class ProjectTaskDAO {
             }
 
             if(!results.contains(userid)){
-                return -1;
+                return -2;
             }
             jdbcTemplate.update("UPDATE project_task SET userid = ? WHERE id = ?",
                     new PreparedStatementSetter() {
