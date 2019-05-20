@@ -44,7 +44,7 @@
     data() {
 
       return {
-        getArticleurl:"http://101.132.194.45:8081//slice-0.0.1-SNAPSHOT//getArticle",
+        getArticleurl: "http://101.132.194.45:8081//slice-0.0.1-SNAPSHOT//getArticle",
 
 
         article: {
@@ -52,7 +52,7 @@
           title: "title",
           intro: "intro",
           author: "author",
-          pic:"",
+          pic: "",
         },
         articles: [],
         showArticles: [],
@@ -93,16 +93,16 @@
       this.userID = sessionStorage.userId;
       for (var i = 0; i < 20; i++) {
 
-      this.articles.push(this.article)
-    }
+        this.articles.push(this.article)
+      }
       // Lambda写法
       this.$http
         .get(this.getArticleurl, {
-          params: { userid: this.userid }
+          params: {userid: this.userid}
         })
         .then(
           res => {
-            this.articles=res.data
+            this.articles = res.data
             console.log(this.articles)
             // 响应成功回调
             // var returnData = res.body;
