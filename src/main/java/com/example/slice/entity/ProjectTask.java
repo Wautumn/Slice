@@ -9,6 +9,7 @@ public class ProjectTask {
     private int projectid;
     private int userid;
     private int status;
+    private String changetime;
 
     public int getId() {
         return id;
@@ -72,5 +73,13 @@ public class ProjectTask {
 
     public void setUserid(int userid) {
         this.userid = userid;
+    }
+
+    public String getChangetime() {
+        return changetime;
+    }
+
+    public void setChangetime(String changetime){
+        this.changetime = changetime;
     }
 }

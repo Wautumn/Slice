@@ -5,6 +5,7 @@ import com.example.slice.entity.ProjectTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,5 +58,33 @@ public class ProjectTaskService {
 
     public List<Map<String, Object>> getDistributeTask(int projectid){
         return projectTaskDAO.getDistributeTask(projectid);
+    }
+
+    public List<ProjectTask> getTodaysTasks(int userid){
+        return projectTaskDAO.getTodaysTasks(userid);
+    }
+
+    public List<ProjectTask> getAllProjectTask(int userid){
+        return projectTaskDAO.getAllProjectTask(userid);
+    }
+
+    public int startTask(int taskid){
+        return projectTaskDAO.startTask(taskid);
+    }
+
+    public int finishTask(int taskid, String time){
+        return projectTaskDAO.finishTask(taskid, time);
+    }
+
+    public int discardTask(int taskid, String time){
+        return projectTaskDAO.discardTask(taskid, time);
+    }
+
+    public int delayTask(int taskid){
+        return projectTaskDAO.delayTask(taskid);
+    }
+
+    public HashMap<String, HashMap<String, Integer>> getData(int userid, String s, String e){
+        return projectTaskDAO.getData(userid, s, e);
     }
 }

@@ -19,6 +19,16 @@ public class DateUtil {
         return dateStr;
     }
 
+    public static String dateToString(Date date){
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        return dateStr;
+    }
+
+    public static String timeToString(Date time){
+        String timeStr = new SimpleDateFormat("yyyy-MM-dd").format(time);
+        return timeStr;
+    }
+
     public static Date stringToTime(String timeStr){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try{
@@ -40,8 +50,8 @@ public class DateUtil {
     }
 
     public static int compareTime(String timeStr_1, String timeStr_2){
-        Date time_1 = stringToDate(timeStr_1);
-        Date time_2 = stringToDate(timeStr_2);
+        Date time_1 = stringToTime(timeStr_1);
+        Date time_2 = stringToTime(timeStr_2);
 
         try{
             if(time_1.getTime() > time_2.getTime()){
