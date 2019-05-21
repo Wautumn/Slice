@@ -14,7 +14,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "echarts": "^4.2.0-rc.2",
+    "dhtmlx-gantt": "^6.1.6",
+    "echarts": "^4.2.1",
     "element-ui": "^2.0.4",
     "iview": "^3.1.5",
     "v-charts": "^1.19.0",

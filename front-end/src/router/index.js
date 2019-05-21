@@ -114,6 +114,11 @@ routes.push({
   name: 'TodoList',
   component: () => import(`@/components/TodoList`),
 })
+routes.push({
+  path: `/Gantt`,
+  name: 'gantt',
+  component: () => import(`@/components/gantt`),
+})
 
 export default new Router({
   routes
