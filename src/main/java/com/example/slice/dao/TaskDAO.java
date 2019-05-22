@@ -23,4 +23,12 @@ public interface TaskDAO {
     void deleteTask(int taskid);
 
     void changeTaskDes(int id, String des);
+
+    void startTask(int id);
+
+    void finishTask(Task task);
+
+    void breakTask(Task task);
+
+    void delayTask(int id);
 }

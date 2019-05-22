@@ -22,6 +22,8 @@ public class Task {
 
     private String finishtime;
 
+    private String realfinish;
+
 
     public int getId() {
         return id;
@@ -85,5 +87,13 @@ public class Task {
 
     public void setFinishtime(String finishtime) {
         this.finishtime = finishtime;
+    }
+
+    public String getRealfinish() {
+        return realfinish;
+    }
+
+    public void setRealfinish(String realfinish) {
+        this.realfinish = realfinish;
     }
 }

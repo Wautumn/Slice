@@ -1,6 +1,7 @@
 package com.example.slice.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.slice.dao.TaskDAO;
 import com.example.slice.entity.Task;
 import com.example.slice.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class TaskController {
 
     @Autowired
     TaskService taskService;
+
 
 
     @RequestMapping(value = "/getTasksByUserid", method = RequestMethod.GET)
@@ -95,6 +97,28 @@ public class TaskController {
             response = "change success!";
         }
         return response;
+
+    }
+
+
+    @RequestMapping(value = "/startTask", method = RequestMethod.POST)
+    public void startTask(int id){
+       taskService.startTask(id);
+    }
+
+    @RequestMapping(value = "/finishTask", method = RequestMethod.POST)
+    public void finishTask(int id,String time){
+      taskService.finishTask(id,time);
+    }
+
+    @RequestMapping(value = "/breakTask", method = RequestMethod.POST)
+    public void breakTask(int id,String time){
+       taskService.breakTask(id,time);
+    }
+
+    @RequestMapping(value = "/delayTask", method = RequestMethod.POST)
+    public void delayTask(int id){
+       taskService.delayTask(id);
 
     }
 }
