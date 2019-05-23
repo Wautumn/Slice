@@ -1,13 +1,44 @@
 <template>
   <div>
     <el-container>
+    
       <el-aside width="400px">
-        <tasklist @transferTask="getTasksByUserid" :tableData="taskData"></tasklist>
+
+        <el-card class="box-card">
+  <div slot="header" class="clearfix">
+    <span>
+
+      <el-dropdown  @command="handleCommand">
+  <span class="el-dropdown-link">
+  {{this.tasktype}}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+
+
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item command="a">个人任务</el-dropdown-item>
+    <el-dropdown-item command="b">团队任务</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown>
+    </span>
+   <el-popover
+  placement="right"
+  width="400"
+  trigger="click">
+   <todolist></todolist>
+  <el-button slot="reference"  style="float: right; padding: 3px 0" type="text">备忘录</el-button>
+</el-popover>
+  
+  </div>
+  <div>
+    <tasklist @transferTask="getTasksByUserid" :tableData="taskData"></tasklist>
+  </div>
+</el-card>
+        
       </el-aside>
 
       <el-main>
          <el-row>
-         <el-col :span="12">
+         <el-col :span="24">
 
         <div style="text-align: center">
           <div
@@ -80,7 +111,7 @@
           </div>
         </div>
          </el-col>
-  <el-col :span="12"><todolist></todolist></el-col>
+
 </el-row>
 
         <el-footer height="60px" style="margin-top: 30px;">
@@ -124,6 +155,8 @@
     },
     data() {
       return {
+        tasktype:"个人任务",
+        currentTaskUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTodayTasksByUserid",
         date: new Date(),
         // clocktime:null,
         ifstart: 0,
@@ -178,6 +211,7 @@
         // dailySummaryUrl: "http://localhost:8080/summary/save",
 
         taskRequestUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTodayTasksByUserid",
+        teamRequestUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTodaysTasks",
         deleteTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/deleteTask",
         dailySummaryUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/writeSummary",
         summaryRequestUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTodaysSummary",
@@ -208,7 +242,7 @@
       this.getcurrentTime = this.currentTime();
       this.getcurrentTime = this.getcurrentTime.substring(0, 19);
       this.$http
-        .get(this.taskRequestUrl, {params: {userid: sessionStorage.userId}})
+        .get(this.currentTaskUrl, {params: {userid: sessionStorage.userId}})
         .then(response => {
           this.taskData = response.data;
           var nlist = [];
@@ -227,6 +261,35 @@
 
     },
     methods: {
+       handleCommand(command) {
+        
+        if(command=='a')
+        {this.currentTaskUrl=this.taskRequestUrl
+        this.tasktype="个人任务"
+        }
+        else if(command=='b')
+        {
+          this.currentTaskUrl=this.teamRequestUrl
+          this.tasktype="团队任务"
+        }
+          this.$http
+              .get(this.currentTaskUrl, {
+                params: {userid: sessionStorage.userId}
+              })
+              .then(response => {
+                this.taskData = response.data;
+                var nlist = [];
+                for (var item of this.taskData) {
+                  //if (item.deadline >= this.getcurrentTime)
+                  nlist.push(item);
+                }
+                this.taskData = nlist;
+               
+              }),
+              response => {
+                console.log(failed);
+              };
+      },
       //*********************
       startCount() {
         if (!this.selected) {
@@ -331,7 +394,7 @@
       getTasksByUserid(msg) {
         if (msg == "new") {
           this.$http
-            .get(this.taskRequestUrl, {
+            .get(this.currentTaskUrl, {
               // params: { userId: sessionStorage.userId }
               params: {userid: "1"}
             })
@@ -461,7 +524,7 @@
               .then(response => {
                 //重新加载页面
                 this.$http
-                  .get(this.taskRequestUrl, {
+                  .get(this.currentTaskUrl, {
                     params: {userid: sessionStorage.userId}
                   })
                   .then(response => {
@@ -542,7 +605,7 @@
           },)
           .then(() => {
             this.$http
-              .get(this.taskRequestUrl, {
+              .get(this.currentTaskUrl, {
                 params: {userid: sessionStorage.userId}
               })
               .then(response => {
@@ -609,7 +672,7 @@
           .then(response => {
             this.currentSummaryId=response.data
             this.$http
-              .get(this.taskRequestUrl, {
+              .get(this.currentTaskUrl, {
                 params: {userid: sessionStorage.userId}
               })
               .then(response => {
@@ -645,7 +708,7 @@
           },)
           .then(() => {
             this.$http
-              .get(this.taskRequestUrl, {
+              .get(this.currentTaskUrl, {
                 params: {userid: sessionStorage.userId}
               })
               .then(response => {
@@ -695,4 +758,11 @@
 </script>
 
 <style>
+ .el-dropdown-link {
+    cursor: pointer;
+   
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
 </style>

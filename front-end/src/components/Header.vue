@@ -11,13 +11,20 @@
       <a class="HeaderTitle" href="/">
         <span>Growth</span>
       </a>
-      <el-menu-item
+      <!-- <el-menu-item
         v-for="item in Menus"
         v-text="item.name"
         :index="item.componentName"
         :key="item.id"
         v-if="isVerified"
-      ></el-menu-item>
+      ></el-menu-item> -->
+      <el-menu-item index="/TaskMode">日视图</el-menu-item>
+      <el-menu-item index="/Month">月视图</el-menu-item>
+      <el-menu-item index="/Project">团队任务</el-menu-item>
+      <el-menu-item index="/WeekAdvice">分析</el-menu-item>
+      <el-menu-item index="/Recom">推荐</el-menu-item>
+      <el-menu-item index="/FeedList">反馈</el-menu-item>
+
       <el-submenu index="2" v-if="isVerified">
         <template slot="title">设置</template>
         <el-menu-item index="2-1" :route="{path:this.$route.path}" @click="doSetting">账户设置</el-menu-item>
@@ -81,7 +88,7 @@
         <Button type="error" @click="passChange">确认</Button>
       </div>
     </Modal>
-    <Modal v-model="taskShow" @on-ok="timeChange" @on-cancel="cancel">
+    <!-- <Modal v-model="taskShow" @on-ok="timeChange" @on-cancel="cancel">
       <Tabs value="name1">
         <TabPane label="目标设置" name="name1">
           <div class="one-line">
@@ -116,7 +123,7 @@
           </div>
         </TabPane>
       </Tabs>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 

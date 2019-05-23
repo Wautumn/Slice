@@ -1,5 +1,7 @@
 <template>
+ <el-main>
   <div class="container">
+    <el-card class="box-card">
     <div class="list" v-for="(item,index) in tableData" :key="index">
       <div class="ticket" v-if="item.isAdmin">
         <div class="avatar">
@@ -26,6 +28,7 @@
         </div>
         <div class="title">{{item.title}}</div>
         <div class="content">{{item.content}}</div>
+        <div class="answer">回复:{{item.answer}}</div>
         <div class="author">
           <!-- by
           {{item.author}}-->
@@ -36,7 +39,9 @@
     </div>
     <el-button class="newButton" type="primary" icon="el-icon-edit" @click="newFeed" plain>新建反馈</el-button>
     <Page :total="size" :page-size="pageSize" @on-change="pageChange" show-elevator class="footer"/>
+    </el-card>
   </div>
+   </el-main>
 </template>
 
 <script>
@@ -234,14 +239,19 @@ export default {
 .reply {
   position: absolute;
   right: 1em;
-  top: 2em;
   color: #ccc;
 }
 
 .content {
-  font-size: 0.9em;
+  font-size: 1.0em;
   color: #666;
 }
+
+.answer {
+  top: 10em;
+  color: #ccc;
+}
+
 
 .author {
   position: absolute;

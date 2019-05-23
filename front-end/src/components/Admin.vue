@@ -1,5 +1,7 @@
 <template>
+  <el-main>
   <div style="padding-left: 15%;  padding-right: 15%; margin-top: 20px">
+    <el-card class="box-card">
     <el-table
       ref="singleTable"
       :data="tableData"
@@ -43,7 +45,9 @@
       show-elevator
       class="page-footer"
     />
+    </el-card>
   </div>
+    </el-main>
 </template>
 
 <script>
@@ -74,7 +78,7 @@ export default {
       tableData: [],
       allData: [],
       getUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/adminGetFeedback",
-      submitUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/addFeedback",
+      submitUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/handleFeedback",
     };
   },
   computed: {
@@ -130,24 +134,24 @@ export default {
       console.log(this.currentRow.id);
       //接口有问题，先模拟数据
      
-      // this.$http
-      //   .post(this.submitUrl,{id:this.currentRow.id,answer:this.reply})
-      //   .then(
-      //     res => {
-      //       // 响应成功回调
-      //       this.$Message.info("提交成功");
-      //       this.currentRow.status = "已处理";
-      //       this.currentRow.answer = this.reply;
-      //       console.log(res);
-      //     },
-      //     res => {
-      //       // 响应错误回调
-      //       console.log("fail");
-      //     }
-      //   )
-      //   .catch(() => {
-      //     console.log("process fail");
-      //   });
+      this.$http
+        .post(this.submitUrl,{id:this.currentRow.id,answer:this.reply})
+        .then(
+          res => {
+            // 响应成功回调
+            this.$Message.info("提交成功");
+            this.currentRow.status = "已处理";
+            this.currentRow.answer = this.reply;
+            console.log(res);
+          },
+          res => {
+            // 响应错误回调
+            console.log("fail");
+          }
+        )
+        .catch(() => {
+          console.log("process fail");
+        });
       this.$Message.info("提交成功");
       this.currentRow.status = "已处理";
       this.currentRow.answer = this.reply;

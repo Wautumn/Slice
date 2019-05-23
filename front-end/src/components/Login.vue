@@ -3,10 +3,10 @@
     <div class="login-wrap" @keyup.enter="login">
       <h3>登录</h3>
       <p v-show="showTishi">{{tishi}}</p>
-      <el-input class="input" placeholder="请输入用户名" v-model="username" clearable></el-input>
-      <br>
-      <el-input class="input" placeholder="请输入密码" v-model="password" type="password" clearable></el-input>
-      <br>
+      <el-input  style="width:240px" placeholder="请输入用户名" v-model="username" clearable></el-input>
+      <br> <br>  
+      <el-input c style="width:240px" placeholder="请输入密码" v-model="password" type="password" clearable></el-input>
+      <br>  <br>  
       <el-button type="primary" @click="login" round class="button">登录</el-button>
       <!-- <button v-on:click="login">登录</button> -->
       <span v-on:click="ToRegister">没有账号？马上注册</span>
@@ -67,10 +67,10 @@ export default {
       password: "",
       userid:"",
       token:"",
-      loginurl :"http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/login",
-      regiurl :"http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/register",
-      findUserIdUrl :"http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/findUserid",
-      getTokenUrl :"http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/getToken"
+      loginurl :"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/login",
+      regiurl :"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/register",
+      findUserIdUrl :"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findUserid",
+      getTokenUrl :"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getToken"
     };
   },
   props: ["isReg"],
@@ -140,7 +140,7 @@ export default {
               // var userID = code;
               // this.logInSuccess(code);
               //  this.$emit("userSignIn", userId);
-              this.$router.push("/");
+              this.$router.push("/TaskMode");
             }
 
            );
