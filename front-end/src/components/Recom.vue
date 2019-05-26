@@ -12,18 +12,19 @@
           :disable-transitions="false"
           @close="handleClose(tag)"
           :type="tag.type"
-        >{{tag.name}}</el-tag>
+        >{{tag.name}}
+        </el-tag>
       </div>
     </div>
     <div class="section-container">
-      <el-card class="box-card" v-for="i in showArticles" :key="i.id">
-        <img :src="i.img" class="image">
+      <el-card class="box-card" v-for="i in articles" :key="i.id">
+        <img :src="i.image" class="image">
         <div class="article">
           <div class="article-container">
             <a :href="i.url">
               <h3>{{i.title}}</h3>
             </a>
-            <p>{{i.intro}}</p>
+            <p style="width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{i.content}}</p>
           </div>
           <div class="article-footer">
             <p class="aurthor">{{i.author}}</p>
@@ -37,204 +38,225 @@
 </template>
 
 <script>
-var articleurl = "http://localhost:8080/getRecommendArticle";
+  var articleurl = "http://localhost:8080/getRecommendArticle";
 
-export default {
-  data() {
-    return {
-      articles: [],
-      showArticles: [],
-      userID: 2,
-      loading: false,
-      tags: [
-        { name: "标签一", type: "" },
-        { name: "标签二", type: "success" },
-        { name: "标签三", type: "info" },
-        { name: "标签四", type: "warning" },
-        { name: "标签五", type: "danger" }
-      ],
-      numToTag: []
-    };
-  },
-  methods: {
-    handleClose(tag) {
-      this.tags.splice(this.tags.indexOf(tag), 1);
-      console.log(tag.name);
-      for (let i = 0; i < this.showArticles.length; i++) {
-        let tagNum = this.showArticles[i].tags;
-        let tagName = this.numToTag[tagNum];
-        //debugger;
-        if (tagName == tag.name) {
-          //删除对应位置article后，需要保持游标位置不变
-          this.showArticles.splice(i--, 1);
-        }
-      }
-      this.showArticles = this.showArticles.sort(function() {
-        return 0.5 - Math.random();
-      });
-    }
-  },
-  mounted() {
-    this.userID = sessionStorage.userId;
-    // Lambda写法
-    this.$http
-      .get(articleurl, {
-        params: { userId: this.userID }
-      })
-      .then(
-        res => {
-          // 响应成功回调
-          var returnData = res.body;
-          this.articles = returnData.Article;
-          this.articles = this.articles.filter(item => {
-            return item.intro;
-          });
-          this.showArticles = this.articles;
-          this.showArticles = this.showArticles.sort(function() {
-            return 0.5 - Math.random();
-          });
-          this.numToTag = returnData.tags;
-          var tagName = Object.values(this.numToTag);
-          for (var i = 0; i < tagName.length; i++) {
-            this.tags[i].name = tagName[i];
-          }
-          this.tags = this.tags.slice(0, tagName.length);
-          this.loading = true;
+  export default {
+    data() {
+
+      return {
+        getArticleurl: "http://101.132.194.45:8081//slice-0.0.1-SNAPSHOT//getArticle",
+
+
+        article: {
+          name: "name",
+          title: "title",
+          intro: "intro",
+          author: "author",
+          pic: "",
         },
-        res => {
-          // 响应错误回调
-          console.log("fail");
+        articles: [],
+        showArticles: [],
+        userid: 8,
+        loading: false,
+        tags:
+          [
+            {name: "标签一", type: ""},
+            {name: "标签二", type: "success"},
+            {name: "标签三", type: "info"},
+            {name: "标签四", type: "warning"},
+            {name: "标签五", type: "danger"}
+          ],
+        numToTag:
+          []
+      }
+        ;
+    },
+    methods: {
+      handleClose(tag) {
+        this.tags.splice(this.tags.indexOf(tag), 1);
+        console.log(tag.name);
+        for (let i = 0; i < this.showArticles.length; i++) {
+          let tagNum = this.showArticles[i].tags;
+          let tagName = this.numToTag[tagNum];
+          //debugger;
+          if (tagName == tag.name) {
+            //删除对应位置article后，需要保持游标位置不变
+            this.showArticles.splice(i--, 1);
+          }
         }
-      )
-      .catch(() => {
-        console.log("fail2");
-      });
-  }
-};
+        this.showArticles = this.showArticles.sort(function () {
+          return 0.5 - Math.random();
+        });
+      }
+    },
+    mounted() {
+      this.userID = sessionStorage.userId;
+      for (var i = 0; i < 20; i++) {
+
+        this.articles.push(this.article)
+      }
+      // Lambda写法
+      this.$http
+        .get(this.getArticleurl, {
+          params: {userid: this.userid}
+        })
+        .then(
+          res => {
+            this.articles = res.data
+            console.log(this.articles)
+            // 响应成功回调
+            // var returnData = res.body;
+            // this.articles = returnData.Article;
+            // this.articles = this.articles.filter(item => {
+            //   return item.intro;
+            // });
+            // this.showArticles = this.articles;
+            // this.showArticles = this.showArticles.sort(function() {
+            //   return 0.5 - Math.random();
+            // });
+            // this.numToTag = returnData.tags;
+            // var tagName = Object.values(this.numToTag);
+            // for (var i = 0; i < tagName.length; i++) {
+            //   this.tags[i].name = tagName[i];
+            // }
+            // this.tags = this.tags.slice(0, tagName.length);
+            // this.loading = true;
+          },
+          // res => {
+          //   // 响应错误回调
+          //   console.log("fail");
+          // }
+        )
+        .catch(() => {
+          console.log("fail2");
+        });
+    }
+  };
 </script>
 
 <style scoped>
-.head-tag {
-  margin: 3px;
-}
-.container {
-  margin-left: 30px;
-}
+  .head-tag {
+    margin: 3px;
+  }
 
-.tag {
-  margin: 5px;
-  border: 1px solid #dcdfe6;
-  border-color: #ebeef5;
-  border-radius: 18px;
-  padding: 7px 15px;
-  float: right;
-}
+  .container {
+    margin-left: 30px;
+  }
 
-.aurthor {
-  color: #3dd07d;
-  font-size: 14px;
-  margin: 5px;
-}
+  .tag {
+    margin: 5px;
+    border: 1px solid #dcdfe6;
+    border-color: #ebeef5;
+    border-radius: 18px;
+    padding: 7px 15px;
+    float: right;
+  }
 
-.click-count {
-  font-size: 0.8em;
-  color: #bababa;
-  margin: 5px;
-}
+  .aurthor {
+    color: #3dd07d;
+    font-size: 14px;
+    margin: 5px;
+  }
 
-.article {
-  border: 20px;
-}
+  .click-count {
+    font-size: 0.8em;
+    color: #bababa;
+    margin: 5px;
+  }
 
-.article-footer {
-  position: relative;
-  padding: 18px;
-}
+  .article {
+    border: 20px;
+  }
 
-.article-container {
-  padding: 18px;
-  position: relative;
-}
+  .article-footer {
+    position: relative;
+    padding: 18px;
+  }
 
-.section-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+  .article-container {
+    padding: 18px;
+    position: relative;
+  }
 
-.section-header h2:before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 70px;
-  height: 2px;
-  background: #3dd07d;
-  transform: translateX(-50%);
-}
+  .section-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
-.section-header h2 {
-  position: relative;
-  display: inline-block;
-  font-size: 18px;
-  padding-bottom: 10px;
-}
+  .section-header h2:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 70px;
+    height: 2px;
+    background: #3dd07d;
+    transform: translateX(-50%);
+  }
 
-.section-header-class {
-  margin-top: 15px;
-  font-size: 15px;
-}
+  .section-header h2 {
+    position: relative;
+    display: inline-block;
+    font-size: 18px;
+    padding-bottom: 10px;
+  }
 
-.section-header {
-  margin: 0 0 60px;
-  margin-top: 60px;
-  text-align: center;
-}
+  .section-header-class {
+    margin-top: 15px;
+    font-size: 15px;
+  }
 
-.bottom {
-  margin-top: 13px;
-  line-height: 12px;
-}
+  .section-header {
+    margin: 0 0 60px;
+    margin-top: 60px;
+    text-align: center;
+  }
 
-.button {
-  padding: 0;
-}
+  .bottom {
+    margin-top: 13px;
+    line-height: 12px;
+  }
 
-.image {
-  display: block;
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
+  .button {
+    padding: 0;
+  }
 
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
+  .image {
+    display: block;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
 
-.clearfix:after {
-  clear: both;
-}
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
 
-.box-card {
-  width: 350px;
-  margin: 13px;
-}
+  .clearfix:after {
+    clear: both;
+  }
 
-h3 {
-  color: #343434;
-  font-size: 1.5em;
-  line-height: 1.35;
-  margin-bottom: 1em;
-}
+  .box-card {
+    width: 350px;
+    margin: 13px;
+  }
+
+  h3 {
+    color: #343434;
+    font-size: 1.5em;
+    line-height: 1.35;
+    margin-bottom: 1em;
+  }
 </style>
 
 <style>
-.el-card__body {
-  padding: 0px !important;
-}
+  .el-card__body {
+    padding: 0px !important;
+  }
 </style>
 
 

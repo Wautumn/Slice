@@ -67,10 +67,10 @@
   export default {
     data() {
       return {
-        newTodoUrl:"http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/createTodo",
-        deleteTodoUrl:"http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/deleteTodo",
-        changeTodoUrl:"http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/changeTodo",
-        findTodoUrl:"http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/findTodo",
+        newTodoUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/createTodo",
+        deleteTodoUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/deleteTodo",
+        changeTodoUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/changeTodo",
+        findTodoUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findTodo",
         createTodoModal: false,
         changeTodoModal:false,
         newTodo: "",

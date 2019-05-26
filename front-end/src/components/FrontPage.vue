@@ -75,7 +75,7 @@ export default {
   methods: {
     ToLog() {
       console.log("login");
-      this.$router.push({ name: "Login" });
+      this.$router.push({ name: "TaskMode" });
     }
   }
 };

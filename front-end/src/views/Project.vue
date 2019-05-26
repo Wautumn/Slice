@@ -20,10 +20,9 @@
             <i class="el-icon-tickets"></i>我创建的团队项目
           </template>
           <el-menu-item-group v-for="task in createdProject">
-            <el-menu-item @click='taskDetail(task)' style="color: black" >{{task.name}}
+            <el-menu-item @click='taskDetail(task)' style="color: black">{{task.name}}
             </el-menu-item>
           </el-menu-item-group>
-
 
 
         </el-submenu>
@@ -33,24 +32,24 @@
             <i class="el-icon-date"></i>我参与的团队项目
           </template>
           <el-menu-item-group v-for="task in joinedProject">
-            <el-menu-item @click="taskDetail($event)" >{{task.name}}</el-menu-item>
+            <el-menu-item @click="taskDetail($event)">{{task.name}}</el-menu-item>
           </el-menu-item-group>
 
         </el-submenu>
-        <el-submenu index="4">
-          <template slot="title"><i class="el-icon-message"></i>导航一</template>
-          <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item @click='sub' >选项1</el-menu-item>
-            <el-menu-item >选项2</el-menu-item>
-          </el-menu-item-group >
+        <!--<el-submenu index="4">-->
+          <!--<template slot="title"><i class="el-icon-message"></i>导航一</template>-->
+          <!--<el-menu-item-group>-->
+            <!--<template slot="title">分组一</template>-->
+            <!--<el-menu-item @click='sub'>选项1</el-menu-item>-->
+            <!--<el-menu-item>选项2</el-menu-item>-->
+          <!--</el-menu-item-group>-->
 
-            <el-menu-item >选项3</el-menu-item>
+          <!--<el-menu-item>选项3</el-menu-item>-->
 
-            <template slot="title">选项4</template>
-            <el-menu-item index="1-4-1">选项4-1</el-menu-item>
+          <!--<template slot="title">选项4</template>-->
+          <!--<el-menu-item index="1-4-1">选项4-1</el-menu-item>-->
 
-        </el-submenu>
+        <!--</el-submenu>-->
       </el-menu>
     </el-aside>
 
@@ -61,19 +60,32 @@
             <add-project></add-project>
           </div>
         </div>
-        <div v-if="type==1">
-          <project-detail :project="this.currentProject"></project-detail>
+        <div v-else>
+          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+                   style="margin-top: 0px">
+            <el-menu-item index="1" @click="gotodetail">任务概览</el-menu-item>
+            <el-menu-item index="2" @click="gotolist">任务列表</el-menu-item>
+            <el-menu-item index="3" @click="gotogant">甘特图</el-menu-item>
+            <el-menu-item index="4" @click="gotostatist">统计</el-menu-item>
+          </el-menu>
+          <div v-if="type==1">
+            <project-detail :project="this.currentProject"></project-detail>
+          </div>
+          <div v-if="type==2">
+
+            <project-list :project="this.currentProject"></project-list>
+
+          </div>
+          <div v-if="type==3">
+            <gantt :project="this.currentProject"></gantt>
+          </div>
+          <div v-if="type==4">
+            <Statist :project="this.currentProject"></Statist>
+
+          </div>
 
         </div>
-        <div v-if="type==2">
 
-        </div>
-        <div v-if="type==3">
-
-        </div>
-        <div v-if="type==4">
-
-        </div>
       </el-main>
     </el-container>
   </el-container>
@@ -83,10 +95,16 @@
 <script>
   import AddProject from '../components/AddProject.vue'
   import ProjectDetail from "../components/ProjectDetail";
+  import ProjectList from "../components/ProjectList";
+  import gantt from "../components/gantt";
+  import Statist from "../components/Statist";
 
   export default {
     name: "Project",
     components: {
+      Statist,
+      gantt,
+      ProjectList,
       ProjectDetail,
       AddProject
 
@@ -150,20 +168,30 @@
         // console.log(this.type);
 
       },
-      sub:function(){
+      sub: function () {
         console.log("click")
-        this.type=1
+        this.type = 1
       },
       //任务详情
       taskDetail: function (message) {
         console.log(message)
         this.type = 1
-        this.currentProject=message
-        console.log("当前"+this.currentProject.name)
-
-
+        this.currentProject = message
+        console.log("当前" + this.currentProject.name)
 
       },
+      gotolist: function () {
+        this.type = 2
+      },
+      gotodetail: function () {
+        this.type = 1
+      },
+      gotogant: function () {
+        this.type = 3
+      },
+      gotostatist:function () {
+        this.type=4
+      }
 
 
     }

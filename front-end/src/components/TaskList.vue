@@ -4,6 +4,9 @@
       <el-button size="medium" @click="createModal = true">新建任务</el-button>
       <el-button size="medium" @click="refresh">刷新列表</el-button>
     </div>
+
+
+
     <el-table
       ref="singleTable"
       :data="tableData"
@@ -33,8 +36,12 @@
       </el-table-column>
       <!--<el-table-column type="index" width="50"></el-table-column>-->
       <el-table-column property="name" label="任务"></el-table-column>
-      <el-table-column label=" 进度" width="75">
-        <template slot-scope="scope">{{scope.row.tomatoCompleted}}/{{scope.row.expectedTomato}}</template>
+      <el-table-column label=" 状态" width="75">
+        <template slot-scope="scope" v-if="scope.row.status==0">未开始</template>
+        <template slot-scope="scope" v-else-if="scope.row.status==2">进行中</template>
+        <template slot-scope="scope" v-else-if="scope.row.status==3">已完成</template>
+        <template slot-scope="scope" v-else-if="scope.row.status==4">已过期</template>
+        <template slot-scope="scope" v-else-if="scope.row.status==0">已终止</template>
       </el-table-column>
       <!--
       <el-table-column label="操作" width="150">
@@ -51,6 +58,8 @@
       </el-table-column>
       -->
     </el-table>
+        
+
     <!--
     <div style="margin-top: 10px; float: right">
       <el-button size="medium" @click="setCurrent()">取消选择</el-button>
@@ -93,7 +102,7 @@ export default {
       newTaskExpectedTomato: 0,
       newTaskTime: null,
       // newTaskUrl: "http://localhost:8080/task/addTask",
-      newTaskUrl: "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/insertTask"
+      newTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/insertTask"
     };
   },
   props: ["tableData"],
@@ -187,34 +196,17 @@ export default {
       console.log(currentTime);
       this.$http
         .post(this.newTaskUrl, {
-          
-          // params: {
-            // userId: sessionStorage.userId,
-            // taskName: this.newTaskName,
-            // description: this.newTaskDescription,
-            // setTime: currentTime,
-            // deadline: this.newTaskTime[1],
-            // expectedTomato: this.newTaskExpectedTomato,
-            // remindTime: this.newTaskTime[0]
-            //userid:sessionStorage.userId,
-           
+      
             name:this.newTaskName,
             description:this.newTaskDescription,
-            // continuance:this.newTaskTime[0],
-            // deadline:"1",
-            starttime:currentTime,
+            // settime:currentTime,
+            //starttime:this.newTaskTime[0],
+            starttime:this.newTaskTime[0],
             finishtime:this.newTaskTime[1],
             userid:"1"
-            // name:"test",
-            // description:"test",
-            // continuance:"1"
         },)
-          // {
-          //   emulateJSON:true
-          // })
+
         .then(response => {
-          //console.log(response.data);
-          //this.tableData = response.data;
           if(response.data==-1)
           {
             this.$message({
@@ -231,7 +223,8 @@ export default {
           });
           }
         });
-      //console.log(this.newTaskTime);
+    //比较起始时间与当前时间
+    
     }
   }
 };

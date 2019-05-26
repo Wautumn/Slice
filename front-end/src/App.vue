@@ -26,7 +26,6 @@ export default {
       // isVerified:true,
     };
   },
-
   methods: {
     //子组件(login)将用户名传过来
     userSignIn(userID) {
@@ -34,6 +33,7 @@ export default {
       if (sessionStorage.userId && parseInt(sessionStorage.userId) !== userID) {
         console.log(userID);
         //清空前用户的数据
+        console.log("delete user message")
         localStorage.clear();
         deleteDB("weekDB");
         deleteDB("daySumDB");

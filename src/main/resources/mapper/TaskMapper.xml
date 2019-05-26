@@ -10,6 +10,7 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="starttime" property="starttime" jdbcType="VARCHAR"/>
         <result column="finishtime" property="finishtime" jdbcType="VARCHAR"/>
+        <result column="realfinish" property="realfinish" jdbcType="VARCHAR"/>
 
     </resultMap>
 
@@ -43,6 +44,28 @@
       where id=#{id}
     </update>
 
+    <update id="startTask">
+          update Task
+      set
+        status=2
+      where id=#{id}
+    </update>
+    <update id="finishTask">
+      update Task
+      set status=3, realfinish=#{realfinish}
+      where id=#{id}
+    </update>
+    <update id="breakTask">
+          update Task
+     set status=4 , realfinish=#{realfinish}
+      where id=#{id}
+    </update>
+    <update id="delayTask">
+          update Task
+      set
+        status=5
+      where id=#{id}
+    </update>
     <!--  <select id="FindBookByType" parameterType="String" resultType="com.wang.store.entity.Book">
     select *
     from Book

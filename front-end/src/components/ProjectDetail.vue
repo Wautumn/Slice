@@ -1,69 +1,77 @@
 <template>
   <div>
+    <br>
     <el-row :gutter="20">
-      <el-col :span="6">
-        <div class="grid-content bg-purple" style="font-size: 20px;border-color: azure">任务名:</div>
-      </el-col>
+      <!--<el-col :span="6">-->
+      <!--<div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" ><i class="el-icon-view"></i>任务名:</div>-->
+      <!--</el-col>-->
       <el-col :span="18">
-        <div class="grid-content bg-purple-light" style="font-size: 20px">{{project.name}}</div>
+        <div class="title">{{project.name}}</div>
       </el-col>
     </el-row>
 
     <br>
     <el-row :gutter="20">
-      <el-col :span="6">
-        <div class="grid-content bg-purple" style="font-size: 20px;border-color: azure">任务描述:</div>
+      <el-col :span="4">
+        <div class="content"><i class="el-icon-tickets"></i> 任务描述:</div>
       </el-col>
-      <el-col :span="18">
-        <div class="grid-content bg-purple-light" style="font-size: 20px">
+      <el-col :span="20">
+        <div class="content">
           {{project.description}}
         </div>
       </el-col>
-      <!--<el-col :span="6">-->
-      <!--<el-button type="info" plain @click="changetask">修改任务描述</el-button>-->
-      <!--</el-col>-->
     </el-row>
 
     <br>
     <el-row :gutter="20">
-      <el-col :span="6">
-        <div class="grid-content bg-purple" style="font-size: 20px;border-color: azure">开始时间:</div>
+      <el-col :span="4">
+        <div class="content"><i class="el-icon-date"></i> 起止时间:</div>
       </el-col>
-      <el-col :span="18">
-        <div class="grid-content bg-purple-light" style="font-size: 20px">{{project.starttime}}</div>
-      </el-col>
-    </el-row>
-
-    <br>
-    <el-row :gutter="20">
-      <el-col :span="6">
-        <div class="grid-content bg-purple" style="font-size: 20px;border-color: azure">结束时间:</div>
-      </el-col>
-      <el-col :span="218">
-        <div class="grid-content bg-purple-light" style="font-size: 20px">{{project.endtime}}</div>
+      <el-col :span="20">
+        <div class="content">{{project.starttime}}至{{project.endtime}}</div>
       </el-col>
     </el-row>
 
     <br>
     <el-row :gutter="20">
-      <el-col :span="6">
-        <div class="grid-content bg-purple" style="font-size: 20px;border-color: azure">当前成员:</div>
+      <el-col :span="4">
+        <div class="content"><i class="el-icon-news"></i>项目经理:</div>
       </el-col>
-      <el-col :span="14">
-        <!--<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>-->
+      <el-col :span="20">
+        <div class="content">{{project.create}}</div>
+      </el-col>
+    </el-row>
+
+    <!--<br>-->
+    <!--<el-row :gutter="20">-->
+    <!--<el-col :span="6">-->
+    <!--<div class="grid-content bg-purple" style="font-size: 20px;border-color: azure">结束时间:</div>-->
+    <!--</el-col>-->
+    <!--<el-col :span="218">-->
+    <!--<div class="grid-content bg-purple-light" style="font-size: 20px">{{project.endtime}}</div>-->
+    <!--</el-col>-->
+    <!--</el-row>-->
+
+    <br>
+    <el-row :gutter="20">
+      <el-col :span="4">
+        <div class="content"><i class="el-icon-d-arrow-right"></i> 当前成员:</div>
+      </el-col>
+      <el-col :span="16">
         <el-row>
-          <!--<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>-->
-          <el-tag v-for="item in attender" @close="handleClose(tag)" style="margin-right: 10px">{{item}}
+          <el-tag v-for="item in attender" type="info" @close="handleClose(tag)" class="content" style="margin-right: 2px">
+           {{item}}
           </el-tag>
+
         </el-row>
       </el-col>
       <el-col :span="4">
-        <el-button  @click="dialogVisible = true" icon="el-icon-circle-plus-outline">添加成员</el-button>
+        <el-button @click="dialogVisible = true" icon="el-icon-circle-plus-outline">添加成员</el-button>
         <el-dialog
           title="添加成员"
           :visible.sync="dialogVisible"
           width="30%"
-          :before-close="handleClose">
+          :before-close="closedialog">
           <span>输入用户名</span>
           <el-input v-model="adduser"></el-input>
           <span slot="footer" class="dialog-footer">
@@ -74,28 +82,28 @@
 
       </el-col>
     </el-row>
-    <br>
+
 
     <el-row :gutter="20">
-      <el-col :span="6">
-        <div class="grid-content bg-purple" style="font-size: 20px;border-color: azure">当前子任务:</div>
+      <el-col :span="4">
+        <div class="content"><i class="el-icon-d-arrow-right"></i> 当前子任务:</div>
       </el-col>
-      <el-col :span="14">
+      <el-col :span="16">
         <!--<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>-->
         <el-row>
           <!--<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>-->
-          <el-tag v-for="subtask in taskandattend" @close="handleClose(tag)" style="margin-right: 10px">
+          <el-tag v-for="subtask in taskandattend" @close="handleClose(tag)" type="info" style="margin-right: 2px">
             {{subtask.name }}
           </el-tag>
         </el-row>
       </el-col>
       <el-col :span="4">
-        <el-button  @click="dialogVisible1 = true" icon="el-icon-circle-plus-outline">添加子任务</el-button>
+        <el-button @click="dialogVisible1 = true" icon="el-icon-circle-plus-outline" >添加子任务</el-button>
         <el-dialog
           title="添加子任务"
           :visible.sync="dialogVisible1"
           width="30%"
-          :before-close="handleClose">
+          :before-close="closedialog">
           <span>输入任务名</span>
           <el-input v-model="addnewsubtask.name"></el-input>
           <span>输入任务描述</span>
@@ -118,17 +126,17 @@
     <br>
 
     <el-row :gutter="20">
-      <el-col :span="6">
-        <div class="grid-content bg-purple" style="font-size: 20px;border-color: azure">当前任务分配:</div>
+      <el-col :span="4">
+        <div class="content">当前任务分配:</div>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="20">
         <!--<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>-->
-        <el-row v-for="taskuser in taskandattend" style="font-size: 15px;padding-bottom: 10px">
+        <el-row v-for="taskuser in taskandattend" class="content">
           <!--<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>-->
           <el-col :span="9" closable @close="handleClose(tag)" style="margin-right: 10px">
             任务名：{{taskuser.name }}
           </el-col>
-          <el-col :span="9" closable @close="handleClose(tag)" style="margin-right: 10px">
+          <el-col :span="9" closable @close="handleClose(tag)" class="content">
             用户名：{{taskuser.username}}
           </el-col>
 
@@ -138,33 +146,33 @@
     </el-row>
     <br>
 
-    <el-row :gutter="20">
-      <el-col :span="6">
-        <div class="grid-content bg-purple" style="font-size: 20px;border-color: azure">分配任务:</div>
-      </el-col>
-      <el-col :span="18">
-        <el-select v-model="selecttask" placeholder="请选择子任务">
-          <el-option
-            v-for="item in taskandattend"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select>
+    <!--<el-row :gutter="20">-->
+      <!--<el-col :span="6">-->
+        <!--<div class="content">分配任务:</div>-->
+      <!--</el-col>-->
+      <!--<el-col :span="18">-->
+        <!--<el-select v-model="selecttask" placeholder="请选择子任务">-->
+          <!--<el-option-->
+            <!--v-for="item in taskandattend"-->
+            <!--:key="item.id"-->
+            <!--:label="item.name"-->
+            <!--:value="item.id">-->
+          <!--</el-option>-->
+        <!--</el-select>-->
 
-        <el-select v-model="selectuser" placeholder="请选择用户">
-          <el-option
-            v-for="item in attender"
-            :key="item"
-            :label="item"
-            :value="item">
-          </el-option>
-        </el-select>
+        <!--<el-select v-model="selectuser" placeholder="请选择用户">-->
+          <!--<el-option-->
+            <!--v-for="item in attender"-->
+            <!--:key="item"-->
+            <!--:label="item"-->
+            <!--:value="item">-->
+          <!--</el-option>-->
+        <!--</el-select>-->
 
-        <el-button plain @click="distributetask">确认分配</el-button>
-      </el-col>
-    </el-row>
-    <br>
+        <!--<el-button plain @click="distributetask">确认分配</el-button>-->
+      <!--</el-col>-->
+    <!--</el-row>-->
+    <!--<br>-->
 
 
     <el-button type="danger" plain @click="deletetask">删除当前任务</el-button>
@@ -186,7 +194,7 @@
         getAllSubTaskAndUserurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//getDistributeTask",
         distributetaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//distributeTask",
         fingpeopleurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findUserid",
-        addsubtaskurl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//addSubTasks",
+        addsubtaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//addSubTasks",
 
         ifchange: 0,
         taskDetail: null,
@@ -196,11 +204,11 @@
         selecttask: null,
         selectuser: null,
         adduser: null,
-        addnewsubtask:{
-          name:null,
-          description:null,
-          starttime:null,
-          endtime:null,
+        addnewsubtask: {
+          name: null,
+          description: null,
+          starttime: null,
+          endtime: null,
         },
 
         dialogVisible: false,
@@ -290,7 +298,7 @@
               callback: action => {
                 this.$message({
                   type: 'info',
-                  message: `action: ${ action }`
+                  message: `action: ${action}`
                 });
               }
             });
@@ -301,7 +309,7 @@
               callback: action => {
                 this.$message({
                   type: 'info',
-                  message: `action: ${ action }`
+                  message: `action: ${action}`
                 });
               }
             });
@@ -341,18 +349,18 @@
           console.log(this.nowpeople)
 
       },
-      addsubtask:function () {
+      addsubtask: function () {
         this.dialogVisible = false
-        this.$http.post(this.addsubtaskurl,{
-          projectid:this.project.id,
-          name:this.addnewsubtask.name,
-          description:this.addnewsubtask.description,
-          starttime:this.addnewsubtask.starttime,
-          endtime:this.addnewsubtask.endtime
-        }).then(response=>{
-          if(response.data!=-1){
+        this.$http.post(this.addsubtaskurl, {
+          projectid: this.project.id,
+          name: this.addnewsubtask.name,
+          description: this.addnewsubtask.description,
+          starttime: this.addnewsubtask.starttime,
+          endtime: this.addnewsubtask.endtime
+        }).then(response => {
+          if (response.data != -1) {
             //添加成功
-          }else {
+          } else {
             //冲突信息
           }
         })
@@ -365,5 +373,15 @@
 </script>
 
 <style scoped>
+  .title {
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  }
+
+  .content {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 15px;
+  }
+  ul{list-style-type:none; margin:0;width:100%; }
+  ul li{ width:80px; float:left;}
 
 </style>

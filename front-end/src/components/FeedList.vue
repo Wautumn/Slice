@@ -1,5 +1,7 @@
 <template>
+ <el-main>
   <div class="container">
+    <el-card class="box-card">
     <div class="list" v-for="(item,index) in tableData" :key="index">
       <div class="ticket" v-if="item.isAdmin">
         <div class="avatar">
@@ -26,59 +28,27 @@
         </div>
         <div class="title">{{item.title}}</div>
         <div class="content">{{item.content}}</div>
+        <div class="answer">回复:{{item.answer}}</div>
         <div class="author">
           <!-- by
           {{item.author}}-->
           <br>
-          <span class="time">{{item.time}}</span>
+          <span class="time">{{item.settime}}</span>
         </div>
       </div>
     </div>
     <el-button class="newButton" type="primary" icon="el-icon-edit" @click="newFeed" plain>新建反馈</el-button>
     <Page :total="size" :page-size="pageSize" @on-change="pageChange" show-elevator class="footer"/>
+    </el-card>
   </div>
+   </el-main>
 </template>
 
 <script>
-var getUrl = "http://localhost:8080/getMyFeedback";
 
-var testData = [
-  {
-    title: "应用内存占用过高",
-    time: "01/03 @ 13:17",
-    author: "oilover",
-    content: "应用内存占用过高",
-    isAdmin: true
-  },
-  {
-    title: "应用内存占用过高",
-    time: "01/03 @ 13:17",
-    author: "oilover",
-    content: "应用内存占用过高",
-    isAdmin: true
-  },
-  {
-    title: "应用内存占用过高",
-    time: "01/03 @ 13:17",
-    author: "oilover",
-    content: "应用内存占用过高",
-    isAdmin: true
-  },
-  {
-    title: "应用内存占用过高",
-    time: "01/03 @ 13:17",
-    author: "oilover",
-    content: "应用内存占用过高",
-    isAdmin: false
-  },
-  {
-    title: "应用内存占用过高",
-    time: "01/03 @ 13:17",
-    author: "oilover",
-    content: "应用内存占用过高",
-    isAdmin: true
-  }
-];
+
+
+
 
 export default {
   name: "Order",
@@ -91,12 +61,31 @@ export default {
     return {
       avatar:
         "http://cdn.v2ex.com/gravatar/d86a1f8a3c75e155a0417a9af2a41ade?s=48&amp;d=mm",
-      tableData: testData,
-      allData: testData,
-      pageSize: 3,
+      tableData: null,
+      // allData: testData,
+      pageSize: 10,
       remarks: "",
-      userID: null
+      userID: null,
+      getUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/feedbackList"
     };
+  },
+  created(){
+        this.$http
+              .get(this.getUrl, {
+                params: {userid:"8"}
+              })
+              .then(response => {
+                console.log("?")
+                console.log(response.data)
+                this.tableData=response.data
+                console.log("tableData")
+                console.log(this.tableData)
+                console.log(this.tableData.size)
+              }),
+              response => {
+                console.log(failed);
+              };
+      
   },
   computed: {
     totalPrice() {
@@ -107,7 +96,7 @@ export default {
       return price;
     },
     size() {
-      return this.allData.length;
+      return this.tableData.length;
     }
   },
   methods: {
@@ -139,44 +128,46 @@ export default {
     }
   },
   mounted() {
-    this.userID = sessionStorage.userId;
+    this.userID = 8;
     // this.userID = 1;
-    this.$http
-      .get(getUrl, {
-        params: { userid: this.userID }
-      })
-      .then(
-        res => {
-          // 响应成功回调
-          var allData = res.body;
-          for (var i = 0; i < allData.length; i++) {
-            var item = allData[i];
-            item.isAdmin = false;
-            if (item.answer !== null) {
-              var nitem = {
-                title: "reply to " + item.title,
-                time: item.time,
-                content: item.answer,
-                isAdmin: true,
-                answer: null
-              };
 
-              allData.splice(++i, 0, nitem);
-            }
-          }
+          
+    // this.$http
+    //   .get(getUrl, {
+    //     params: { userid: this.userID }
+    //   })
+    //   .then(
+    //     res => {
+    //       // 响应成功回调
+    //       var allData = res.body;
+    //       for (var i = 0; i < allData.length; i++) {
+    //         var item = allData[i];
+    //         item.isAdmin = false;
+    //         if (item.answer !== null) {
+    //           var nitem = {
+    //             title: "reply to " + item.title,
+    //             time: item.time,
+    //             content: item.answer,
+    //             isAdmin: true,
+    //             answer: null
+    //           };
 
-          console.log(allData);
-          this.allData = allData;
-          this.pageChange(1);
-        },
-        res => {
-          // 响应错误回调
-          console.log("fail");
-        }
-      )
-      .catch(() => {
-        console.log("process fail");
-      });
+    //           allData.splice(++i, 0, nitem);
+    //         }
+    //       }
+
+    //       console.log(allData);
+    //       this.allData = allData;
+    //       this.pageChange(1);
+    //     },
+    //     res => {
+    //       // 响应错误回调
+    //       console.log("fail");
+    //     }
+    //   )
+    //   .catch(() => {
+    //     console.log("process fail");
+    //   });
   }
 };
 </script>
@@ -248,14 +239,19 @@ export default {
 .reply {
   position: absolute;
   right: 1em;
-  top: 2em;
   color: #ccc;
 }
 
 .content {
-  font-size: 0.9em;
+  font-size: 1.0em;
   color: #666;
 }
+
+.answer {
+  top: 10em;
+  color: #ccc;
+}
+
 
 .author {
   position: absolute;

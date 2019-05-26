@@ -38,7 +38,7 @@
 </template>
 
 <script>
-var submitUrl = "http://localhost:8080/submitFeedback";
+var submitUrl = "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/addFeedback";
 
 export default {
   name: "Freeback",
@@ -52,8 +52,8 @@ export default {
     };
   },
   mounted() {
-    this.userID = sessionStorage.userId;
-    // this.userID = 1;
+    // this.userID = sessionStorage.userId;
+    this.userID = 8;
   },
   methods: {
     goBack() {
@@ -69,7 +69,10 @@ export default {
       console.log("submit");
       // debugger;
       this.$http
-        .post(submitUrl, data, { emulateJSON: true })
+        .post(submitUrl,{
+        content: this.formItem.content,
+        title: this.formItem.title,
+        userid: this.userID},)
         .then(
           res => {
             // 响应成功回调

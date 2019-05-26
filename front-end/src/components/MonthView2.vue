@@ -24,33 +24,35 @@ var monthStart = new Date(monthAgo);//当月1日
 
 
 
+
 export default {
   data() {
     return {
       fcEvents: [],
       storedTaskYear: [],
       date: [monthAgo, nowTime],//[当月1日，当前日期]
-      userID: 1,
+      userID:8,
       description:[],
-      taskurl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTasksByUserid"
+      taskurl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getAllTasks"
     };
   },
+
   beforeCreate() {
     console.log("刷新");
     localStorage.clear();
   },
   //该组件在mounted之前就调用了TimeChange所以一些操作需要提前到created来做
   created() {
-    console.log("个人任务")
+    console.log("团队任务视图")
     //++++++++++++++++dev++++++++++++++++++++++++
         // deleteDB("weekDB");
         // deleteDB("daySumDB");
         // deleteDB("dayTaskDB");
         // deleteDB("dayTomoDB");
     //--------------------------------------------
-    sessionStorage.userId="1";
-    this.userID = sessionStorage.userId;
-    openDB("dayTaskDB");
+   
+    openDB("teamTaskDB")
+    //openDB("dayTaskDB");
     if (localStorage.storedTaskYear) {
       //如果任务数据库已经被创建
       console.log("任务数据库已经被创建");
@@ -117,7 +119,7 @@ export default {
 
           
           },
-          "dayTaskDB"
+          "teamTaskDB"
         );
       }
     },
@@ -158,8 +160,8 @@ export default {
           this.fcEvents.push({
             start: item.starttime,
             title: item.name,
-            end:item.finishtime,
-            color:ccolor
+            end:item.endtime,
+            color: ccolor
           });
        // }
       }
@@ -208,7 +210,7 @@ export default {
           this.updateData(selectedData);
           for (var i of returnData) {
             console.log("now begin to save data")
-            saveData(i, "dayTaskDB");
+            saveData(i, "teamTaskDB");
           }
           console.log("here store the year")
           this.storedTaskYear.push(year);

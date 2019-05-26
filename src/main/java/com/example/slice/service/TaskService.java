@@ -6,6 +6,8 @@ import com.example.slice.other.ConvertDate;
 import com.example.slice.service.util.DateConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -105,6 +107,31 @@ public class TaskService {
 
         }
         return result;
+    }
+
+
+    public void startTask(int id){
+        taskDAO.startTask(id);
+    }
+
+    public void finishTask(int id,String time){
+        Task task=new Task();
+        task.setId(id);
+        task.setRealfinish(time);
+        taskDAO.finishTask(task);
+    }
+
+    public void breakTask(int id,String time){
+        Task task=new Task();
+        task.setId(id);
+        task.setRealfinish(time);
+        taskDAO.breakTask(task);
+    }
+
+
+    public void delayTask(int id){
+        taskDAO.delayTask(id);
+
     }
 
 }

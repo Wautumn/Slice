@@ -36,11 +36,17 @@ Date.prototype.format = function (fmt) {
 function date_slice(start_date, end_date, source) {
     //从数据源切割,假设source有序
     var result = [];
+    console.log("in data_slice,source length:")
+    console.log(source.length)
     for (let j = 0; j < source.length; j++) {
         var item = source[j];
-        
+        console.log("in data_slice, now item is:")
+        console.log("item")
+        console.log(item.settime)
+        console.log(item.settime)
         if (item.settime >= start_date && item.settime <= end_date) {
             result.push(item);
+            console.log("item push")
         } 
     }
     return result;

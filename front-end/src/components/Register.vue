@@ -3,15 +3,16 @@
     <div class="register-wrap" @keyup.enter="register">
       <h3>注册</h3>
       <p v-show="showTishi">{{tishi}}</p>
-      <el-input class="input" placeholder="请输入用户名" v-model="newUsername" clearable></el-input>
-      <br>
+      <el-input style="width:240px" placeholder="请输入用户名" v-model="newUsername" clearable></el-input>
+      <br>  <br>
 
-      <el-input class="input" placeholder="请输入邮箱" v-model="mailAddress" clearable></el-input>
-      <br>
-      <el-input class="input" placeholder="请输入密码" v-model="newPassword" type="password" clearable></el-input>
+      <el-input style="width:240px" placeholder="请输入邮箱" v-model="mailAddress" clearable></el-input>
+      <br>  <br>
+      <el-input style="width:240px" placeholder="请输入密码" v-model="newPassword" type="password" clearable></el-input>
 
-      <br>
+      <br> <br>
       <el-button type="primary" @click="register" round class="button">注册</el-button>
+
 
       <span v-on:click="ToLogin">已有账号？马上登录</span>
     </div>
@@ -62,8 +63,8 @@ h3 {
 import { setCookie, getCookie } from "../assets/cookie.js";
 
 
-var loginurl = "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/login";
-var regiurl = "http://101.132.194.45:8080/slice-0.0.1-SNAPSHOT/register";
+var loginurl = "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/login";
+var regiurl = "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/register";
 
 export default {
   data() {

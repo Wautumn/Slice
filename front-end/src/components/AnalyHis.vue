@@ -24,7 +24,7 @@ export default {
   },
   mounted() {
     console.log("his page");
-    this.$router.push({ name: "DayView1" });
+    // this.$router.push({ name: "DayView1" });
   },
   data() {
     return {
