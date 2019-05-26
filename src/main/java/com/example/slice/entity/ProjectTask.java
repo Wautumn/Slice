@@ -1,5 +1,7 @@
 package com.example.slice.entity;
 
+import java.util.List;
+
 public class ProjectTask {
     private int id;
     private String name;
@@ -7,7 +9,7 @@ public class ProjectTask {
     private String starttime;
     private String endtime;
     private int projectid;
-    private int userid;
+    private List<Integer> userid;
     private int status;
     private String changetime;
 
@@ -67,11 +69,11 @@ public class ProjectTask {
         this.projectid = projectid;
     }
 
-    public int getUserid() {
+    public List<Integer> getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(List<Integer> userid) {
         this.userid = userid;
     }
 

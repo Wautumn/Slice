@@ -14,8 +14,8 @@ public class ProjectTaskService {
     @Autowired
     private ProjectTaskDAO projectTaskDAO;
 
-    public int createProjectTask(ProjectTask projectTask){
-        return projectTaskDAO.createProjectTask(projectTask);
+    public int createProjectTask(ProjectTask projectTask, String[] usernames){
+        return projectTaskDAO.createProjectTask(projectTask, usernames);
     }
 
     public int deleteProjectTask(int id){
@@ -32,7 +32,7 @@ public class ProjectTaskService {
 
     public List<Integer> findTasksByName(int projectid, String name){return projectTaskDAO.findTasksByName(name, projectid);}
 
-    public int setTask(int id, String description, String starttime, String endtime, int userid){
+    public int setTask(int id, String description, String starttime, String endtime, String[] userid){
         return projectTaskDAO.setTask(id, description, starttime, endtime, userid);
     }
 
@@ -52,7 +52,7 @@ public class ProjectTaskService {
         return projectTaskDAO.setEndtime(id, endtime);
     }
 
-    public int setTaskUserid(int projectid, int taskid, String username){
+    public int setTaskUserid(int projectid, int taskid, String[] username){
         return projectTaskDAO.setTaskUserid(projectid, taskid, username);
     }
 
@@ -86,5 +86,25 @@ public class ProjectTaskService {
 
     public HashMap<String, HashMap<String, Integer>> getData(int userid, String s, String e){
         return projectTaskDAO.getData(userid, s, e);
+    }
+
+    public int delayProjectTask(int taskid, String endtime){
+        return projectTaskDAO.delayProjectTask(taskid, endtime);
+    }
+
+    public int setPreProjecttask(int projectid, int taskid, int preid){
+        return projectTaskDAO.setPreProjecttask(projectid, taskid, preid);
+    }
+
+    public List<ProjectTask> findPreTask(int taskid){
+        return projectTaskDAO.findPreTask(taskid);
+    }
+
+    public List<ProjectTask> findPostTask(int taskid){
+        return projectTaskDAO.findPostTask(taskid);
+    }
+
+    public Map<Integer, Map<String, Integer>> getProjectProgress(int projectid){
+        return projectTaskDAO.getProjectProgress(projectid);
     }
 }

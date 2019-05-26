@@ -1,5 +1,6 @@
 package com.example.slice.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.slice.entity.ProjectTask;
 import com.example.slice.service.ProjectTaskService;
@@ -19,6 +20,15 @@ public class ProjectTaskController {
     @Autowired
     ProjectTaskService projectTaskService;
 
+    private String[] splitStrings(JSONArray members){
+        String[] mem_names = new String[members.size()];
+        for(int i = 0; i < members.size(); i++){
+            mem_names[i] = members.get(i).toString();
+        }
+
+        return mem_names;
+    }
+
     @RequestMapping(value = "/addSubTasks", method = RequestMethod.POST)
     @ResponseBody
     public int createProjectTask(@RequestBody JSONObject jsonObject) {
@@ -30,6 +40,8 @@ public class ProjectTaskController {
         String endtime = jsonObject.getString("endtime");
         int projectid = jsonObject.getInteger("projectid");
 
+        JSONArray usernames_arr = jsonObject.getJSONArray("usernames");
+        String[] usernames = splitStrings(usernames_arr);
 
         projectTask.setName(name);
         projectTask.setDescription(description);
@@ -37,7 +49,7 @@ public class ProjectTaskController {
         projectTask.setEndtime(endtime);
         projectTask.setProjectid(projectid);
 
-        return projectTaskService.createProjectTask(projectTask);
+        return projectTaskService.createProjectTask(projectTask, usernames);
     }
 
     @RequestMapping(value = "/deleteProjectTask", method = RequestMethod.GET)
@@ -77,7 +89,9 @@ public class ProjectTaskController {
         String description = jsonObject.getString("description");
         String starttime = jsonObject.getString("starttime");
         String endtime = jsonObject.getString("endtime");
-        int userid = jsonObject.getInteger("userid");
+
+        JSONArray members = jsonObject.getJSONArray("users");
+        String[] userid = splitStrings(members);
 
         return projectTaskService.setTask(id, description, starttime, endtime, userid);
     }
@@ -106,10 +120,15 @@ public class ProjectTaskController {
         return projectTaskService.setTaskEndtime(id, endtime);
     }
 
-    @RequestMapping(value = "/distributeTask", method = RequestMethod.GET)
+    @RequestMapping(value = "/distributeTask", method = RequestMethod.POST)
     @ResponseBody
-    public int setTaskUserid(int projectid, int taskid, String username) {
-        return projectTaskService.setTaskUserid(projectid, taskid, username);
+    public int setTaskUserid(@RequestBody JSONObject jsonObject) {
+        int projectid = jsonObject.getInteger("projectid");
+        int taskid = jsonObject.getInteger("taskid");
+        JSONArray usernames_arr = jsonObject.getJSONArray("usernames");
+        String[] usernames = splitStrings(usernames_arr);
+
+        return projectTaskService.setTaskUserid(projectid, taskid, usernames);
     }
 
     @RequestMapping(value = "/getDistributeTask", method = RequestMethod.GET)
@@ -158,5 +177,35 @@ public class ProjectTaskController {
     @ResponseBody
     public HashMap<String, HashMap<String, Integer>> getData(int userid, String start, String end){
         return projectTaskService.getData(userid, start, end);
+    }
+
+    @RequestMapping(value = "/delayProjectTask", method = RequestMethod.GET)
+    @ResponseBody
+    public int delayProjectTask(int taskid, String endtime){
+        return projectTaskService.delayProjectTask(taskid, endtime);
+    }
+
+    @RequestMapping(value = "/setPreTask", method = RequestMethod.GET)
+    @ResponseBody
+    public int setPreProjecttask(int projectid, int taskid, int preid){
+        return projectTaskService.setPreProjecttask(projectid, taskid, preid);
+    }
+
+    @RequestMapping(value = "/findPreTask", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ProjectTask> findPreTask(int taskid){
+        return projectTaskService.findPreTask(taskid);
+    }
+
+    @RequestMapping(value = "/findPostTask", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ProjectTask> findPostTask(int taskid){
+        return projectTaskService.findPostTask(taskid);
+    }
+
+    @RequestMapping(value = "/getProjectProgress", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<Integer, Map<String, Integer>> getProjectProgress(int projectid){
+        return projectTaskService.getProjectProgress(projectid);
     }
 }
