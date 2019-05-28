@@ -5,6 +5,7 @@ import com.example.slice.entity.ProjectTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +105,7 @@ public class ProjectTaskService {
         return projectTaskDAO.findPostTask(taskid);
     }
 
-    public Map<String, Map<String, Integer>> getProjectProgress(int projectid){
+    public Collection<Map<String, Object>> getProjectProgress(int projectid){
         return projectTaskDAO.getProjectProgress(projectid);
     }
 }

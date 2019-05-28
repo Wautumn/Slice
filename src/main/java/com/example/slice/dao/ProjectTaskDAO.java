@@ -610,9 +610,9 @@ public class ProjectTaskDAO {
         }
     }
 
-    public Map<String, Map<String, Integer>> getProjectProgress(int projectid){
+    public Collection<Map<String, Object>> getProjectProgress(int projectid){
         try{
-            Map<String, Map<String, Integer>> results = new HashMap<>();
+            Map<String, Map<String, Object>> results = new HashMap<>();
 
             Object[] params = new Object[]{projectid};
             String sql = "SELECT userid FROM project_member WHERE projectid = ?";
@@ -620,7 +620,8 @@ public class ProjectTaskDAO {
             for(int userid : users){
                 String username = jdbcTemplate.queryForObject("SELECT username FROM user WHERE id = ?",
                         new Object[]{userid}, String.class);
-                Map<String, Integer> m = new HashMap<>();
+                Map<String, Object> m = new HashMap<>();
+                m.put("username", username);
                 m.put("All Tasks", 0);
                 m.put("Finished Tasks", 0);
                 m.put("Delayed Tasks", 0);
@@ -644,7 +645,7 @@ public class ProjectTaskDAO {
                 for(int user : members){
                     String username = jdbcTemplate.queryForObject("SELECT username FROM user WHERE id = ?",
                             new Object[]{user}, String.class);
-                    int prev = results.get(username).get("All Tasks");
+                    int prev = (int)results.get(username).get("All Tasks");
                     results.get(username).put("All Tasks", prev + 1);
 
                     String keyword = "";
@@ -660,12 +661,12 @@ public class ProjectTaskDAO {
                         continue;
                     }
 
-                    int s_prev = results.get(username).get(keyword);
+                    int s_prev = (int)results.get(username).get(keyword);
                     results.get(username).put(keyword, s_prev + 1);
                 }
             }
 
-            return results;
+            return results.values();
         }catch (Exception exception){
             return null;
         }

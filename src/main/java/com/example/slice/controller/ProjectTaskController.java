@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -205,7 +206,7 @@ public class ProjectTaskController {
 
     @RequestMapping(value = "/getProjectProgress", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Map<String, Integer>> getProjectProgress(int projectid){
+    public Collection<Map<String, Object>> getProjectProgress(int projectid){
         return projectTaskService.getProjectProgress(projectid);
     }
 }
