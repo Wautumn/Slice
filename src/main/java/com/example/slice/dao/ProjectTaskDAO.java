@@ -271,7 +271,15 @@ public class ProjectTaskDAO {
                     Object[] params = new Object[]{taskid};
                     String sql_user = "SELECT userid FROM task_member WHERE taskid = ?";
                     List<Integer> userid = jdbcTemplate.queryForList(sql_user, params, Integer.class);
-                    i.put("users", userid);
+                    List<String> usernames = new ArrayList<>();
+                    for(int id : userid){
+                        String username = jdbcTemplate.queryForObject("SELECT username FROM user WHERE id = ?",
+                                new Object[]{id}, String.class);
+                        usernames.add(username);
+                    }
+                    i.put("users", usernames);
+
+                    i.put("pretasks", findPreTask(taskid));
                 }catch(Exception exception){
                     i.put("users", null);
                 }
