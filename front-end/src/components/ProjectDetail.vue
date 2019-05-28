@@ -2,9 +2,6 @@
   <div>
     <br>
     <el-row :gutter="20">
-      <!--<el-col :span="6">-->
-      <!--<div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" ><i class="el-icon-view"></i>任务名:</div>-->
-      <!--</el-col>-->
       <el-col :span="18">
         <div class="title">{{project.name}}</div>
       </el-col>
@@ -59,9 +56,10 @@
       </el-col>
       <el-col :span="16">
         <el-row>
-          <el-tag v-for="item in attender" type="info" @close="handleClose(tag)" class="content" style="margin-right: 2px">
-           {{item}}
-          </el-tag>
+          <div v-for="item in attender" type="info" @close="handleClose(tag)" class="content"
+                  style="margin-right: 2px">
+            {{item}}
+          </div>
 
         </el-row>
       </el-col>
@@ -84,100 +82,98 @@
     </el-row>
 
 
-    <el-row :gutter="20">
-      <el-col :span="4">
-        <div class="content"><i class="el-icon-d-arrow-right"></i> 当前子任务:</div>
-      </el-col>
-      <el-col :span="16">
-        <!--<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>-->
-        <el-row>
-          <!--<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>-->
-          <el-tag v-for="subtask in taskandattend" @close="handleClose(tag)" type="info" style="margin-right: 2px">
-            {{subtask.name }}
-          </el-tag>
-        </el-row>
-      </el-col>
-      <el-col :span="4">
-        <el-button @click="dialogVisible1 = true" icon="el-icon-circle-plus-outline" >添加子任务</el-button>
-        <el-dialog
-          title="添加子任务"
-          :visible.sync="dialogVisible1"
-          width="30%"
-          :before-close="closedialog">
-          <span>输入任务名</span>
-          <el-input v-model="addnewsubtask.name"></el-input>
-          <span>输入任务描述</span>
-          <el-input v-model="addnewsubtask.description"></el-input>
-          <span>开始时间</span>
-          <el-date-picker type="datetime" placeholder="选择时间" v-model="addnewsubtask.starttime" style="width: 100%;"
-                          value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+    <!--<el-row :gutter="20">-->
+      <!--<el-col :span="4">-->
+        <!--<div class="content"><i class="el-icon-d-arrow-right"></i> 当前子任务:</div>-->
+      <!--</el-col>-->
+      <!--<el-col :span="16">-->
+        <!--&lt;!&ndash;<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>&ndash;&gt;-->
+        <!--<el-row>-->
+          <!--&lt;!&ndash;<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>&ndash;&gt;-->
+          <!--<el-tag v-for="subtask in taskandattend" @close="handleClose(tag)" type="info" style="margin-right: 2px">-->
+            <!--{{subtask.name }}-->
+          <!--</el-tag>-->
+        <!--</el-row>-->
+      <!--</el-col>-->
+      <!--<el-col :span="4">-->
+        <!--<el-button @click="dialogVisible1 = true" icon="el-icon-circle-plus-outline">添加子任务</el-button>-->
+        <!--<el-dialog-->
+          <!--title="添加子任务"-->
+          <!--:visible.sync="dialogVisible1"-->
+          <!--width="30%"-->
+          <!--:before-close="closedialog">-->
+          <!--<span>输入任务名</span>-->
+          <!--<el-input v-model="addnewsubtask.name"></el-input>-->
+          <!--<span>输入任务描述</span>-->
+          <!--<el-input v-model="addnewsubtask.description"></el-input>-->
+          <!--<span>开始时间</span>-->
+          <!--<el-date-picker type="datetime" placeholder="选择时间" v-model="addnewsubtask.starttime" style="width: 100%;"-->
+                          <!--value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
 
-          <span>结束时间</span>
-          <el-date-picker type="datetime" placeholder="选择时间" v-model="addnewsubtask.endtime" style="width: 100%;"
-                          value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible1 = false">取 消</el-button>
-            <el-button type="primary" @click="addsubtask">确 定</el-button>
-          </span>
-        </el-dialog>
+          <!--<span>结束时间</span>-->
+          <!--<el-date-picker type="datetime" placeholder="选择时间" v-model="addnewsubtask.endtime" style="width: 100%;"-->
+                          <!--value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
+          <!--<span slot="footer" class="dialog-footer">-->
+            <!--<el-button @click="dialogVisible1 = false">取 消</el-button>-->
+            <!--<el-button type="primary" @click="addsubtask">确 定</el-button>-->
+          <!--</span>-->
+        <!--</el-dialog>-->
 
-      </el-col>
-    </el-row>
-    <br>
-
-    <el-row :gutter="20">
-      <el-col :span="4">
-        <div class="content">当前任务分配:</div>
-      </el-col>
-      <el-col :span="20">
-        <!--<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>-->
-        <el-row v-for="taskuser in taskandattend" class="content">
-          <!--<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>-->
-          <el-col :span="9" closable @close="handleClose(tag)" style="margin-right: 10px">
-            任务名：{{taskuser.name }}
-          </el-col>
-          <el-col :span="9" closable @close="handleClose(tag)" class="content">
-            用户名：{{taskuser.username}}
-          </el-col>
-
-
-        </el-row>
-      </el-col>
-    </el-row>
+      <!--</el-col>-->
+    <!--</el-row>-->
     <br>
 
     <!--<el-row :gutter="20">-->
-      <!--<el-col :span="6">-->
-        <!--<div class="content">分配任务:</div>-->
+      <!--<el-col :span="4">-->
+        <!--<div class="content">当前任务分配:</div>-->
       <!--</el-col>-->
-      <!--<el-col :span="18">-->
-        <!--<el-select v-model="selecttask" placeholder="请选择子任务">-->
-          <!--<el-option-->
-            <!--v-for="item in taskandattend"-->
-            <!--:key="item.id"-->
-            <!--:label="item.name"-->
-            <!--:value="item.id">-->
-          <!--</el-option>-->
-        <!--</el-select>-->
+      <!--<el-col :span="20">-->
+        <!--&lt;!&ndash;<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>&ndash;&gt;-->
+        <!--<el-row v-for="taskuser in taskandattend" class="content">-->
+          <!--&lt;!&ndash;<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>&ndash;&gt;-->
+          <!--<el-col :span="9" closable @close="handleClose(tag)" style="margin-right: 10px">-->
+            <!--任务名：{{taskuser.name }}-->
+          <!--</el-col>-->
+          <!--<el-col :span="9" closable @close="handleClose(tag)" class="content">-->
+            <!--用户名：{{taskuser.username}}-->
+          <!--</el-col>-->
 
-        <!--<el-select v-model="selectuser" placeholder="请选择用户">-->
-          <!--<el-option-->
-            <!--v-for="item in attender"-->
-            <!--:key="item"-->
-            <!--:label="item"-->
-            <!--:value="item">-->
-          <!--</el-option>-->
-        <!--</el-select>-->
 
-        <!--<el-button plain @click="distributetask">确认分配</el-button>-->
+        <!--</el-row>-->
       <!--</el-col>-->
+    <!--</el-row>-->
+    <br>
+
+    <!--<el-row :gutter="20">-->
+    <!--<el-col :span="6">-->
+    <!--<div class="content">分配任务:</div>-->
+    <!--</el-col>-->
+    <!--<el-col :span="18">-->
+    <!--<el-select v-model="selecttask" placeholder="请选择子任务">-->
+    <!--<el-option-->
+    <!--v-for="item in taskandattend"-->
+    <!--:key="item.id"-->
+    <!--:label="item.name"-->
+    <!--:value="item.id">-->
+    <!--</el-option>-->
+    <!--</el-select>-->
+
+    <!--<el-select v-model="selectuser" placeholder="请选择用户">-->
+    <!--<el-option-->
+    <!--v-for="item in attender"-->
+    <!--:key="item"-->
+    <!--:label="item"-->
+    <!--:value="item">-->
+    <!--</el-option>-->
+    <!--</el-select>-->
+
+    <!--<el-button plain @click="distributetask">确认分配</el-button>-->
+    <!--</el-col>-->
     <!--</el-row>-->
     <!--<br>-->
 
 
     <el-button type="danger" plain @click="deletetask">删除当前任务</el-button>
-    <!--<el-button type="primary" plain @click="changetask">编辑当前任务</el-button>-->
-    <!--<el-button type="primary" plain @click="changetask">编辑当前任务</el-button>-->
 
 
   </div>
@@ -211,6 +207,9 @@
           endtime: null,
         },
 
+        createid: null,
+        createname:null,
+
         dialogVisible: false,
         dialogVisible1: false
       }
@@ -227,6 +226,9 @@
       this.getProjectAttend()
       this.getSubTask()
       this.getProjectTaskAndUser()
+      this.createid = this.project.userid
+
+
     },
     computed: {},
     methods: {
@@ -340,6 +342,7 @@
               this.$alert('已添加' + this.adduser, '添加成功', {
                 confirmButtonText: '确定',
               });
+
               this.attender.push(this.adduser)
 
             }
@@ -374,14 +377,24 @@
 
 <style scoped>
   .title {
-    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    font-size: 20px;
   }
 
   .content {
     font-family: "Times New Roman", Times, serif;
-    font-size: 15px;
+    font-size: 18px;
   }
-  ul{list-style-type:none; margin:0;width:100%; }
-  ul li{ width:80px; float:left;}
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    width: 100%;
+  }
+
+  ul li {
+    width: 80px;
+    float: left;
+  }
 
 </style>

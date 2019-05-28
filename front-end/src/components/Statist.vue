@@ -15,18 +15,18 @@
         </div>
       </el-col>
     </el-row>
-    <!--<el-row :gutter="20">-->
+    <el-row :gutter="20">
+
+      <div class="grid-content bg-purple">
+        <ve-line :data="peopledata"></ve-line>
+      </div>
+
       <!--<el-col :span="12">-->
-        <!--<div class="grid-content bg-purple">-->
-          <!--<ve-pie :data="chartData"></ve-pie>-->
-        <!--</div>-->
+      <!--<div class="grid-content bg-purple">-->
+      <!--<ve-pie :data="chartData"></ve-pie>-->
+      <!--</div>-->
       <!--</el-col>-->
-      <!--<el-col :span="12">-->
-        <!--<div class="grid-content bg-purple">-->
-          <!--<ve-pie :data="chartData"></ve-pie>-->
-        <!--</div>-->
-      <!--</el-col>-->
-    <!--</el-row>-->
+    </el-row>
   </div>
 </template>
 
@@ -36,6 +36,9 @@
     data() {
       return {
         getAllTasksurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//getDistributeTask",
+        getAlluserdataurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//getProjectProgress",
+        getAlluserurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//getProjectUser",
+
 
         projectid: this.project.id,
         alltasks: null,
@@ -74,6 +77,16 @@
             {'日期': '1/5', '访问用户': 3792},
             {'日期': '1/6', '访问用户': 4593}
           ]
+        },
+
+
+        peopledata: {
+          columns: ['username', 'Unstarted Tasks', 'Ongoing Tasks', 'Finished Tasks', 'Delayed Tasks', 'All Tasks'],
+          rows: [
+            // {'username': '1/1', 'Unstarted Tasks': 1393, 'Ongoing Tasks': 1093, 'Finished Tasks': 0.32, 'Delayed Tasks': 32, 'All Tasks': 43},
+
+          ]
+
         }
       }
     },
@@ -93,6 +106,7 @@
       console.log(difDay)//总天数
       this.handlerealday()
       this.handletasks()
+      this.getalluserdata()
     },
     methods: {
 
@@ -144,7 +158,7 @@
                 this.state5++
 
             }
-            this.stateData={
+            this.stateData = {
               columns: ['状态', '任务数'],
               rows: [
                 {'状态': '未开始', '任务数': this.state1},
@@ -158,6 +172,44 @@
           })
 
       },
+
+
+      getalluserdata: function () {
+        console.log("kaishi")
+        this.$http.get(this.getAlluserdataurl, {
+          params: {
+            projectid: this.projectid
+          }
+        }).then(response => {
+          var alluserdata = response.data
+          var alluser
+          console.log("jjj")
+          console.log(response.data)
+          //找到所有项目成员
+          // this.$http.get(this.getAlluserurl, {
+          //   params: {
+          //     projectid: this.projectid
+          //   }
+          // }).then(response => {
+          //   console.log("所有人de")
+          //   console.log(response.data)
+          //   alluser=response.data
+          //   for(var v=0;v<alluser.length;v++){
+          //     console.log("Yhu"+alluser[v])
+          //     var thisuser=alluserdata[alluser[v]]
+          //     console.log(thisuser)
+          //   }
+          // })
+
+          for (var i = 0; i < alluserdata.length; i++) {
+            console.log("dsds")
+            console.log(this.peopledata.rows[0])
+          console.log(alluserdata[i])
+
+            this.peopledata.rows.push(alluserdata[i])
+          }
+        })
+      }
 
 
     },

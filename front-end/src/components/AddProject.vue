@@ -30,31 +30,52 @@
       <el-form-item label="子任务">
         <el-row :span="24">
           <el-form-item label="子任务名称：">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="nowsubtask.name"></el-input>
           </el-form-item>
         </el-row>
         <el-row :span="24">
           <el-form-item label="子任务描述：">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="nowsubtask.description"></el-input>
           </el-form-item>
         </el-row>
         <!--<el-col class="line" :span="2">-</el-col>-->
         <el-form-item label="开始时间">
           <el-row :span="11">
-            <el-date-picker type="datetime" placeholder="选择时间" v-model="form.starttime" style="width: 100%;"
+            <el-date-picker type="datetime" placeholder="选择时间" v-model="nowsubtask.starttime" style="width: 100%;"
                             value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
           </el-row>
         </el-form-item>
         <el-form-item label="结束时间">
           <el-row :span="11">
-            <el-date-picker type="datetime" placeholder="选择时间" v-model="form.starttime" style="width: 100%;"
+            <el-date-picker type="datetime" placeholder="选择时间" v-model="nowsubtask.finishtime" style="width: 100%;"
                             value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
           </el-row>
         </el-form-item>
-        <!--<el-col :span="12">结束时间-->
-          <!--<el-date-picker type="datetime" placeholder="选择时间" v-model="form.starttime" style="width: 100%;"-->
-                          <!--value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
-        <!--</el-col>-->
+        <el-form-item label="子任务成员">
+          <el-row :span="11">
+            <el-checkbox-group
+              v-model="nowsubtask.subtaskuser"
+              :min="1"
+              :max="5">
+              <el-checkbox v-for="user in form.joiner" :label="user" :key="user">{{user}}</el-checkbox>
+            </el-checkbox-group>
+          </el-row>
+        </el-form-item>
+
+        <el-form-item label="前置任务">
+          <el-radio v-model="radio" label="1">存在前置任务</el-radio>
+          <el-radio v-model="radio" label="2">不存在前置任务</el-radio>
+
+          <el-select v-if="radio==1" v-model="nowsubtask.beforetask" placeholder="请选择">
+            <el-option
+              v-for="item in form.subtask"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <el-col :span="11">
           <el-button @click="addsubtask">确认添加</el-button>
         </el-col>
@@ -63,8 +84,8 @@
       <el-form-item label="当前子任务">
         <el-col :span="11"></el-col>
         <el-tag
-          v-for="people in form.subtask" :key="people" closable :disable-transitions="false" @close="handleClose(tag)">
-          {{people}}
+          v-for="subtask in form.subtask" :key="people" closable :disable-transitions="false" @close="handleClose(tag)">
+          {{subtask.name}}
         </el-tag>
       </el-form-item>
 
@@ -98,35 +119,62 @@
   export default {
     name: "addProject",
     data() {
+      var task = {
+        name: '',
+        description: '',
+        starttime: '',
+        finishtime: '',
+        beforetask: '',
+      }
       return {
-        userid: 10,
-        nowpeople: '',
-        nowsubtask: '',
         newprojecturl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//createProject",
         fingpeopleurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findUserid",
-        joinerid: [],
-        addpeopleresult: 0,
+        addsubtaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/addSubTasks",
+        setpretaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/setPreTask",
+        findprojecttaskid: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findProjectTaskId",
+
         form: {
           name: '',
           description: '',
           joiner: [],
           subtask: [],
           starttime: '',
-          finishtime: ''
-        }
+          finishtime: '',
+        },
+
+
+        userid: 10,
+        nowpeople: '',//当前添加的人员
+        nowsubtask: {
+          name: '',
+          description: '',
+          starttime: '',
+          finishtime: '',
+          subtaskuser: [],
+          beforetask: null,
+
+        }, //当前添加的子任务
+
+        joinerid: [],
+        addpeopleresult: 0,
+
+        radio: '1',
+        value: null,
       }
 
     },
     methods: {
+      //创建任务的总提交
       onSubmit() {
         console.log('submit!');
+        console.log(this.form)
         this.$http
           .post(this.newprojecturl, {
             userid: 10,//this.userid,
             name: this.form.name,
             description: this.form.description,
             members: this.form.joiner,
-            subtasks: this.form.subtask,
+            subtasks: [],
             starttime: this.form.starttime,
             endtime: this.form.finishtime
           },).then(response => {
@@ -136,6 +184,62 @@
               confirmButtonText: '确定',
             });
           } else {
+            console.log("添加项目成功")
+            var nowprojectid = response.data
+            console.log("项目id" + nowprojectid)
+            //添加子任务
+            console.log("下面是添加子任务啦")
+
+            for (var i = 0; i < this.form.subtask.length; i++) {
+              console.log("添加子任务" + this.form.subtask[i].name)
+              var before=this.form.subtask[i].beforetask
+              console.log("看看前置任务有没有" + before);
+              this.$http
+                .post(this.addsubtaskurl,
+                  {
+                    name: this.form.subtask[i].name,
+                    description: this.form.subtask[i].description,
+                    starttime: this.form.subtask[i].starttime,
+                    endtime: this.form.subtask[i].finishtime,
+                    projectid: nowprojectid,
+                    usernames: this.form.subtask[i].subtaskuser
+                  }).then(response => {
+                var subtaskid = response.data;
+                console.log("增加的子任务成功");
+                console.log(subtaskid);
+                //增加前置任务
+                console.log("看看前置任务有没有" + before);
+                if (before!= null) {
+                  //根据名字去找前置任务的id
+                  console.log("现在是添加前置任务")
+                  var beforetaskname = before;//前置任务的名字
+                  var beforetaskid;//前置任务的id
+                  this.$http.get(this.findprojecttaskid, {
+                    params: {
+                      projectid: nowprojectid,
+                      name: beforetaskname,
+                    }
+                  }).then(response => {
+                    beforetaskid = response.data
+                    console.log("找到子任务的id是" + beforetaskid)
+
+                    this.$http.get(this.setpretaskurl, {
+                      params:
+                        {
+                          projectid: nowprojectid,
+                          taskid: subtaskid,
+                          preid: beforetaskid
+
+                        }
+                    }).then(response => {
+                      console.log("添加子任务的结果" + response.data)
+                    })
+                  })
+
+
+                }
+              })
+            }
             this.$alert('新建成功', {
               confirmButtonText: '确定',
             });
@@ -160,12 +264,14 @@
             }
           }),
 
-
           console.log(this.nowpeople)
       },
+      //子任务添加到任务表单里面去
       addsubtask: function () {
-        this.form.subtask.push(this.nowsubtask)
+        var current = Object.assign({}, this.nowsubtask)
+        this.form.subtask.push(current)
         console.log(this.nowsubtask)
+        console.log(this.form.subtask)
       },
       handleClose(tag) {
         this.form.joiner.splice(this.form.joiner.indexOf(tag), 1);

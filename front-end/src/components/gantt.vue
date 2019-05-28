@@ -26,12 +26,13 @@
 
         showtasks: {
           data: [
-            // {id: 1, text: "111create test", start_date: "12-05-2019", duration: 5, progress: 0},
-            // {id: 2, text: 'Task #2', start_date: '19-05-2019', duration: 5, progress: 1},
+            {id: 1, text: "111create test", start_date: "12-05-2019", duration: 5, progress: 0},
+            {id: 2, text: 'Task #2', start_date: '19-05-2019', duration: 5, progress: 1},
 
           ],
           links: [
-            {id: 1, source: 1, target: 2, type: '0'}
+            {id: 1, source: 1, target: 2, type: '0'},
+
           ]
         },
         nowtask: {},
@@ -54,6 +55,8 @@
         .then(response => {
           this.alltasks = response.data
           this.nowtask = response.data
+
+
           for (var i = 0; i < this.alltasks.length; i++) {
             var show = new Object();
             show.id = i + 3
@@ -91,6 +94,43 @@
           console.log(this.showtasks.data)
 
 
+          for (var i = 0; i < this.alltasks.length; i++) {
+            if (this.alltasks[i].pretasks.length > 0) {
+              console.log(this.alltasks[i].pretasks[0].name)
+              var target = this.alltasks[i].pretasks[0].name
+              var start = this.alltasks[i].name
+              var targetid
+              var startid
+              console.log(target + "t")
+              console.log(start + "s")
+              for (var v = 0; v < this.showtasks.data.length; v++) {
+                if (this.showtasks.data[v].text == target) {
+                  targetid = this.showtasks.data[v].id
+                }
+                if (this.showtasks.data[v].text == start) {
+                  startid = this.showtasks.data[v].id
+                }
+              }
+              console.log(targetid + "tid")
+              console.log(startid + "sid")
+              var link = {
+                id: i+2,
+                source: targetid,
+                target: startid,
+                type: '0'
+
+              }
+              console.log("link is")
+              console.log(link)
+              this.showtasks.links.push(link)
+
+            }
+            console.log(this.showtasks.links)
+            console.log(this.showtasks.data)
+
+          }
+
+
           gantt.config.scale_unit = "month";
           gantt.config.date_scale = "%F, %Y";
 
@@ -102,8 +142,6 @@
 
           gantt.init("gantt_here")
           gantt.parse(this.showtasks)
-
-
 
 
         })
