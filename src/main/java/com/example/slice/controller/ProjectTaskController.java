@@ -205,7 +205,7 @@ public class ProjectTaskController {
 
     @RequestMapping(value = "/getProjectProgress", method = RequestMethod.GET)
     @ResponseBody
-    public Map<Integer, Map<String, Integer>> getProjectProgress(int projectid){
+    public Map<String, Map<String, Integer>> getProjectProgress(int projectid){
         return projectTaskService.getProjectProgress(projectid);
     }
 }

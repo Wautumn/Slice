@@ -610,14 +610,16 @@ public class ProjectTaskDAO {
         }
     }
 
-    public Map<Integer, Map<String, Integer>> getProjectProgress(int projectid){
+    public Map<String, Map<String, Integer>> getProjectProgress(int projectid){
         try{
-            Map<Integer, Map<String, Integer>> results = new HashMap<>();
+            Map<String, Map<String, Integer>> results = new HashMap<>();
 
             Object[] params = new Object[]{projectid};
             String sql = "SELECT userid FROM project_member WHERE projectid = ?";
             List<Integer> users = jdbcTemplate.queryForList(sql, params, Integer.class);
             for(int userid : users){
+                String username = jdbcTemplate.queryForObject("SELECT username FROM user WHERE id = ?",
+                        new Object[]{userid}, String.class);
                 Map<String, Integer> m = new HashMap<>();
                 m.put("All Tasks", 0);
                 m.put("Finished Tasks", 0);
@@ -625,7 +627,7 @@ public class ProjectTaskDAO {
                 m.put("Ongoing Tasks", 0);
                 m.put("Unstarted Tasks", 0);
 
-                results.put(userid, m);
+                results.put(username, m);
             }
 
             params = new Object[]{projectid};
@@ -640,8 +642,10 @@ public class ProjectTaskDAO {
                 List<Integer> members = jdbcTemplate.queryForList(sql, params, Integer.class);
 
                 for(int user : members){
-                    int prev = results.get(user).get("All Tasks");
-                    results.get(user).put("All Tasks", prev + 1);
+                    String username = jdbcTemplate.queryForObject("SELECT username FROM user WHERE id = ?",
+                            new Object[]{user}, String.class);
+                    int prev = results.get(username).get("All Tasks");
+                    results.get(username).put("All Tasks", prev + 1);
 
                     String keyword = "";
                     if(status == 1){
@@ -656,8 +660,8 @@ public class ProjectTaskDAO {
                         continue;
                     }
 
-                    int s_prev = results.get(user).get(keyword);
-                    results.get(user).put(keyword, s_prev + 1);
+                    int s_prev = results.get(username).get(keyword);
+                    results.get(username).put(keyword, s_prev + 1);
                 }
             }
 

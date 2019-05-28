@@ -104,7 +104,7 @@ public class ProjectTaskService {
         return projectTaskDAO.findPostTask(taskid);
     }
 
-    public Map<Integer, Map<String, Integer>> getProjectProgress(int projectid){
+    public Map<String, Map<String, Integer>> getProjectProgress(int projectid){
         return projectTaskDAO.getProjectProgress(projectid);
     }
 }
