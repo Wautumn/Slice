@@ -54,6 +54,12 @@ public class ProjectController {
         return projectService.createProject(project, mem_names, task_names);
     }
 
+    @RequestMapping(value = "/deleteProject", method = RequestMethod.GET)
+    @ResponseBody
+    public int deleteProject(int projectid){
+        return projectService.deleteProject(projectid);
+    }
+
     @RequestMapping(value = "/addMembers", method = RequestMethod.POST)
     @ResponseBody
     public int addMembers(@RequestBody JSONObject jsonObject){

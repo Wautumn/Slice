@@ -69,6 +69,21 @@ public class ProjectDAO {
         return -1;
     }
 
+    public int deleteProject(int id) {
+        try {
+            jdbcTemplate.update("DELETE FROM project WHERE id = ?",
+                    new PreparedStatementSetter() {
+                        @Override
+                        public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                            preparedStatement.setInt(1, id);
+                        }
+                    });
+        } catch (Exception exception) {
+            return -1;
+        }
+        return 1;
+    }
+
     public int addMembers(int projectid, String[] members) {
         try {
             for (String s : members) {
@@ -90,7 +105,7 @@ public class ProjectDAO {
                 }
             }
         } catch (Exception exception) {
-            return 0;
+            return -1;
         }
         return 1;
     }

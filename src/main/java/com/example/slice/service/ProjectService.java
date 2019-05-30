@@ -16,6 +16,8 @@ public class ProjectService {
         return projectDAO.createProject(project, members, tasks);
     }
 
+    public int deleteProject(int id){return projectDAO.deleteProject(id);}
+
     public int addMembers(int projectid, String[] members){return projectDAO.addMembers(projectid, members);}
 
     public int addTasks(int projectid, String[] tasks){return projectDAO.addTasks(projectid, tasks);}

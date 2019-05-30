@@ -55,6 +55,9 @@ public class ProjectTaskDAO {
 
     public int deleteProjectTask(int id){
         try{
+            if(findPostTask(id) != null && findPostTask(id).size() > 0){
+                return -2;
+            }
             jdbcTemplate.update("DELETE FROM project_task WHERE id = ?",
                     new PreparedStatementSetter() {
                         @Override
@@ -63,7 +66,7 @@ public class ProjectTaskDAO {
                         }
                     });
         }catch (Exception exception){
-            return 2;
+            return -1;
         }
         return 1;
     }
@@ -474,6 +477,7 @@ public class ProjectTaskDAO {
             return -1;
         }
     }
+
     public HashMap<String, HashMap<String, Integer>> getData(int userid, String s, String e){
         Date start = DateUtil.stringToDate(s);
         Date end = DateUtil.stringToDate(e);
