@@ -45,11 +45,6 @@
         label="前置任务"
         width="180">
       </el-table-column>
-      <!--<el-table-column-->
-      <!--prop="address"-->
-      <!--label="备注"-->
-      <!--width="180">-->
-      <!--</el-table-column>-->
       <el-table-column
         label="操作"
         width="100">
@@ -57,6 +52,9 @@
           <!--<el-button @click="addpeople(scope.row)" type="text">添加成员</el-button>-->
           <!--<br>-->
           <el-button @click="handleClick(scope.row)" type="text">推迟任务</el-button>
+          <br>
+          <el-button @click="deletesubtask(scope.row)" type="text">删除任务</el-button>
+          <br>
         </template>
       </el-table-column>
 
@@ -166,6 +164,7 @@
         getAllusersurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//getProjectUser",//获取所有成员
         addsubtaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/addSubTasks",//添加子任务
         setpretaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/setPreTask",
+        deleteprojecttaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//deleteProjectTask",
 
 
         alltasks: [],
@@ -296,15 +295,15 @@
               confirmButtonText: '确定',
             });
           } else {
-            if(this.addtask.pretask!=null){
-              console.log(this.addtask.pretask+"qian")
+            if (this.addtask.pretask != null) {
+              console.log(this.addtask.pretask + "qian")
             }
             var taskid = response.data
             this.$http.get(this.setpretaskurl, {
               params: {
                 projectid: this.projectid,
-                taskid:taskid,
-                preid:this.addtask.pretask
+                taskid: taskid,
+                preid: this.addtask.pretask
 
               }
             })
@@ -355,11 +354,37 @@
       },
 
 
-      //增加成员
+      //子任务增加成员
       addpeople(row) {
         console.log(row);
         var taskid = row.id
+        var projectid = row.projectid
 
+
+      },
+      //删除子任务
+      deletesubtask(row) {
+        var taskid = row.id
+        var projectid = row.projectid
+        this.$http.get(this.deleteprojecttaskurl,{params:{
+          id:taskid
+          }}).then(response=>{
+          if (response.data == -1) {
+            this.$alert('任务删除失败！', '删除失败', {
+              confirmButtonText: '确定',
+            });
+          } else if (response.data == -2) {
+            this.$alert('此任务存在后置任务，请先删除后置任务！！', '删除失败', {
+              confirmButtonText: '确定',
+            });
+          } else {
+            this.$alert('删除成功', {
+              confirmButtonText: '确定',
+            })
+            // location.reload()
+            this.$router.push('/Empty')
+
+          }})
 
       },
 

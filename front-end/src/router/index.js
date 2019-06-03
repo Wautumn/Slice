@@ -132,6 +132,13 @@ routes.push({
 
   
 })
+routes.push({
+  path: `/Empty`,
+  name: 'Empty',
+  component: () => import(`@/components/Empty`),
+
+
+})
 
 export default new Router({
   routes

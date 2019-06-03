@@ -18,8 +18,6 @@
       </el-form-item>
       <el-form-item label="当前成员">
         <el-col :span="11"></el-col>
-        <!--<el-col class="line" :span="4" v-for="people in form.joiner">-->
-        <!--<el-button >{{people}}</el-button></el-col>-->
         <el-tag
           v-for="people in form.joiner" :key="people" closable :disable-transitions="false" @close="handleClose(tag)">
           {{people}}
@@ -119,13 +117,6 @@
   export default {
     name: "addProject",
     data() {
-      var task = {
-        name: '',
-        description: '',
-        starttime: '',
-        finishtime: '',
-        beforetask: '',
-      }
       return {
         newprojecturl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//createProject",
         fingpeopleurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findUserid",
@@ -190,10 +181,12 @@
             //添加子任务
             console.log("下面是添加子任务啦")
 
-            for (var i = 0; i < this.form.subtask.length; i++) {
+            for (let i = 0; i < this.form.subtask.length; i++) {
               console.log("添加子任务" + this.form.subtask[i].name)
-              var before=this.form.subtask[i].beforetask
-              console.log("看看前置任务有没有" + before);
+              var before=new Object()
+              before = this.form.subtask[i].beforetask
+              Object.freeze(before)
+              console.log("看看前置任务有没有" + before + i );
               this.$http
                 .post(this.addsubtaskurl,
                   {
@@ -208,11 +201,11 @@
                 console.log("增加的子任务成功");
                 console.log(subtaskid);
                 //增加前置任务
-                console.log("看看前置任务有没有" + before);
-                if (before!= null) {
+                console.log("看看前置任务有没有2" + this.form.subtask[i].beforetask+i);
+                if (this.form.subtask[i].beforetask != null) {
                   //根据名字去找前置任务的id
                   console.log("现在是添加前置任务")
-                  var beforetaskname = before;//前置任务的名字
+                  var beforetaskname = this.form.subtask[i].beforetask;//前置任务的名字
                   var beforetaskid;//前置任务的id
                   this.$http.get(this.findprojecttaskid, {
                     params: {
@@ -246,6 +239,45 @@
           }
         });
       },
+
+
+      //添加前置任务的
+      addpre: function () {
+        console.log(this.form.subtask)
+
+        for (var i = 0; i < this.form.subtask.length; i++) {
+          var before = this.form.subtask[i].beforetask
+          if (before != null) {
+            //根据名字去找前置任务的id
+            console.log("现在是添加前置任务")
+            var beforetaskname = before;//前置任务的名字
+            var beforetaskid;//前置任务的id
+            this.$http.get(this.findprojecttaskid, {
+              params: {
+                projectid: nowprojectid,
+                name: beforetaskname,
+              }
+            }).then(response => {
+              beforetaskid = response.data
+              console.log("找到子任务的id是" + beforetaskid)
+              this.$http.get(this.setpretaskurl, {
+                params:
+                  {
+                    projectid: nowprojectid,
+                    taskid: subtaskid,
+                    preid: beforetaskid
+
+                  }
+              }).then(response => {
+                console.log("添加子任务的结果" + response.data)
+              })
+            })
+          }
+        }
+
+      },
+
+
       addpeople: function () {
         this.$http
           .get(this.fingpeopleurl, {params: {username: this.nowpeople}})

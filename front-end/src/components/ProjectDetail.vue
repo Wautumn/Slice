@@ -35,7 +35,7 @@
         <div class="content"><i class="el-icon-news"></i>项目经理:</div>
       </el-col>
       <el-col :span="20">
-        <div class="content">{{project.create}}</div>
+        <div class="content">{{createname}}</div>
       </el-col>
     </el-row>
 
@@ -57,7 +57,7 @@
       <el-col :span="16">
         <el-row>
           <div v-for="item in attender" type="info" @close="handleClose(tag)" class="content"
-                  style="margin-right: 2px">
+               style="margin-right: 2px">
             {{item}}
           </div>
 
@@ -83,64 +83,64 @@
 
 
     <!--<el-row :gutter="20">-->
-      <!--<el-col :span="4">-->
-        <!--<div class="content"><i class="el-icon-d-arrow-right"></i> 当前子任务:</div>-->
-      <!--</el-col>-->
-      <!--<el-col :span="16">-->
-        <!--&lt;!&ndash;<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>&ndash;&gt;-->
-        <!--<el-row>-->
-          <!--&lt;!&ndash;<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>&ndash;&gt;-->
-          <!--<el-tag v-for="subtask in taskandattend" @close="handleClose(tag)" type="info" style="margin-right: 2px">-->
-            <!--{{subtask.name }}-->
-          <!--</el-tag>-->
-        <!--</el-row>-->
-      <!--</el-col>-->
-      <!--<el-col :span="4">-->
-        <!--<el-button @click="dialogVisible1 = true" icon="el-icon-circle-plus-outline">添加子任务</el-button>-->
-        <!--<el-dialog-->
-          <!--title="添加子任务"-->
-          <!--:visible.sync="dialogVisible1"-->
-          <!--width="30%"-->
-          <!--:before-close="closedialog">-->
-          <!--<span>输入任务名</span>-->
-          <!--<el-input v-model="addnewsubtask.name"></el-input>-->
-          <!--<span>输入任务描述</span>-->
-          <!--<el-input v-model="addnewsubtask.description"></el-input>-->
-          <!--<span>开始时间</span>-->
-          <!--<el-date-picker type="datetime" placeholder="选择时间" v-model="addnewsubtask.starttime" style="width: 100%;"-->
-                          <!--value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
+    <!--<el-col :span="4">-->
+    <!--<div class="content"><i class="el-icon-d-arrow-right"></i> 当前子任务:</div>-->
+    <!--</el-col>-->
+    <!--<el-col :span="16">-->
+    <!--&lt;!&ndash;<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>&ndash;&gt;-->
+    <!--<el-row>-->
+    <!--&lt;!&ndash;<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>&ndash;&gt;-->
+    <!--<el-tag v-for="subtask in taskandattend" @close="handleClose(tag)" type="info" style="margin-right: 2px">-->
+    <!--{{subtask.name }}-->
+    <!--</el-tag>-->
+    <!--</el-row>-->
+    <!--</el-col>-->
+    <!--<el-col :span="4">-->
+    <!--<el-button @click="dialogVisible1 = true" icon="el-icon-circle-plus-outline">添加子任务</el-button>-->
+    <!--<el-dialog-->
+    <!--title="添加子任务"-->
+    <!--:visible.sync="dialogVisible1"-->
+    <!--width="30%"-->
+    <!--:before-close="closedialog">-->
+    <!--<span>输入任务名</span>-->
+    <!--<el-input v-model="addnewsubtask.name"></el-input>-->
+    <!--<span>输入任务描述</span>-->
+    <!--<el-input v-model="addnewsubtask.description"></el-input>-->
+    <!--<span>开始时间</span>-->
+    <!--<el-date-picker type="datetime" placeholder="选择时间" v-model="addnewsubtask.starttime" style="width: 100%;"-->
+    <!--value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
 
-          <!--<span>结束时间</span>-->
-          <!--<el-date-picker type="datetime" placeholder="选择时间" v-model="addnewsubtask.endtime" style="width: 100%;"-->
-                          <!--value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
-          <!--<span slot="footer" class="dialog-footer">-->
-            <!--<el-button @click="dialogVisible1 = false">取 消</el-button>-->
-            <!--<el-button type="primary" @click="addsubtask">确 定</el-button>-->
-          <!--</span>-->
-        <!--</el-dialog>-->
+    <!--<span>结束时间</span>-->
+    <!--<el-date-picker type="datetime" placeholder="选择时间" v-model="addnewsubtask.endtime" style="width: 100%;"-->
+    <!--value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
+    <!--<span slot="footer" class="dialog-footer">-->
+    <!--<el-button @click="dialogVisible1 = false">取 消</el-button>-->
+    <!--<el-button type="primary" @click="addsubtask">确 定</el-button>-->
+    <!--</span>-->
+    <!--</el-dialog>-->
 
-      <!--</el-col>-->
+    <!--</el-col>-->
     <!--</el-row>-->
     <br>
 
     <!--<el-row :gutter="20">-->
-      <!--<el-col :span="4">-->
-        <!--<div class="content">当前任务分配:</div>-->
-      <!--</el-col>-->
-      <!--<el-col :span="20">-->
-        <!--&lt;!&ndash;<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>&ndash;&gt;-->
-        <!--<el-row v-for="taskuser in taskandattend" class="content">-->
-          <!--&lt;!&ndash;<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>&ndash;&gt;-->
-          <!--<el-col :span="9" closable @close="handleClose(tag)" style="margin-right: 10px">-->
-            <!--任务名：{{taskuser.name }}-->
-          <!--</el-col>-->
-          <!--<el-col :span="9" closable @close="handleClose(tag)" class="content">-->
-            <!--用户名：{{taskuser.username}}-->
-          <!--</el-col>-->
+    <!--<el-col :span="4">-->
+    <!--<div class="content">当前任务分配:</div>-->
+    <!--</el-col>-->
+    <!--<el-col :span="20">-->
+    <!--&lt;!&ndash;<div class="grid-content bg-purple-light" style="font-size: 20px" v-for="attend in attender">{{attend}}</div>&ndash;&gt;-->
+    <!--<el-row v-for="taskuser in taskandattend" class="content">-->
+    <!--&lt;!&ndash;<el-col v-for="attend in attender" ><div class="grid-content bg-purple" style="font-size: 20px;border-color: azure" >{{attend}}</div></el-col>&ndash;&gt;-->
+    <!--<el-col :span="9" closable @close="handleClose(tag)" style="margin-right: 10px">-->
+    <!--任务名：{{taskuser.name }}-->
+    <!--</el-col>-->
+    <!--<el-col :span="9" closable @close="handleClose(tag)" class="content">-->
+    <!--用户名：{{taskuser.username}}-->
+    <!--</el-col>-->
 
 
-        <!--</el-row>-->
-      <!--</el-col>-->
+    <!--</el-row>-->
+    <!--</el-col>-->
     <!--</el-row>-->
     <br>
 
@@ -191,6 +191,10 @@
         distributetaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//distributeTask",
         fingpeopleurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findUserid",
         addsubtaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//addSubTasks",
+        addmembersurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//addMembers",
+        deleteurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//deleteProject",
+        findcreatorurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//findNameById",
+
 
         ifchange: 0,
         taskDetail: null,
@@ -208,7 +212,7 @@
         },
 
         createid: null,
-        createname:null,
+        createname: null,
 
         dialogVisible: false,
         dialogVisible1: false
@@ -221,12 +225,15 @@
     },
 
     created() {
-      console.log("获得" + this.project)
+      console.log("获得")
+
+      console.log(this.project)
       this.getProjectDetail()
       this.getProjectAttend()
       this.getSubTask()
       this.getProjectTaskAndUser()
       this.createid = this.project.userid
+      this.getCreator()
 
 
     },
@@ -258,6 +265,20 @@
           this.taskandattend = response.data
           console.log(this.taskDetail.name)
         })
+      },
+      //获取项目创始人
+      getCreator: function () {
+        var userid = this.project.userid
+        this.$http.get(this.findcreatorurl, {
+          params: {
+            id: userid
+          }
+        }).then(response=>{
+          console.log(response.bodyText)
+          console.log("hhh")
+          this.createname=response.bodyText
+        })
+
       },
       handleCloseUser: function () {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -322,6 +343,31 @@
       },
       deletetask: function () {
         //删除的逻辑
+        this.$http.get(this.deleteurl, {
+          params: {
+            projectid: this.project.id
+          }
+        }).then(
+          response => {
+            console.log(response.data)
+            if (response.data == -1) {
+              this.$alert('任务删除失败！', '删除失败', {
+                confirmButtonText: '确定',
+              });
+            } else if (response.data == -2) {
+              this.$alert('此任务存在后置任务，请先删除后置任务！！', '删除失败', {
+                confirmButtonText: '确定',
+              });
+            } else {
+              this.$alert('删除成功', {
+                confirmButtonText: '确定',
+              })
+              // location.reload()
+              this.$router.push('/Empty')
+
+
+            }
+          })
       },
       changetask: function () {
 
@@ -329,9 +375,14 @@
       },
       addattend: function () {
         this.dialogVisible = false
-        console.log("ada")
+        console.log(this.projectid)
+        var mem = [this.adduser]
         this.$http
-          .get(this.fingpeopleurl, {params: {username: this.adduser}})
+          .post(this.addmembersurl,
+            {
+              projectid: this.project.id,
+              members: mem
+            })
           .then(response => {
             console.log(response.data)
             if (response.data == -1) {
