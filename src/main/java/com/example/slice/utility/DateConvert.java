@@ -1,4 +1,4 @@
-package com.example.slice.service.util;
+package com.example.slice.utility;
 
 import org.springframework.stereotype.Service;
 

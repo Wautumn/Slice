@@ -1,4 +1,4 @@
-package com.example.slice.other;
+package com.example.slice.utility;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

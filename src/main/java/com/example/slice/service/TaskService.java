@@ -2,12 +2,10 @@ package com.example.slice.service;
 
 import com.example.slice.dao.TaskDAO;
 import com.example.slice.entity.Task;
-import com.example.slice.other.ConvertDate;
-import com.example.slice.service.util.DateConvert;
+import com.example.slice.utility.ConvertDate;
+import com.example.slice.utility.DateConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
