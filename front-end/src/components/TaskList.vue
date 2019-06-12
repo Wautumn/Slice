@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div style="margin-top: 20px; margin-bottom: 20px; text-align:center;">
-      <el-button size="medium" @click="createModal = true">新建任务</el-button>
-      <el-button size="medium" @click="refresh">刷新列表</el-button>
+    <div style="margin-top: 10px; margin-bottom: 20px; text-align:center;">
+      <el-button size="medium" @click="createModal = true" v-if="currentmode==0">新建任务</el-button>
+      <!-- <el-button size="medium" @click="refresh">刷新列表</el-button> -->
     </div>
 
 
@@ -22,49 +22,45 @@
             <el-form-item label="任务描述：">
               <span>{{props.row.description}}</span>
             </el-form-item>
+            
             <el-form-item label="任务状态：">
-              <span>{{tableRowStatus(props.row.status)}}</span>
+              <!-- <span>{{tableRowStatus(props.row.status)}}</span> -->
+           
+               <span>
+                 <!-- {{props.row.status}} -->
+                   <template v-if="props.row.status==1">未开始</template>
+        <template v-else-if="props.row.status==2">进行中</template>
+        <template v-else-if="props.row.status==3">已完成</template>
+        <template v-else-if="props.row.status==4">已过期</template>
+        <template v-else-if="props.row.status==5">已终止</template>
+                 </span>
             </el-form-item>
             <el-form-item label="开始时间：">
               <span>{{props.row.starttime}}</span>
             </el-form-item>
             <el-form-item label="截止时间：">
-              <span>{{props.row.finishtime}}</span>
+              <span>
+        <template v-if="currentmode==1"> {{props.row.endtime}}</template>
+        <template v-else-if="currentmode==0">{{props.row.finishtime}}</template>
+               </span>
             </el-form-item>
+             
           </el-form>
         </template>
       </el-table-column>
-      <!--<el-table-column type="index" width="50"></el-table-column>-->
+      <el-table-column property="id" label="项目" v-if="currentmode==1"></el-table-column>
       <el-table-column property="name" label="任务"></el-table-column>
       <el-table-column label=" 状态" width="75">
-        <template slot-scope="scope" v-if="scope.row.status==0">未开始</template>
-        <template slot-scope="scope" v-else-if="scope.row.status==2">进行中</template>
-        <template slot-scope="scope" v-else-if="scope.row.status==3">已完成</template>
-        <template slot-scope="scope" v-else-if="scope.row.status==4">已过期</template>
-        <template slot-scope="scope" v-else-if="scope.row.status==0">已终止</template>
+        <template slot-scope="taskscope">
+        <template v-if="taskscope.row.status==1">未开始</template>
+        <template v-else-if="taskscope.row.status==2">进行中</template>
+        <template v-else-if="taskscope.row.status==3">已完成</template>
+        <template v-else-if="taskscope.row.status==4">已过期</template>
+        <template v-else-if="taskscope.row.status==5">已终止</template>
+         </template>
       </el-table-column>
-      <!--
-      <el-table-column label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            style="margin-left: 5px"
-            @click="handleDelete(scope.$index, scope.row)"
-          >删除</el-button>
-        </template> 
-        
-      </el-table-column>
-      -->
     </el-table>
-        
 
-    <!--
-    <div style="margin-top: 10px; float: right">
-      <el-button size="medium" @click="setCurrent()">取消选择</el-button>
-    </div> 
-    -->
     <Modal v-model="createModal" title="新建任务" @on-ok="modalOk" draggable>
       <el-form>
         <el-form-item>任务名称：
@@ -73,9 +69,6 @@
         <el-form-item>任务描述：
           <el-input v-model="newTaskDescription" placeholder="请输入任务描述"></el-input>
         </el-form-item>
-        <!-- <el-form-item>预期番茄钟：
-          <el-input-number v-model="newTaskExpectedTomato" :min="1"></el-input-number>
-        </el-form-item> -->
         <el-form-item>开始日期与截止日期：
           <el-date-picker
             v-model="newTaskTime"
@@ -95,6 +88,7 @@
 export default {
   data() {
     return {
+      // currentmode:0,
       currentRow: null,
       createModal: false,
       newTaskName: "",
@@ -105,7 +99,7 @@ export default {
       newTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/insertTask"
     };
   },
-  props: ["tableData"],
+  props: ["tableData","currentmode"],
   methods: {
     setCurrent(row) {
       this.$refs.singleTable.setCurrentRow(row);
@@ -119,17 +113,15 @@ export default {
       }
     },
     tableRowClassName({ row }) {
-      if (row.status == 0 && row.tomatoCompleted == 0) {
+      if (row.status == 1) {
         return "new-task";
       } else if (
-        row.status == 1 &&
-        row.tomatoCompleted >= 0 &&
-        row.tomatoCompleted <= row.expectedTomato
+        row.status == 2
       ) {
         return "processing-task";
-      } else if (row.status == 2 && row.tomatoCompleted == row.expectedTomato) {
+      } else if (row.status == 3) {
         return "finished-task";
-      } else if (row.status == -1) {
+      } else if (row.status == 4) {
         return "aborted-task";
       }
       return "";
@@ -203,7 +195,7 @@ export default {
             //starttime:this.newTaskTime[0],
             starttime:this.newTaskTime[0],
             finishtime:this.newTaskTime[1],
-            userid:"1"
+            userid:"10"
         },)
 
         .then(response => {
@@ -232,7 +224,7 @@ export default {
 
 <style>
 .el-table .processing-task {
-  background: oldlace;
+  background: #F0FFFF;
 }
 .el-table .finished-task {
   background: #f0f9eb;

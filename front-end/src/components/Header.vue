@@ -11,13 +11,7 @@
       <a class="HeaderTitle" href="/">
         <span>Growth</span>
       </a>
-      <!-- <el-menu-item
-        v-for="item in Menus"
-        v-text="item.name"
-        :index="item.componentName"
-        :key="item.id"
-        v-if="isVerified"
-      ></el-menu-item> -->
+      
       <el-menu-item index="/TaskMode">日视图</el-menu-item>
       <el-menu-item index="/Month">月视图</el-menu-item>
       <el-menu-item index="/Project">团队任务</el-menu-item>
@@ -28,7 +22,7 @@
       <el-submenu index="2" v-if="isVerified">
         <template slot="title">设置</template>
         <el-menu-item index="2-1" :route="{path:this.$route.path}" @click="doSetting">账户设置</el-menu-item>
-        <el-menu-item index="2-2" :route="{path:this.$route.path}" @click="taskShow = true">任务设置</el-menu-item>
+        <!-- <el-menu-item index="2-2" :route="{path:this.$route.path}" @click="taskShow = true">任务设置</el-menu-item> -->
         <el-menu-item index="2-3" :route="{path:this.$route.path}" @click="logOut">退出</el-menu-item>
       </el-submenu>
       <el-button @click="ToReg" v-if="!isVerified" type="success" size="small" class="reg-button">注册</el-button>
@@ -36,7 +30,7 @@
     </el-menu>
     <Modal v-model="accountShow" @on-ok="ok" @on-cancel="cancel" width="400">
       <Tabs value="name1" @on-click="accountTab">
-        <TabPane label="账号" name="name1">
+        <!-- <TabPane label="账号" name="name1">
           <div>
             <label class="one-line">昵称：</label>
             <div class="one-line" v-if="changeName">
@@ -60,8 +54,13 @@
               <Button type="text" @click="changeMail = true">更换</Button>
             </div>
           </div>
-        </TabPane>
-        <TabPane label="账号安全" name="name2">
+        </TabPane> -->
+        <TabPane label="账号安全" name="name1">
+          <div>
+            <label class="one-line">昵称：</label>  
+              <span>{{username}}</span>
+          </div>
+          <br>
           <div>原密码:
             <Input v-model="originalPW" type="password" placeholder="请输入原密码" class="input-item"/>
           </div>
@@ -70,7 +69,7 @@
             <Input v-model="newPW" type="password" placeholder="请输入新密码" class="input-item"/>
           </div>
         </TabPane>
-        <TabPane label="修改头像" name="name3">
+        <!-- <TabPane label="修改头像" name="name3">
           <el-upload
             class="avatar-uploader"
             action="https://jsonplaceholder.typicode.com/posts/"
@@ -81,49 +80,14 @@
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-        </TabPane>
+        </TabPane> -->
       </Tabs>
       <div slot="footer" v-if="changePass">
-        <!-- <div>确定</div> -->
+     
         <Button type="error" @click="passChange">确认</Button>
       </div>
     </Modal>
-    <!-- <Modal v-model="taskShow" @on-ok="timeChange" @on-cancel="cancel">
-      <Tabs value="name1">
-        <TabPane label="目标设置" name="name1">
-          <div class="one-line">
-            <span>每日目标</span>
-            <InputNumber :min="1" v-model="dayGoal" class="input-number"></InputNumber>
-            <span>个番茄</span>
-          </div>
-          <br>
-          <div class="one-line">
-            <span>每周目标</span>
-            <InputNumber :min="1" v-model="weekGoal" class="input-number"></InputNumber>
-            <span>个番茄</span>
-          </div>
-          <br>
-          <div class="one-line">
-            <span>每月目标</span>
-            <InputNumber :min="1" v-model="monthGoal" class="input-number"></InputNumber>
-            <span>个番茄</span>
-          </div>
-        </TabPane>
-        <TabPane label="番茄设置" name="name2">
-          <div class="one-line">
-            <span>番茄时间</span>
-            <InputNumber :min="10" v-model="pomoTime" class="input-number"></InputNumber>
-            <span>分钟</span>
-          </div>
-          <br>
-          <div class="one-line">
-            <span>休息时间</span>
-            <InputNumber :min="1" v-model="restTime" class="input-number"></InputNumber>
-            <span>分钟</span>
-          </div>
-        </TabPane>
-      </Tabs>
-    </Modal> -->
+   
   </div>
 </template>
 
@@ -179,13 +143,13 @@ export default {
     //   this.$emit("reload");
     // }
     this.username = sessionStorage.username;
-    this.email = sessionStorage.email;
-    this.dayGoal = parseInt(sessionStorage.dayGoal);
-    this.weekGoal = parseInt(sessionStorage.weekGoal);
-    this.monthGoal = parseInt(sessionStorage.monthGoal);
-    if (sessionStorage.tomoLength) {
-      this.pomoTime = parseInt(sessionStorage.tomoLength);
-    }
+    // this.email = sessionStorage.email;
+    // this.dayGoal = parseInt(sessionStorage.dayGoal);
+    // this.weekGoal = parseInt(sessionStorage.weekGoal);
+    // this.monthGoal = parseInt(sessionStorage.monthGoal);
+    // if (sessionStorage.tomoLength) {
+    //   this.pomoTime = parseInt(sessionStorage.tomoLength);
+    // }
   },
   props: ["isVerified"],
   methods: {

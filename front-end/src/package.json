@@ -2,6 +2,9 @@
   "dependencies": {
     "dhtmlx-gantt": "^6.1.6",
     "echarts": "^4.2.1",
-    "vue-atlas": "^2.0.13"
+    "vue-atlas": "^2.0.13",
+    "vuetify": "1.1.9",
+    "babel-loader": "^7.1.5",
+    "dayspan-vuetify": "0.2.3"
   }
 }

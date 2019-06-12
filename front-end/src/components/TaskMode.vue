@@ -433,11 +433,14 @@
         // this.currentFinishedPomo = msg.tomatoCompleted;
         // this.currentTotalPomo = parseInt(msg.expectedTomato);
         this.currentTaskDetail = msg.description;
-        if(this.currentmode==1)
+        console.log("what is message")
+        console.log(msg)
+        console.log(this.tasktype)
+        if(this.tasktype==1)
         {
           this.currentDeadline = msg.endtime;
         }
-        else if(this.currentmode==0)
+        else if(this.tasktype==0)
         {
           this.currentDeadline=msg.finishtime;
         }
@@ -459,7 +462,8 @@
         {
           this.isTaskFinish=1
         }
-        console.log(this.currentStarttime + "ccccccccccc")
+        console.log(this.currentStarttime + "is fucking ok!")
+        console.log(this.currentDeadline+"is working normally")
         if (Date.parse(this.date) < Date.parse(this.currentStarttime.replace(/-/g, "/"))) {
           this.ifstart = 0//还没开始
          console.log("1")
