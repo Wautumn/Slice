@@ -4,7 +4,7 @@
       <div id="large-header" class="large-header">
         <canvas id="demo-canvas"></canvas>
         <h1 class="main-title">Slice</h1>
-        <h2>基于番茄工作法的简单易行的时间管理工具</h2>
+        <h2>简单易行的时间管理工具</h2>
       </div>
       <nav class="codrops-demos">
         <!--<a href="index.html">Demo 1</a>-->
