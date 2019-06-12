@@ -31,8 +31,8 @@
                    <template v-if="props.row.status==1">未开始</template>
         <template v-else-if="props.row.status==2">进行中</template>
         <template v-else-if="props.row.status==3">已完成</template>
-        <template v-else-if="props.row.status==4">已过期</template>
-        <template v-else-if="props.row.status==5">已终止</template>
+        <template v-else-if="props.row.status==4">已终止</template>
+        <template v-else-if="props.row.status==5">已过期</template>
                  </span>
             </el-form-item>
             <el-form-item label="开始时间：">
@@ -55,8 +55,8 @@
         <template v-if="taskscope.row.status==1">未开始</template>
         <template v-else-if="taskscope.row.status==2">进行中</template>
         <template v-else-if="taskscope.row.status==3">已完成</template>
-        <template v-else-if="taskscope.row.status==4">已过期</template>
-        <template v-else-if="taskscope.row.status==5">已终止</template>
+        <template v-else-if="taskscope.row.status==4">已终止</template>
+        <template v-else-if="taskscope.row.status==5">已过期</template>
          </template>
       </el-table-column>
     </el-table>

@@ -11,13 +11,13 @@
       <a class="HeaderTitle" href="/">
         <span>Slice</span>
       </a>
-     
-      <el-menu-item v-if="isVerified" index="/TaskMode"><i class="icon-glyph-156"></i>日视图</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/Month"><i class="icon-glyph-17"></i>月视图</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/Project"><i class="icon-glyph-265"></i>团队任务</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/WeekAdvice"><i class="icon-glyph-173"></i>分析</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/Recom"><i class="icon-glyph-142"></i>推荐</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/FeedList"><i class="icon-glyph-109"></i>反馈</el-menu-item>
+
+      <el-menu-item v-if="isVerified" index="/TaskMode"><i class="icon-glyph-156"></i><strong>日视图</strong></el-menu-item>
+      <el-menu-item v-if="isVerified" index="/Month"><i class="icon-glyph-17"></i><strong>月视图</strong></el-menu-item>
+      <el-menu-item v-if="isVerified" index="/Project"><i class="icon-glyph-265"></i><strong>团队任务</strong></el-menu-item>
+      <el-menu-item v-if="isVerified" index="/WeekAdvice"><i class="icon-glyph-173"></i><strong>分析</strong></el-menu-item>
+      <el-menu-item v-if="isVerified" index="/Recom"><i class="icon-glyph-142"></i><strong>推荐</strong></el-menu-item>
+      <el-menu-item v-if="isVerified" index="/FeedList"><i class="icon-glyph-109"></i><strong>反馈</strong></el-menu-item>
 
       <el-submenu index="2" v-if="isVerified">
         <template slot="title">设置</template>
@@ -374,9 +374,10 @@ export default {
 }
 
 .HeaderTitle {
-  color: lightskyblue;
+  font-family: custom-icons;
+  color: #6b6b6b;
   float: left;
-  padding: 15px 15px;
+  padding: 20px 15px;
   font-size: 34px;
   line-height: 20px;
   outline: none; /*取消选中后的蓝框*/
