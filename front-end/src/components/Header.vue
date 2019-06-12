@@ -11,7 +11,7 @@
       <a class="HeaderTitle" href="/">
         <span>Slice</span>
       </a>
-      
+     
       <el-menu-item v-if="isVerified" index="/TaskMode"><i class="icon-glyph-156"></i>日视图</el-menu-item>
       <el-menu-item v-if="isVerified" index="/Month"><i class="icon-glyph-17"></i>月视图</el-menu-item>
       <el-menu-item v-if="isVerified" index="/Project"><i class="icon-glyph-265"></i>团队任务</el-menu-item>
@@ -374,10 +374,10 @@ export default {
 }
 
 .HeaderTitle {
-  color: #149290;
+  color: lightskyblue;
   float: left;
   padding: 15px 15px;
-  font-size: 24px;
+  font-size: 34px;
   line-height: 20px;
   outline: none; /*取消选中后的蓝框*/
   text-decoration: none; /*取消a标签下划线*/
