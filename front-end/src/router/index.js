@@ -54,8 +54,8 @@ routes.push({
 
 routes.push({
   path: `/`,
-  name: 'FrontPage',
-  component: () => import(`@/components/FrontPage`),
+  name: 'Welcome',
+  component: () => import(`@/components/Welcome`),
   // props: true,
 })
 

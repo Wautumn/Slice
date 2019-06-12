@@ -19,6 +19,12 @@ import 'iview/dist/styles/iview.css';
 import 'dhtmlx-gantt/codebase/dhtmlxgantt.css'
 import 'dhtmlx-gantt/codebase/dhtmlxgantt'
 import "../static/api"
+import "../static/demo-3"
+import "../static/html5"
+import "../static/rAF"
+import "../static/EasePack.min"
+import "../static/TweenLite.min"
+
 
 Vue.config.productionTip = false
 
