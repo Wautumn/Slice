@@ -8,17 +8,10 @@
   <div slot="header" class="clearfix">
     <span>
 
-      <el-dropdown  @command="handleCommand">
-  <span class="el-dropdown-link">
-  {{this.tasktype}}<i class="el-icon-arrow-down el-icon--right"></i>
-  </span>
-
-
-  <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item command="a">个人任务</el-dropdown-item>
-    <el-dropdown-item command="b">团队任务</el-dropdown-item>
-  </el-dropdown-menu>
-</el-dropdown>
+    <el-radio-group v-model="radio" @change="handleCommand">
+    <el-radio :label="3">个人任务</el-radio>
+    <el-radio :label="6">团队任务</el-radio>
+  </el-radio-group>
     </span>
    <el-popover
   placement="right"
@@ -30,7 +23,16 @@
   
   </div>
   <div>
-    <tasklist @transferTask="getTasksByUserid" :tableData="taskData"></tasklist>
+     <template>
+        <template v-if="tasktype==0">
+          <tasklist @transferTask="getTasksByUserid" :tableData="taskData" :currentmode="tasktype"></tasklist>
+        </template>
+        <template v-else-if="tasktype==1">
+            <tasklist @transferTask="getTasksByUserid" :tableData="taskData" :currentmode="tasktype"></tasklist>
+          <!-- <teamTasklist></teamTasklist> -->
+        </template>
+         </template>
+    <!-- <tasklist @transferTask="getTasksByUserid" :tableData="taskData" :currentmode="tasktype"></tasklist> -->
   </div>
 </el-card>
         
@@ -57,25 +59,23 @@
 
           <el-button
             :type="countButtonType"
-            v-show="!currentCondition"
-            :disabled="countOn || currentStatus == -1"
-            @click="startCount"
-          >开始时钟
+            :disabled="isTaskFinish==0"
+            @click="finishTask"
+          >完成任务
           </el-button>
           <el-button
             type="warning"
-            v-show="!currentCondition"
-            :disabled="!countOn"
-            @click="stopCount"
-          >中止时钟
+            :disabled="isTaskFinish==0"
+            @click="breakTask"
+          >废弃任务
           </el-button>
-          <el-button
+          <!-- <el-button
             type="success"
             v-show="currentCondition"
             :disabled="currentStatus == 2"
             @click="finishTask"
           >完成任务
-          </el-button>
+          </el-button> -->
           <br>
         </div>
         <div v-show="selected" style="margin-left: 20px; margin-right: 20px;">
@@ -99,13 +99,13 @@
               <el-form-item>
                 <el-button type="primary" @click="onSubmit">保存</el-button>
                 <el-button type="danger" style="float: right;" @click="deleteTask">删除记录</el-button>
-                <el-button
+                <!-- <el-button
                   type="warning"
                   style="float: right;"
                   :disabled="currentStatus == -1"
                   @click="breakTask"
                 >废弃任务
-                </el-button>
+                </el-button> -->
               </el-form-item>
             </el-form>
           </div>
@@ -125,13 +125,6 @@
             style="margin-top: 10px; margin-bottom:10px;"
           >
           </el-input>
-            <!-- <el-button
-            type="warning"
-            v-show="!currentSummaryCondition"
-            :disabled="!summaryCountOn"
-            @click="changeSummary"
-          >修改
-          </el-button> -->
           <el-button type="primary" @click="saveDailySummary" style="float: right;">{{currentSummaryText}}</el-button>
         </el-footer>
       </el-main>
@@ -145,17 +138,20 @@
   import {clearInterval} from "timers";
   import {setInterval} from "timers";
   import TaskList from "@/components/TaskList";
-  import TodoList from "@/components/TodoList"
+  import TodoList from "@/components/TodoList";
+  import teamTaskList from "@/components/teamTaskList";
   import Clock from 'vue-clock2';
   export default {
     components: {
       tasklist: TaskList,
       todolist:TodoList,
+      teamTasklist:teamTaskList,
       Clock
     },
     data() {
       return {
-        tasktype:"个人任务",
+        tasktype:0,
+        isTaskFinish:1,
         currentTaskUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTodayTasksByUserid",
         date: new Date(),
         // clocktime:null,
@@ -199,6 +195,7 @@
         currentStarttime: null,
         taskData: [],
         currentSummaryId:null,
+        radio: 3,
         // taskRequestUrl: "http://localhost:8080/task/getTask",
         // taskStartUrl: "http://localhost:8080/task/startTask",
         // tomatoStartUrl: "http://localhost:8080/startTomato",
@@ -222,8 +219,14 @@
         tomatoBreakUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/breakTomato",
         tomatoEndUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/endTomato",
         modifyTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/changeTaskDescription",
-        breakTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/task/breakTask",
-        endTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/task/endTask",
+        // breakTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/task/breakTask",
+        // endTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/task/endTask",
+
+        
+        startTaskurl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/startTask",
+        breakTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/discardTask",
+        endTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/finishTask",
+        delayTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/delayTask",
     
       };
     },
@@ -238,7 +241,7 @@
 
 
 
-      sessionStorage.userId = "1";
+      sessionStorage.userId = "10";
       this.getcurrentTime = this.currentTime();
       this.getcurrentTime = this.getcurrentTime.substring(0, 19);
       this.$http
@@ -263,14 +266,14 @@
     methods: {
        handleCommand(command) {
         
-        if(command=='a')
+        if(command==3)
         {this.currentTaskUrl=this.taskRequestUrl
-        this.tasktype="个人任务"
+        this.tasktype=0
         }
-        else if(command=='b')
+        else if(command==6)
         {
           this.currentTaskUrl=this.teamRequestUrl
-          this.tasktype="团队任务"
+          this.tasktype=1
         }
           this.$http
               .get(this.currentTaskUrl, {
@@ -392,11 +395,13 @@
 
       //！！！！！！！！！！！！！！！！！！
       getTasksByUserid(msg) {
+        console.log("----------------------msg")
+        console.log(msg)
         if (msg == "new") {
           this.$http
             .get(this.currentTaskUrl, {
               // params: { userId: sessionStorage.userId }
-              params: {userid: "1"}
+              params: {userid: "10"}
             })
             .then(response => {
               this.taskData = response.data;
@@ -428,21 +433,53 @@
         // this.currentFinishedPomo = msg.tomatoCompleted;
         // this.currentTotalPomo = parseInt(msg.expectedTomato);
         this.currentTaskDetail = msg.description;
-        this.currentDeadline = msg.finishtime;
+        console.log("what is message")
+        console.log(msg)
+        console.log(this.tasktype)
+        if(this.tasktype==1)
+        {
+          this.currentDeadline = msg.endtime;
+        }
+        else if(this.tasktype==0)
+        {
+          this.currentDeadline=msg.finishtime;
+        }
         this.currentStarttime = msg.starttime;
+        console.log("gagagagaga")
+        console.log(this.currentStarttime)
         this.currentStatus = msg.status;
+        this.currentTaskid=msg.id;
         this.currentCondition = false;
-
-        console.log(this.currentStarttime + "ccccccccccc")
+        if(msg.status==3)
+        {
+          this.isTaskFinish=0
+        }
+        else if(msg.status==4||msg.status==5)
+        {
+          this.isTaskFinish=0
+        }
+        else if(msg.status==1||msg.status==2)
+        {
+          this.isTaskFinish=1
+        }
+        console.log(this.currentStarttime + "is fucking ok!")
+        console.log(this.currentDeadline+"is working normally")
         if (Date.parse(this.date) < Date.parse(this.currentStarttime.replace(/-/g, "/"))) {
           this.ifstart = 0//还没开始
+         console.log("1")
           this.endstart = Date.parse(this.currentStarttime - this.date)
         } else if ((Date.parse(this.date) > Date.parse(this.currentStarttime.replace(/-/g, "/"))) && (Date.parse(this.date) < Date.parse(this.currentDeadline.replace(/-/g, "/")))) {
           this.ifstart = 1;//进行中
+            console.log("2")
+           this.starttask()//任务开始修改状态
           this.endfinish = Date.parse(this.currentDeadline) - Date.parse(this.date);
         } else {
+            console.log("3")
           this.ifstart = 2;//已经结束
+           this.delayTask()//过期修改状态
         }
+        console.log("hhhhhhhhh")
+ console.log(this.ifstart)
         // console.log(this.currentStarttime + "aaaa");
         var _this = this;
         this.timer = setInterval(function () {
@@ -554,44 +591,44 @@
             });
           });
       },
-      finishTask() {
-        this.$http.get(this.endTaskUrl, {
-          params: {
-            userid: sessionStorage.userId,
-            taskName: this.currentTaskName,
-            startTime: new Date().format("yyyy-MM-dd hh:mm:ss")
-          }
-        });
-        this.taskData[this.currentTask].status = 2;
-        this.currentStatus = 2;
-      },
-      breakTask() {
-        this.$confirm("此操作将废弃当前任务, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        })
-          .then(() => {
-            this.$http.get(this.breakTaskUrl, {
-              params: {
-                userid: sessionStorage.userId,
-                taskName: this.currentTaskName
-              }
-            });
-            this.taskData[this.currentTask].status = -1;
-            this.currentStatus = -1;
-            this.$message({
-              type: "success",
-              message: "废弃成功!"
-            });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消废弃"
-            });
-          });
-      },
+      // finishTask() {
+      //   this.$http.get(this.endTaskUrl, {
+      //     params: {
+      //       userid: sessionStorage.userId,
+      //       taskName: this.currentTaskName,
+      //       startTime: new Date().format("yyyy-MM-dd hh:mm:ss")
+      //     }
+      //   });
+      //   this.taskData[this.currentTask].status = 2;
+      //   this.currentStatus = 2;
+      // },
+      // breakTask() {
+      //   this.$confirm("此操作将废弃当前任务, 是否继续?", "提示", {
+      //     confirmButtonText: "确定",
+      //     cancelButtonText: "取消",
+      //     type: "warning"
+      //   })
+      //     .then(() => {
+      //       this.$http.get(this.breakTaskUrl, {
+      //         params: {
+      //           userid: sessionStorage.userId,
+      //           taskName: this.currentTaskName
+      //         }
+      //       });
+      //       this.taskData[this.currentTask].status = -1;
+      //       this.currentStatus = -1;
+      //       this.$message({
+      //         type: "success",
+      //         message: "废弃成功!"
+      //       });
+      //     })
+      //     .catch(() => {
+      //       this.$message({
+      //         type: "info",
+      //         message: "已取消废弃"
+      //       });
+      //     });
+      // },
       //提交修改
       onSubmit() {
         this.$http
@@ -752,9 +789,81 @@
               response => {
                 console.log(failed);
               };      
-      }
+      },
+       starttask:function () {
+        this.$http.get(this.startTaskurl, {
+          params: {
+            taskid: this.currentTaskid,
+          }
+        }).then(res=>{
+          var a=res.data
+          this.currentStatus=2
+        });
+
+      },
+      finishTask() {//完成
+        this.$http.get(this.endTaskUrl, {
+          params: {
+            taskid: this.currentTaskid,
+            time: new Date().format("yyyy-MM-dd hh:mm:ss")
+          }
+        }).then(res=>{
+          this.currentStatus=3
+           this.isTaskFinish=0
+        });
+      },
+      breakTask() {//中断
+        this.$http.get(this.breakTaskUrl, {
+          params: {
+            taskid: this.currentTaskid,
+            time: new Date().format("yyyy-MM-dd hh:mm:ss")
+          }
+        }).then(res=>{
+          this.currentStatus=4
+          this.isTaskFinish=0
+          this.getCurrentTaskList()
+
+        });
+      },
+      delayTask() {//过期
+        this.$http.get(this.delayTaskUrl, {
+          params: {
+            taskid: this.currentTaskid,
+            time: new Date().format("yyyy-MM-dd hh:mm:ss")
+          }
+        }).then(res=>{
+          this.currentStatus=5
+          this.getCurrentTaskList()
+        });
+      },
+      getCurrentTaskList(){//重新获取任务列表
+      this.$http
+            .get(this.currentTaskUrl, {
+              // params: { userId: sessionStorage.userId }
+              params: {userid: "10"}
+            })
+            .then(response => {
+              this.taskData = response.data;
+              var nlist = [];
+              for (var item of this.taskData) {
+                // if (item.deadline >= this.getcurrentTime)
+                nlist.push(item);
+              }
+              this.taskData = nlist;
+            }),
+            response => {
+              console.log("failed");
+            };
+          console.log(this.taskData);
+          return;
+      },
+      getJoinedProjectTask(){
+        //先获取今天的团队任务
+
+      },
     }
   };
+  
 </script>
 
 <style>

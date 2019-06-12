@@ -123,6 +123,7 @@ export default {
           begindate=begindate.format("yyyy-MM-dd")
             console.log(begindate)
           let tmpData = date_slice(begindate,finishDate,this.taskData);
+          console.log("tmpdata")
           console.log(tmpData)
 
           for(let k=0;k<7;k++)
@@ -143,13 +144,13 @@ export default {
             for(let j of this.currentData)
             {
                 if(j.weekday==i.settime)
-                {  
-                    if(i.status==2)
+                {  console.log("status")
+                    if(i.status==0)
                     {   
                         j.doingcount=j.doingcount+1
                         j.allcount=j.allcount+1
                     }
-                    else if(i.status==3)
+                    else if(i.status==0)
                     {
                         j.finishcount=j.finishcount+1
                         j.allcount=j.allcount+1

@@ -8,7 +8,6 @@
       <el-input c style="width:240px" placeholder="请输入密码" v-model="password" type="password" clearable></el-input>
       <br>  <br>  
       <el-button type="primary" @click="login" round class="button">登录</el-button>
-      <!-- <button v-on:click="login">登录</button> -->
       <span v-on:click="ToRegister">没有账号？马上注册</span>
     </div>
   </div>
@@ -67,6 +66,7 @@ export default {
       password: "",
       userid:"",
       token:"",
+      email:"",
       loginurl :"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/login",
       regiurl :"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/register",
       findUserIdUrl :"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findUserid",
@@ -80,7 +80,7 @@ export default {
     if (userId) {
       //修改
       this.$emit("userSignIn", userId);
-      this.$router.push("/PomoMode");
+      this.$router.push("/TaskMode");
       console.log("cookie exist");
     }
   },
@@ -95,7 +95,7 @@ export default {
       setCookie("userid", userID, 1000 * 60);
       setTimeout(
         function() {
-          this.$router.push("/PomoMode");
+          this.$router.push("/TaskMode");
         }.bind(this),
         1000
       );
@@ -134,13 +134,28 @@ export default {
             },)
            .then(
              response => {
-            //  this.token = response.data;
-                   this.tishi = "登录成功";
+               if(response.data==2)
+              {this.tishi = "登录成功";
               this.showTishi = true;
+
+              console.log("登陆成功")
+              //console.log(this.email)
+
+
+              sessionStorage.username=this.username
+              sessionStorage.userid=this.userid
+              sessionStorage.password=this.password
+              //sessionStorage.email=this.email
               // var userID = code;
               // this.logInSuccess(code);
-              //  this.$emit("userSignIn", userId);
+               this.$emit("userSignIn",this.userid);
               this.$router.push("/TaskMode");
+              }
+              else{
+                console.log("登陆失败")
+                this.tishi="登陆失败";
+                this.showTishi=true;
+              }
             }
 
            );

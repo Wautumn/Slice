@@ -5,8 +5,12 @@ import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
 import VCharts from 'v-charts'
+import Vuetify from 'vuetify'
+import DaySpanVuetify from 'dayspan-vuetify'
 
-
+import 'vuetify/dist/vuetify.min.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import 'dayspan-vuetify/dist/lib/dayspan-vuetify.min.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
@@ -16,7 +20,14 @@ import 'dhtmlx-gantt/codebase/dhtmlxgantt.css'
 import 'dhtmlx-gantt/codebase/dhtmlxgantt'
 import "../static/api"
 
+Vue.config.productionTip = false
 
+Vue.use(Vuetify)
+Vue.use(DaySpanVuetify, {
+  methods: {
+    getDefaultEventColor: () => '#1976d2'
+  }
+})
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);

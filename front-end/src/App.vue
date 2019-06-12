@@ -28,10 +28,11 @@ export default {
   },
   methods: {
     //子组件(login)将用户名传过来
-    userSignIn(userID) {
+    userSignIn(userid) {
+      console.log("isVerified Change")
       //设置用户ID
-      if (sessionStorage.userId && parseInt(sessionStorage.userId) !== userID) {
-        console.log(userID);
+      if (sessionStorage.userid && parseInt(sessionStorage.userid) !== userid) {
+        console.log(userid);
         //清空前用户的数据
         console.log("delete user message")
         localStorage.clear();
@@ -41,8 +42,8 @@ export default {
         deleteDB("dayTomoDB");
       }
       // localStorage.clear();
-      sessionStorage.userId = userID;
-      this.userId = sessionStorage.userId;
+      // sessionStorage.userId = userID;
+      // this.userId = sessionStorage.userId;
       sessionStorage.isVerified = true;
       this.isVerified = true;
       this.loading();

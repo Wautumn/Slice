@@ -131,13 +131,21 @@ routes.push({
   component: () => import(`@/components/Recom`),
 
   
-})
+}),
 routes.push({
   path: `/Empty`,
   name: 'Empty',
   component: () => import(`@/components/Empty`),
 
+  
+}),
 
+routes.push({
+  path: `/newMonthView`,
+  name: 'newMonthView',
+  component: () => import(`@/components/newMonthView`),
+
+  
 })
 
 export default new Router({
