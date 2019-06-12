@@ -16,15 +16,18 @@
         </el-tag>
       </div>
     </div>
-    <div class="section-container">
-      <el-card class="box-card" v-for="i in articles" :key="i.id">
+    <div class="section-container" >
+      <el-card class="box-card" v-for="i in articles" :key="i.id" style="width: 350px">
         <img :src="i.image" class="image">
         <div class="article">
           <div class="article-container">
             <a :href="i.url">
               <h3>{{i.title}}</h3>
             </a>
-            <p style="width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{i.content}}</p>
+            <p id="article" style="width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{i.content}}</p>
+
+            <br><br>
+            <div @click="completearticle" >查看全文</div>
           </div>
           <div class="article-footer">
             <p class="aurthor">{{i.author}}</p>
@@ -58,6 +61,7 @@
         showArticles: [],
         userid: 8,
         loading: false,
+        complete:null,
         tags:
           [
             {name: "标签一", type: ""},
@@ -71,7 +75,17 @@
       }
         ;
     },
+    mounted(){
+       this.complete=document.querySelector('#article');
+       console.log(this.complete)
+    },
     methods: {
+      completearticle:function(){
+        // this.complete.style.overflow=null
+        // this.complete.style.textOverflow=null
+
+
+      },
       handleClose(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);
         console.log(tag.name);
