@@ -12,12 +12,12 @@
         <span>Slice</span>
       </a>
       
-      <el-menu-item v-if="isVerified" index="/TaskMode"><i class="icon-glyph-220"></i>日视图</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/Month">月视图</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/Project">团队任务</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/WeekAdvice">分析</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/Recom">推荐</el-menu-item>
-      <el-menu-item v-if="isVerified" index="/FeedList">反馈</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/TaskMode"><i class="icon-glyph-156"></i>日视图</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/Month"><i class="icon-glyph-17"></i>月视图</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/Project"><i class="icon-glyph-265"></i>团队任务</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/WeekAdvice"><i class="icon-glyph-173"></i>分析</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/Recom"><i class="icon-glyph-142"></i>推荐</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/FeedList"><i class="icon-glyph-109"></i>反馈</el-menu-item>
 
       <el-submenu index="2" v-if="isVerified">
         <template slot="title">设置</template>
