@@ -15,20 +15,22 @@
   },
   "dependencies": {
     "dayspan-vuetify": "^0.4.0",
-    "echarts": "^4.2.0-rc.2",
+    "echarts": "^4.2.1",
+    "vuetify": "1.1.9",
+    "moment": "^2.24.0",
+    "babel-loader": "^7.1.5",
+    "dhtmlx-gantt": "^6.1.6",
     "element-ui": "^2.0.4",
     "iview": "^3.1.5",
-    "moment": "^2.24.0",
     "v-charts": "^1.19.0",
     "vue": "^2.5.2",
-    "vue-blu": "^0.1.9",
     "vue-clock2": "^1.1.5",
     "vue-fullcalendar": "^1.0.9",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
+    "vuejs-dialog": "^1.4.0",
     "vuex": "^3.0.1",
-    "vuetify": "1.1.9",
-    "babel-loader": "^7.1.5"
+    "webpack-dev-server": "^2.11.5"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -88,31 +90,12 @@
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
-    "webpack-dev-server": "^2.9.1",
+    "webpack-dev-server": "^2.11.5",
     "webpack-merge": "^4.1.0"
   },
   "engines": {
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
   },
   "browserslist": [
     "> 1%",
