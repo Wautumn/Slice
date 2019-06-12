@@ -9,7 +9,7 @@ var demo3=(function() {
     initAnimation();
 
     function initHeader() {
-        width = window.innerWidth;
+        width = 1200;
         height = window.innerHeight;
         target = {x: 0, y: height};
 
@@ -67,6 +67,7 @@ var demo3=(function() {
     function resize() {
         width = window.innerWidth;
         height = window.innerHeight;
+        // largeHeader=document.getElementById("large-header")
         largeHeader.style.height = height+'px';
         canvas.width = width;
         canvas.height = height;

@@ -22,9 +22,7 @@
 
   export default {
     name: "Welcome",
-    data() {
 
-    },
     mounted() {
       this.methods1()
     },
@@ -43,7 +41,7 @@
   }
   h2 {
     position:absolute;
-    left:180px;
+    left:320px;
     top:400px;
     color: white;
     font-size: 42px;
