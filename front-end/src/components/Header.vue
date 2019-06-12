@@ -12,12 +12,12 @@
         <span>Growth</span>
       </a>
       
-      <el-menu-item index="/TaskMode">日视图</el-menu-item>
-      <el-menu-item index="/Month">月视图</el-menu-item>
-      <el-menu-item index="/Project">团队任务</el-menu-item>
-      <el-menu-item index="/WeekAdvice">分析</el-menu-item>
-      <el-menu-item index="/Recom">推荐</el-menu-item>
-      <el-menu-item index="/FeedList">反馈</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/TaskMode">日视图</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/Month">月视图</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/Project">团队任务</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/WeekAdvice">分析</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/Recom">推荐</el-menu-item>
+      <el-menu-item v-if="isVerified" index="/FeedList">反馈</el-menu-item>
 
       <el-submenu index="2" v-if="isVerified">
         <template slot="title">设置</template>
