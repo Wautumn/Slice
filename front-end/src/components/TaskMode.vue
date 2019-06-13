@@ -66,7 +66,7 @@
               </el-button>
               <el-button
                 type="warning"
-                :disabled="isTaskFinish==0"
+                :disabled="isTaskFinish==0||tasktype==1"
                 @click="breakTask"
               >废弃任务
               </el-button>
@@ -229,6 +229,11 @@
         breakTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/breakTask",
         endTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/finishTask",
         delayTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/delayTask",
+
+        endProjectTaskUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/finishProjectTask",
+        startProjectTaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/startProjectTask",
+        delayProjectTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/delayTask1",
+
 
       };
     },
@@ -587,44 +592,6 @@
             });
           });
       },
-      // finishTask() {
-      //   this.$http.get(this.endTaskUrl, {
-      //     params: {
-      //       userid: sessionStorage.userId,
-      //       taskName: this.currentTaskName,
-      //       startTime: new Date().format("yyyy-MM-dd hh:mm:ss")
-      //     }
-      //   });
-      //   this.taskData[this.currentTask].status = 2;
-      //   this.currentStatus = 2;
-      // },
-      // breakTask() {
-      //   this.$confirm("此操作将废弃当前任务, 是否继续?", "提示", {
-      //     confirmButtonText: "确定",
-      //     cancelButtonText: "取消",
-      //     type: "warning"
-      //   })
-      //     .then(() => {
-      //       this.$http.get(this.breakTaskUrl, {
-      //         params: {
-      //           userid: sessionStorage.userId,
-      //           taskName: this.currentTaskName
-      //         }
-      //       });
-      //       this.taskData[this.currentTask].status = -1;
-      //       this.currentStatus = -1;
-      //       this.$message({
-      //         type: "success",
-      //         message: "废弃成功!"
-      //       });
-      //     })
-      //     .catch(() => {
-      //       this.$message({
-      //         type: "info",
-      //         message: "已取消废弃"
-      //       });
-      //     });
-      // },
       //提交修改
       onSubmit() {
         this.$http
@@ -784,7 +751,10 @@
           };
       },
       starttask: function () {
-        this.$http.get(this.startTaskurl, {
+        //个人任务
+        if(this.tasktype==0)
+        {
+          this.$http.get(this.startTaskurl, {
           params: {
             id: this.currentTaskid,
           }
@@ -792,10 +762,25 @@
           var a = res.data
           this.currentStatus = 2
         });
-
+        }
+        //团队任务
+        else if(tasktype==1)
+        {
+        this.$http.get(this.startProjectTaskurl, {
+          params: {
+            taskid: this.currentTaskid,
+          }
+        }).then(res => {
+          var a = res.data
+          this.currentStatus = 2
+        });
+        }
       },
       finishTask() {//完成
         console.log("task" + this.currentTask)
+        //个人任务
+        if(this.tasktype==0)
+        {
         this.$http.get(this.endTaskUrl, {
           params: {
             id: this.currentTaskid,
@@ -811,6 +796,26 @@
             });
          
         });
+        }
+        else if(tasktype==1)
+        {
+        //团队任务
+        this.$http.get(this.endProjectTaskUrl, {
+          params: {
+            taskid: this.currentTaskid,
+            time: new Date().format("yyyy-MM-dd hh:mm:ss")
+          }
+        }).then(res=>{
+          this.currentStatus=3
+           this.isTaskFinish=0
+             
+            this.$message({
+              type: 'info',
+              message: "任务完成！"
+            });
+         
+        });
+        }
       },
       breakTask() {//中断
         this.$http.get(this.breakTaskUrl, {
@@ -826,15 +831,30 @@
         });
       },
       delayTask() {//过期
+       if(this.tasktype==0)
+       {//个人
         this.$http.get(this.delayTaskUrl, {
           params: {
             id: this.currentTaskid,
             time: new Date().format("yyyy-MM-dd hh:mm:ss")
           }
         }).then(res => {
+          this.currentStatus = 4
+          this.getCurrentTaskList()
+        });
+       }
+       else if(this.tasktype==1)
+       {//团队
+         this.$http.get(this.delayProjectTaskUrl, {
+          params: {
+            taskid: this.currentTaskid,
+            //time: new Date().format("yyyy-MM-dd hh:mm:ss")
+          }
+        }).then(res => {
           this.currentStatus = 5
           this.getCurrentTaskList()
         });
+       }
       },
       getCurrentTaskList() {//重新获取任务列表
         this.$http
