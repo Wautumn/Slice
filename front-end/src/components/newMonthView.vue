@@ -89,220 +89,12 @@ export default {
       description:[],
       taskurl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTasksByUserid",
     //--------------
-    defaultEvents: [
-      {
-        data: {
-          title: 'Weekly Meeting',
-          color: '#3F51B5'
-        },
-        schedule: {
-          dayOfWeek: [Weekday.MONDAY],
-          times: [9],
-          duration: 30,
-          durationUnit: 'minutes'
-        }
-      },
-      {
-        data: {
-          title: 'First Weekend',
-          color: '#4CAF50'
-        },
-        schedule: {
-          weekspanOfMonth: [0],
-          dayOfWeek: [Weekday.FRIDAY],
-          duration: 3,
-          durationUnit: 'days'
-        }
-      },
-      {
-        data: {
-          title: 'End of Month',
-          color: '#000000'
-        },
-        schedule: {
-          lastDayOfMonth: [1],
-          duration: 1,
-          durationUnit: 'hours'
-        }
-      },
-      {
-        data: {
-          title: 'Mother\'s Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.MAY],
-          dayOfWeek: [Weekday.SUNDAY],
-          weekspanOfMonth: [1]
-        }
-      },
-      {
-        data: {
-          title: 'New Year\'s Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.JANUARY],
-          dayOfMonth: [1]
-        }
-      },
-      {
-        data: {
-          title: 'Inauguration Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.JANUARY],
-          dayOfMonth: [20]
-        }
-      },
-      {
-        data: {
-          title: 'Martin Luther King, Jr. Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.JANUARY],
-          dayOfWeek: [Weekday.MONDAY],
-          weekspanOfMonth: [2]
-        }
-      },
-      {
-        data: {
-          title: 'George Washington\'s Birthday',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.FEBRUARY],
-          dayOfWeek: [Weekday.MONDAY],
-          weekspanOfMonth: [2]
-        }
-      },
-      {
-        data: {
-          title: 'Memorial Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.MAY],
-          dayOfWeek: [Weekday.MONDAY],
-          lastWeekspanOfMonth: [0]
-        }
-      },
-      {
-        data: {
-          title: 'Independence Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.JULY],
-          dayOfMonth: [4]
-        }
-      },
-      {
-        data: {
-          title: 'Labor Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.SEPTEMBER],
-          dayOfWeek: [Weekday.MONDAY],
-          lastWeekspanOfMonth: [0]
-        }
-      },
-      {
-        data: {
-          title: 'Columbus Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.OCTOBER],
-          dayOfWeek: [Weekday.MONDAY],
-          weekspanOfMonth: [1]
-        }
-      },
-      {
-        data: {
-          title: 'Veterans Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.NOVEMBER],
-          dayOfMonth: [11]
-        }
-      },
-      {
-        data: {
-          title: 'Thanksgiving Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.NOVEMBER],
-          dayOfWeek: [Weekday.THURSDAY],
-          weekspanOfMonth: [3]
-        }
-      },
-      {
-        data: {
-          title: 'Christmas Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.DECEMBER],
-          dayOfMonth: [25]
-        }
-      }
-    ]
+    defaultEvents: []
   }),
 //--------------------------------
  //该组件在mounted之前就调用了TimeChange所以一些操作需要提前到created来做
   created() {
     localStorage.clear();
-    // console.log("个人任务")
-    // //++++++++++++++++dev++++++++++++++++++++++++
-    //     // deleteDB("weekDB");
-    //     // deleteDB("daySumDB");
-    //     // deleteDB("dayTaskDB");
-    //     // deleteDB("dayTomoDB");
-    // //--------------------------------------------
-    // sessionStorage.userId="1";
-    // this.userID = sessionStorage.userId;
-    // openDB("dayTaskDB");
-    // if (localStorage.storedTaskYear) {
-    //   //如果任务数据库已经被创建
-    //   console.log("任务数据库已经被创建");
-    //   this.storedTaskYear = JSON.parse(localStorage.storedTaskYear);
-    //   // js的懒加载机制见识到了
-    //   // searchData(
-    //   //   monthAgo,
-    //   //   nowTime,
-    //   //   () => {
-    //   //     var selectedData = dbData;
-    //   //     this.updateData(selectedData);
-    //   //   },
-    //   //   "dayTaskDB"
-    //   // );
-      
-    // } else {
-    //   //如果数据库没有被创建
-    //   console.log("任务数据库没有被创建");
-    //   this.requestData(new Date().getFullYear(), 2);
-    // }
-    // window.app = this.$refs.app;
-
-    // this.loadState();
   },
 //--------------------------------
   mounted()
@@ -395,49 +187,100 @@ export default {
             console.log(this.defaultEvents)
             console.log("res data1")
           console.log(res.data)
-          let selectedData=res.data
-        for (let i = 0; i < selectedData.length; i++) {
-        let item = selectedData[i];
-          var ccolor='cssyellow';
-          switch (item.status) {
-            case 1:
-              ccolor ='cssyellow'; //"waiting";
-              break;
-            case 4:
-              ccolor ='cssred';// "abandoned";
-              break;
-            case 2:
-              ccolor = 'cssgreen';//"running";
-              break;
-            case 3:
-              ccolor = 'cssblue';//"completed";
-              break;
-            case 5:
-              ccolor = 'cssblack';//"break";
-              break;
-            default:
-              break;
-          }
-          let tmpdefaultdata={
+      //     let selectedData=res.data
+      //   for (let i = 0; i < selectedData.length; i++) {
+      //   let item = selectedData[i];
+      //     var ccolor='#4CAF50';
+      //     switch (item.status) {
+      //       case 1:
+      //         ccolor ='#FFF68F'; //"waiting";
+      //         break;
+      //       case 4:
+      //         ccolor ='#ffd4d4';// "abandoned";
+      //         break;
+      //       case 2:
+      //         ccolor = '#4CAF50';//"running";
+      //         break;
+      //       case 3:
+      //         ccolor = '#2196F3';//"completed";
+      //         break;
+      //       case 5:
+      //         ccolor = '#000000';//"break";
+      //         break;
+      //       default:
+      //         break;
+      //     }
+      //     //console.log()
+      //     let tmpdefaultdata={
+      //      data: {
+      //     title: item.name,
+      //     color: ccolor
+      //     //color: '#4CAF50'
+      //   },
+      //   schedule: {
+      //     // weekspanOfMonth: [0],
+      //     //dayOfWeek: [Weekday.FRIDAY],
+      //     // month: [Month.JUNE],
+      //     // dayOfMonth: [20],
+      //     // duration: 3,
+      //     // durationUnit: 'days'
+      //     start:item.starttime,
+      //     end:item.finishtime,
+      //   }}
+      //   JSON.stringify(tmpdefaultdata)
+      //   this.defaultEvents.push(tmpdefaultdata)
+      // }
+      // console.log("executed")
+      //   state.events = this.defaultEvents;
+      //   console.log(this.defaultEvents)
+        
+ 
+          //console.log()
+          let tmpdefaultdata1={
            data: {
-          title: item.name,
+          title:"枯了",
+          //color: ccolor
           color: '#4CAF50'
         },
         schedule: {
-          weekspanOfMonth: [0],
+          // weekspanOfMonth: [0],
           //dayOfWeek: [Weekday.FRIDAY],
-          month: [Month.JUNE],
-          dayOfMonth: [20],
-          duration: 3,
-          durationUnit: 'days'
+          // month: [Month.JUNE],
+          // dayOfMonth: [20],
+          // duration: 3,
+          // durationUnit: 'days'
+          start:"2019-06-14 00:00:00",
+          end:"2019-06-14 23:00:00",
         }}
-        JSON.stringify(tmpdefaultdata)
-        this.defaultEvents.push(tmpdefaultdata)
-      }
-      console.log("executed")
+
+         let tmpdefaultdata2={
+           data: {
+          title: "heng",
+        //  color: ccolor
+          color: '#4CAF50'
+        },
+        schedule: {
+          // weekspanOfMonth: [0],
+          //dayOfWeek: [Weekday.FRIDAY],
+          // month: [Month.JUNE],
+          // dayOfMonth: [20],
+          // duration: 3,
+          // durationUnit: 'days'
+          start:"2019-06-14 00:00:00",
+          end:"2019-06-14 23:00:00",
+        }}
+        JSON.stringify(tmpdefaultdata1)
+        JSON.stringify(tmpdefaultdata2)
+
+        this.defaultEvents.push(tmpdefaultdata1)
+        this.defaultEvents.push(tmpdefaultdata2)
+
+     
         state.events = this.defaultEvents;
         console.log(this.defaultEvents)
         
+
+
         state.events.forEach(ev =>
             {
                 console.log("here for each")
