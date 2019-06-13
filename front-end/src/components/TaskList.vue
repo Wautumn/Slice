@@ -185,7 +185,28 @@ export default {
     },
     modalOk() {
       var currentTime = this.currentTime();
-      console.log(currentTime);
+       var ctime = new Date();
+      // console.log("currentTime"+currentTime);
+      // console.log("newTaskTime"+this.newTaskTime[0]);
+      if(Date.parse(ctime) >Date.parse(this.newTaskTime[0].replace(/-/g, "/")))
+      // if(currentTime>this.newTaskTime[0])
+      {
+          this.$alert('任务的起始时间不能迟于当前时间', '出错了！', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: "创建失败！"
+            });
+          }
+          })
+        //  this.$message({
+        //     message: "创建失败！日期",
+        //     type: "fail"
+        //   });
+      }
+      else
+      {
       this.$http
         .post(this.newTaskUrl, {
       
@@ -195,7 +216,7 @@ export default {
             //starttime:this.newTaskTime[0],
             starttime:this.newTaskTime[0],
             finishtime:this.newTaskTime[1],
-            userid:"10"
+            userid:sessionStorage.userid
         },)
 
         .then(response => {
@@ -216,7 +237,7 @@ export default {
           }
         });
     //比较起始时间与当前时间
-    
+      }
     }
   }
 };

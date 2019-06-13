@@ -242,11 +242,12 @@
       }, 1000);
 
 
-      sessionStorage.userId = "10";
+
+      // sessionStorage.userId = "10";
       this.getcurrentTime = this.currentTime();
       this.getcurrentTime = this.getcurrentTime.substring(0, 19);
       this.$http
-        .get(this.currentTaskUrl, {params: {userid: sessionStorage.userId}})
+        .get(this.currentTaskUrl, {params: {userid: sessionStorage.userid}})
         .then(response => {
           this.taskData = response.data;
           var nlist = [];
@@ -274,23 +275,23 @@
           this.currentTaskUrl = this.teamRequestUrl
           this.tasktype = 1
         }
-        this.$http
-          .get(this.currentTaskUrl, {
-            params: {userid: sessionStorage.userId}
-          })
-          .then(response => {
-            this.taskData = response.data;
-            var nlist = [];
-            for (var item of this.taskData) {
-              //if (item.deadline >= this.getcurrentTime)
-              nlist.push(item);
-            }
-            this.taskData = nlist;
-
-          }),
-          response => {
-            console.log(failed);
-          };
+          this.$http
+              .get(this.currentTaskUrl, {
+                params: {userid: sessionStorage.userid}
+              })
+              .then(response => {
+                this.taskData = response.data;
+                var nlist = [];
+                for (var item of this.taskData) {
+                  //if (item.deadline >= this.getcurrentTime)
+                  nlist.push(item);
+                }
+                this.taskData = nlist;
+               
+              }),
+              response => {
+                console.log(failed);
+              };
       },
       //*********************
       startCount() {
@@ -318,7 +319,7 @@
           if (this.taskData[this.currentTask].status == 0) {
             this.$http.get(this.taskStartUrl, {
               params: {
-                userid: sessionStorage.userId,
+                userid: sessionStorage.userid,
                 taskName: this.taskData[this.currentTask].name
               }
             });
@@ -327,7 +328,7 @@
           this.tomoStartTime = new Date().format("yyyy-MM-dd hh:mm:ss");
           this.$http.get(this.tomatoStartUrl, {
             params: {
-              userid: sessionStorage.userId,
+              userid: sessionStorage.userid,
               taskName: this.currentTaskName,
               startTime: this.tomoStartTime
             }
@@ -348,7 +349,7 @@
                 this.taskData[this.currentTask].tomatoCompleted++;
                 this.$http.get(this.tomatoEndUrl, {
                   params: {
-                    userid: sessionStorage.userId,
+                    userid: sessionStorage.userid,
                     needAssociation: true,
                     taskName: this.currentTaskName,
                     startTime: this.tomoStartTime,
@@ -357,7 +358,7 @@
                 });
                 this.$http.get(this.modifyTaskUrl, {
                   params: {
-                    userid: sessionStorage.userId,
+                    userid: sessionStorage.userid,
                     taskName: this.currentTaskName,
                     property: "tomatoCompleted",
                     value: this.currentFinishedPomo
@@ -384,7 +385,7 @@
         //this.currentFinishedPomo--;
         this.$http.get(this.tomatoBreakUrl, {
           params: {
-            userid: sessionStorage.userId,
+            userid: sessionStorage.userid,
             breakTime: new Date().format("yyyy-MM-dd hh:mm:ss"),
             startTime: this.tomoStartTime
           }
@@ -400,7 +401,7 @@
           this.$http
             .get(this.currentTaskUrl, {
               // params: { userId: sessionStorage.userId }
-              params: {userid: "10"}
+              params: {userid: sessionStorage.userid}
             })
             .then(response => {
               this.taskData = response.data;
@@ -557,7 +558,7 @@
                 //重新加载页面
                 this.$http
                   .get(this.currentTaskUrl, {
-                    params: {userid: sessionStorage.userId}
+                    params: {userid: sessionStorage.userid}
                   })
                   .then(response => {
                     this.taskData = response.data;
@@ -629,7 +630,7 @@
         this.$http
           .post(this.modifyTaskUrl, {
 
-            id: sessionStorage.userId,
+            id: sessionStorage.userid,
             // taskName: this.taskData[this.currentTask].name,
             description: "description",
             // value: this.currentTaskDetail
@@ -638,7 +639,7 @@
           .then(() => {
             this.$http
               .get(this.currentTaskUrl, {
-                params: {userid: sessionStorage.userId}
+                params: {userid: sessionStorage.userid}
               })
               .then(response => {
                 this.taskData = response.data;
@@ -698,31 +699,32 @@
               content: this.dailySummary,
               // date: this.getcurrentTime,
               score: this.selfRating
-
-            },)
-            .then(response => {
-              this.currentSummaryId = response.data
-              this.$http
-                .get(this.currentTaskUrl, {
-                  params: {userid: sessionStorage.userId}
-                })
-                .then(response => {
-                  this.taskData = response.data;
-                  var nlist = [];
-                  for (var item of this.taskData) {
-                    nlist.push(item);
-                  }
-                  this.taskData = nlist;
-                  this.$message({
-                    message: "保存成功！",
-                    type: "success"
-                  });
-                }),
-                response => {
-                  console.log(failed);
-                };
-            });
-        } else {
+            
+          },)
+          .then(response => {
+            this.currentSummaryId=response.data
+            this.$http
+              .get(this.currentTaskUrl, {
+                params: {userid: sessionStorage.userid}
+              })
+              .then(response => {
+                this.taskData = response.data;
+                var nlist = [];
+                for (var item of this.taskData) {
+                   nlist.push(item);
+                }
+                this.taskData = nlist;
+                this.$message({
+                  message: "保存成功！",
+                  type: "success"
+                });
+              }),
+              response => {
+                console.log(failed);
+              };
+          });
+        }
+        else{
           this.changeSummary()
         }
       },
@@ -739,7 +741,7 @@
           .then(() => {
             this.$http
               .get(this.currentTaskUrl, {
-                params: {userid: sessionStorage.userId}
+                params: {userid: sessionStorage.userid}
               })
               .then(response => {
                 this.taskData = response.data;
@@ -799,11 +801,15 @@
             id: this.currentTaskid,
             time: new Date().format("yyyy-MM-dd hh:mm:ss")
           }
-        }).then(res => {
-          console.log("task" + this.currentTaskid)
-          console.log("完成")
-          this.currentStatus = 3
-          this.isTaskFinish = 0
+        }).then(res=>{
+          this.currentStatus=3
+           this.isTaskFinish=0
+             
+            this.$message({
+              type: 'info',
+              message: "任务完成！"
+            });
+         
         });
       },
       breakTask() {//中断
