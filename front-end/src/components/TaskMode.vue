@@ -752,8 +752,8 @@
       },
       starttask: function () {
         //个人任务
-        if(this.tasktype==0)
-        {
+        // if(this.tasktype==0)
+        // {
           this.$http.get(this.startTaskurl, {
           params: {
             id: this.currentTaskid,
@@ -762,10 +762,10 @@
           var a = res.data
           this.currentStatus = 2
         });
-        }
-        //团队任务
-        else if(tasktype==1)
-        {
+        // }
+        // //团队任务
+        // else if(tasktype==1)
+        // {
         this.$http.get(this.startProjectTaskurl, {
           params: {
             taskid: this.currentTaskid,
@@ -774,7 +774,7 @@
           var a = res.data
           this.currentStatus = 2
         });
-        }
+        // }
       },
       finishTask() {//完成
         console.log("task" + this.currentTask)
