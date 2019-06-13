@@ -187,60 +187,35 @@ export default {
             console.log(this.defaultEvents)
             console.log("res data1")
           console.log(res.data)
-      //     let selectedData=res.data
-      //   for (let i = 0; i < selectedData.length; i++) {
-      //   let item = selectedData[i];
-      //     var ccolor='#4CAF50';
-      //     switch (item.status) {
-      //       case 1:
-      //         ccolor ='#FFF68F'; //"waiting";
-      //         break;
-      //       case 4:
-      //         ccolor ='#ffd4d4';// "abandoned";
-      //         break;
-      //       case 2:
-      //         ccolor = '#4CAF50';//"running";
-      //         break;
-      //       case 3:
-      //         ccolor = '#2196F3';//"completed";
-      //         break;
-      //       case 5:
-      //         ccolor = '#000000';//"break";
-      //         break;
-      //       default:
-      //         break;
-      //     }
-      //     //console.log()
-      //     let tmpdefaultdata={
-      //      data: {
-      //     title: item.name,
-      //     color: ccolor
-      //     //color: '#4CAF50'
-      //   },
-      //   schedule: {
-      //     // weekspanOfMonth: [0],
-      //     //dayOfWeek: [Weekday.FRIDAY],
-      //     // month: [Month.JUNE],
-      //     // dayOfMonth: [20],
-      //     // duration: 3,
-      //     // durationUnit: 'days'
-      //     start:item.starttime,
-      //     end:item.finishtime,
-      //   }}
-      //   JSON.stringify(tmpdefaultdata)
-      //   this.defaultEvents.push(tmpdefaultdata)
-      // }
-      // console.log("executed")
-      //   state.events = this.defaultEvents;
-      //   console.log(this.defaultEvents)
-        
- 
-          //console.log()
-          let tmpdefaultdata1={
+          let selectedData=res.data
+        for (let i = 0; i < selectedData.length; i++) {
+        let item = selectedData[i];
+          var ccolor='#4CAF50';
+          switch (item.status) {
+            case 1:
+              ccolor ='#FFF68F'; //"waiting";
+              break;
+            case 4:
+              ccolor ='#ffd4d4';// "abandoned";
+              break;
+            case 2:
+              ccolor = '#4CAF50';//"running";
+              break;
+            case 3:
+              ccolor = '#2196F3';//"completed";
+              break;
+            case 5:
+              ccolor = '#000000';//"break";
+              break;
+            default:
+              break;
+          }
+          
+          let tmpdefaultdata={
            data: {
-          title:"枯了",
-          //color: ccolor
-          color: '#4CAF50'
+          title: item.name,
+          color: ccolor
+          //color: '#4CAF50'
         },
         schedule: {
           // weekspanOfMonth: [0],
@@ -249,38 +224,16 @@ export default {
           // dayOfMonth: [20],
           // duration: 3,
           // durationUnit: 'days'
-          start:"2019-06-14 00:00:00",
-          end:"2019-06-14 23:00:00",
+          start:item.starttime,
+          end:item.finishtime,
         }}
-
-         let tmpdefaultdata2={
-           data: {
-          title: "heng",
-        //  color: ccolor
-          color: '#4CAF50'
-        },
-        schedule: {
-          // weekspanOfMonth: [0],
-          //dayOfWeek: [Weekday.FRIDAY],
-          // month: [Month.JUNE],
-          // dayOfMonth: [20],
-          // duration: 3,
-          // durationUnit: 'days'
-          start:"2019-06-14 00:00:00",
-          end:"2019-06-14 23:00:00",
-        }}
-        JSON.stringify(tmpdefaultdata1)
-        JSON.stringify(tmpdefaultdata2)
-
-        this.defaultEvents.push(tmpdefaultdata1)
-        this.defaultEvents.push(tmpdefaultdata2)
-
-     
+        JSON.stringify(tmpdefaultdata)
+        this.defaultEvents.push(tmpdefaultdata)
+      }
+      console.log("executed")
         state.events = this.defaultEvents;
         console.log(this.defaultEvents)
         
-
-
         state.events.forEach(ev =>
             {
                 console.log("here for each")
