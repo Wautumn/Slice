@@ -230,7 +230,7 @@
         endTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/finishTask",
         delayTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/delayTask",
 
-        endProjectTaskUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/finishProjectTask",
+        endProjectTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/finishProjectTask",
         startProjectTaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/startProjectTask",
         delayProjectTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/delayTask1",
 
@@ -245,7 +245,6 @@
 
 
       }, 1000);
-
 
 
       // sessionStorage.userId = "10";
@@ -280,23 +279,23 @@
           this.currentTaskUrl = this.teamRequestUrl
           this.tasktype = 1
         }
-          this.$http
-              .get(this.currentTaskUrl, {
-                params: {userid: sessionStorage.userid}
-              })
-              .then(response => {
-                this.taskData = response.data;
-                var nlist = [];
-                for (var item of this.taskData) {
-                  //if (item.deadline >= this.getcurrentTime)
-                  nlist.push(item);
-                }
-                this.taskData = nlist;
-               
-              }),
-              response => {
-                console.log(failed);
-              };
+        this.$http
+          .get(this.currentTaskUrl, {
+            params: {userid: sessionStorage.userid}
+          })
+          .then(response => {
+            this.taskData = response.data;
+            var nlist = [];
+            for (var item of this.taskData) {
+              //if (item.deadline >= this.getcurrentTime)
+              nlist.push(item);
+            }
+            this.taskData = nlist;
+
+          }),
+          response => {
+            console.log(failed);
+          };
       },
       //*********************
       startCount() {
@@ -463,7 +462,7 @@
         console.log(this.currentStarttime + "is fucking ok!")
         console.log(this.currentDeadline + "is working normally")
 
-        if(msg.status == 1 || msg.status == 2) {
+        if (msg.status == 1 || msg.status == 2) {
           if (Date.parse(this.date) < Date.parse(this.currentStarttime.replace(/-/g, "/"))) {
             this.ifstart = 0//还没开始
             console.log("1")
@@ -483,19 +482,43 @@
         console.log(this.ifstart)
         // console.log(this.currentStarttime + "aaaa");
         var _this = this;
-        this.timer = setInterval(function () {
+        console.log("bbb" + _this)
 
+
+        //时钟定时器
+        this.timer = setInterval(function () {
           var start = new Date(_this.currentStarttime.replace(/-/g, "/"));
+          var tt = _this.currentStarttime
+          console.log("kk" + _this.currentTaskid)
           var now = new Date()
           var finish = new Date(_this.currentDeadline.replace(/-/g, "/"))
-          // console.log(now + "qq")
-          // console.log(start + "qq1")
-          //
-          // console.log(finish + "qq2")
+          var nowstate = msg.status
+          if (nowstate == 1) {
+            console.log("未开始")
+            console.log("rtt" + _this.currentTaskid)
+            console.log(now)
+            console.log(start)
+            var ddd = start.getTime() - now.getTime();
+            console.log(ddd)
+            if (ddd <= 0) {
+              console.log("到达开始时间")
+              console.log("aa" + _this)
+              _this.$http.get(_this.startTaskurl, {
+                params: {
+                  id: _this.currentTaskid,
+                }
+              }).then(res => {
+                console.log("aaa")
+                var a = res.data
+                _this.currentStatus = 2
+              });
 
+            }
+          } else if (nowstate == 2) {
+            console.log("进行中")
+
+          }
           var dateDiff1 = start.getTime() - now.getTime();//未开始
-
-
           var dayDiff = Math.floor(dateDiff1 / (24 * 3600 * 1000));//计算出相差天数
           var leave1 = dateDiff1 % (24 * 3600 * 1000)    //计算天数后剩余的毫秒数
           var hours = Math.floor(leave1 / (3600 * 1000))//计算出小时数
@@ -666,32 +689,31 @@
               content: this.dailySummary,
               // date: this.getcurrentTime,
               score: this.selfRating
-            
-          },)
-          .then(response => {
-            this.currentSummaryId=response.data
-            this.$http
-              .get(this.currentTaskUrl, {
-                params: {userid: sessionStorage.userid}
-              })
-              .then(response => {
-                this.taskData = response.data;
-                var nlist = [];
-                for (var item of this.taskData) {
-                   nlist.push(item);
-                }
-                this.taskData = nlist;
-                this.$message({
-                  message: "保存成功！",
-                  type: "success"
-                });
-              }),
-              response => {
-                console.log(failed);
-              };
-          });
-        }
-        else{
+
+            },)
+            .then(response => {
+              this.currentSummaryId = response.data
+              this.$http
+                .get(this.currentTaskUrl, {
+                  params: {userid: sessionStorage.userid}
+                })
+                .then(response => {
+                  this.taskData = response.data;
+                  var nlist = [];
+                  for (var item of this.taskData) {
+                    nlist.push(item);
+                  }
+                  this.taskData = nlist;
+                  this.$message({
+                    message: "保存成功！",
+                    type: "success"
+                  });
+                }),
+                response => {
+                  console.log(failed);
+                };
+            });
+        } else {
           this.changeSummary()
         }
       },
@@ -754,7 +776,7 @@
         //个人任务
         // if(this.tasktype==0)
         // {
-          this.$http.get(this.startTaskurl, {
+        this.$http.get(this.startTaskurl, {
           params: {
             id: this.currentTaskid,
           }
@@ -779,42 +801,39 @@
       finishTask() {//完成
         console.log("task" + this.currentTask)
         //个人任务
-        if(this.tasktype==0)
-        {
-        this.$http.get(this.endTaskUrl, {
-          params: {
-            id: this.currentTaskid,
-            time: new Date().format("yyyy-MM-dd hh:mm:ss")
-          }
-        }).then(res=>{
-          this.currentStatus=3
-           this.isTaskFinish=0
-             
+        if (this.tasktype == 0) {
+          this.$http.get(this.endTaskUrl, {
+            params: {
+              id: this.currentTaskid,
+              time: new Date().format("yyyy-MM-dd hh:mm:ss")
+            }
+          }).then(res => {
+            this.currentStatus = 3
+            this.isTaskFinish = 0
+
             this.$message({
               type: 'info',
               message: "任务完成！"
             });
-         
-        });
-        }
-        else if(tasktype==1)
-        {
-        //团队任务
-        this.$http.get(this.endProjectTaskUrl, {
-          params: {
-            taskid: this.currentTaskid,
-            time: new Date().format("yyyy-MM-dd hh:mm:ss")
-          }
-        }).then(res=>{
-          this.currentStatus=3
-           this.isTaskFinish=0
-             
+
+          });
+        } else if (tasktype == 1) {
+          //团队任务
+          this.$http.get(this.endProjectTaskUrl, {
+            params: {
+              taskid: this.currentTaskid,
+              time: new Date().format("yyyy-MM-dd hh:mm:ss")
+            }
+          }).then(res => {
+            this.currentStatus = 3
+            this.isTaskFinish = 0
+
             this.$message({
               type: 'info',
               message: "任务完成！"
             });
-         
-        });
+
+          });
         }
       },
       breakTask() {//中断
@@ -831,30 +850,27 @@
         });
       },
       delayTask() {//过期
-       if(this.tasktype==0)
-       {//个人
-        this.$http.get(this.delayTaskUrl, {
-          params: {
-            id: this.currentTaskid,
-            time: new Date().format("yyyy-MM-dd hh:mm:ss")
-          }
-        }).then(res => {
-          this.currentStatus = 4
-          this.getCurrentTaskList()
-        });
-       }
-       else if(this.tasktype==1)
-       {//团队
-         this.$http.get(this.delayProjectTaskUrl, {
-          params: {
-            taskid: this.currentTaskid,
-            //time: new Date().format("yyyy-MM-dd hh:mm:ss")
-          }
-        }).then(res => {
-          this.currentStatus = 5
-          this.getCurrentTaskList()
-        });
-       }
+        if (this.tasktype == 0) {//个人
+          this.$http.get(this.delayTaskUrl, {
+            params: {
+              id: this.currentTaskid,
+              time: new Date().format("yyyy-MM-dd hh:mm:ss")
+            }
+          }).then(res => {
+            this.currentStatus = 4
+            this.getCurrentTaskList()
+          });
+        } else if (this.tasktype == 1) {//团队
+          this.$http.get(this.delayProjectTaskUrl, {
+            params: {
+              taskid: this.currentTaskid,
+              //time: new Date().format("yyyy-MM-dd hh:mm:ss")
+            }
+          }).then(res => {
+            this.currentStatus = 5
+            this.getCurrentTaskList()
+          });
+        }
       },
       getCurrentTaskList() {//重新获取任务列表
         this.$http
