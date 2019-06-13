@@ -65,14 +65,14 @@ export default {
       // allData: testData,
       pageSize: 10,
       remarks: "",
-      userID: null,
+      userID: sessionStorage.userid,
       getUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/feedbackList"
     };
   },
   created(){
         this.$http
               .get(this.getUrl, {
-                params: {userid:"8"}
+                params: {userid: sessionStorage.userid}
               })
               .then(response => {
                 console.log("?")
@@ -128,7 +128,7 @@ export default {
     }
   },
   mounted() {
-    this.userID = 8;
+    this.userID = sessionStorage.userid;
     // this.userID = 1;
 
           

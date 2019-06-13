@@ -93,7 +93,7 @@
 
         createdProject: [],//当前用户创建的任务
         joinedProject: [],//参与的任务
-        userid: 10,
+        userid: sessionStorage.userid,
         currentProject: 0,//选中的任务
         typeitem: ["新建"],
         type: 0,
@@ -105,14 +105,14 @@
     },
     methods: {
       getCreateProject: function () {
-        this.$http.get(this.myCreateProjecturl, {params: {userid: this.userid}}).then(response => {
+        this.$http.get(this.myCreateProjecturl, {params: {userid: sessionStorage.userid}}).then(response => {
           this.createdProject = response.data
           console.log(this.createdProject.length)
         })
       },
 
       getJoinedProject: function () {
-        this.$http.get(this.myjoinedProjecturl, {params: {userid: 12}}).then(response => {
+        this.$http.get(this.myjoinedProjecturl, {params: {userid: sessionStorage.userid}}).then(response => {
           this.joinedProject = response.data
           console.log("获取" + this.joinedProject.length)
         })

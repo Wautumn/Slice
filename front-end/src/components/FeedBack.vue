@@ -47,13 +47,13 @@ export default {
       formItem: {
         title: "",
         content: "",
-        userID: null
+        userID:sessionStorage.userid
       }
     };
   },
   mounted() {
     // this.userID = sessionStorage.userId;
-    this.userID = 8;
+    this.userID =  sessionStorage.userid;
   },
   methods: {
     goBack() {
@@ -64,7 +64,7 @@ export default {
       var data = {
         content: this.formItem.content,
         title: this.formItem.title,
-        userid: this.userID
+        userid:  sessionStorage.userid
       };
       console.log("submit");
       // debugger;
@@ -72,7 +72,7 @@ export default {
         .post(submitUrl,{
         content: this.formItem.content,
         title: this.formItem.title,
-        userid: this.userID},)
+        userid:  sessionStorage.userid},)
         .then(
           res => {
             // 响应成功回调

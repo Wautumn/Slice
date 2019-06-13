@@ -88,7 +88,7 @@ export default {
     };
 
     return {
-      userID: 2,
+      userID:  sessionStorage.userid,
       bestDay: "周三",
       bestTime: "上午",
       pieData: {
@@ -113,7 +113,7 @@ export default {
           this.$http
             .get(this.taskRequestUrl, {
               // params: { userId: sessionStorage.userId }
-              params: {userid: "1"}
+              params: {userid:sessionStorage.userid}
             })
             .then(response => {
               this.taskData = response.data;
@@ -147,7 +147,7 @@ export default {
           console.log(beginData)
    
           
-    this.userID = sessionStorage.userId;
+    this.userID =  sessionStorage.userid;
     //获取数据
     this.getTasksByUserid()
   

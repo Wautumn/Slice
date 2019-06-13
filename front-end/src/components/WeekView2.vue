@@ -77,7 +77,7 @@ export default {
     this.grid = { right: 30 }; //坐标图右侧宽度为60
     return {
       //默认为最近一月的数据
-      userID: 2,
+      userID:  sessionStorage.userid,
       date: [monthAgo, nowTime],
       chartData: EMPTY_DATA,
       tableData: EMPTY_DATA.rows,
@@ -92,7 +92,7 @@ export default {
     localStorage.clear();
   },
   mounted() {
-    this.userID = sessionStorage.userId;
+    this.userID = sessionStorage.userid;
     openDB("weekDB");
     if (localStorage.weekhis) {
       //如果不是第一次进入页面，从数据库请求
@@ -112,7 +112,7 @@ export default {
       this.$http
         .get(historyurl, {
           params: {
-            userid: this.userID,
+            userid: sessionStorage.userid,
             date: new Date().getFullYear() + "-01-01"
           }
         })
@@ -198,7 +198,7 @@ export default {
       this.$http
         .get(historyurl, {
           params: {
-            userid: this.userID,
+            userid:  sessionStorage.userid,
          
           }
         })

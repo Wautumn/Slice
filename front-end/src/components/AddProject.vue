@@ -134,7 +134,7 @@
         },
 
 
-        userid: 10,
+        userid:  sessionStorage.userid,
         nowpeople: '',//当前添加的人员
         nowsubtask: {
           name: '',
@@ -161,7 +161,7 @@
         console.log(this.form)
         this.$http
           .post(this.newprojecturl, {
-            userid: 10,//this.userid,
+            userid: sessionStorage.userid,//this.userid,
             name: this.form.name,
             description: this.form.description,
             members: this.form.joiner,
