@@ -49,11 +49,12 @@
               </div>
               <clock :time="clocktime"></clock>
               <br>
-              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left" v-if="ifstart==0">距离任务开始:
+              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left" v-if="ifstart==0&&currentStatus<3">距离任务开始:
                 {{endstart1}}天 {{endstart2}}时 {{endstart3}}分 {{endstart4}}秒</strong>
-              <strong style="font-size: 20px;line-height: 80px; color: slategrey ;text-align: left" v-if="ifstart==1">距离任务结束:
+              <strong style="font-size: 20px;line-height: 80px; color: slategrey ;text-align: left" v-else-if="ifstart==1">距离任务结束:
                 {{endfinish1}}天 {{endfinish2}}时 {{endfinish3}}分 {{endfinish4}}秒</strong>
-              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left" v-if="ifstart==2">任务已结束</strong>
+              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left" v-else-if="ifstart==2">任务已结束</strong>
+              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left" v-else-if="currentStatus==5">任务已过期</strong>
 
 
               <br>
@@ -437,6 +438,7 @@
         // this.currentFinishedPomo = msg.tomatoCompleted;
         // this.currentTotalPomo = parseInt(msg.expectedTomato);
         this.currentTaskDetail = msg.description;
+        this.currentStatus=msg.status
         console.log("what is message")
         console.log(msg)
         console.log(this.tasktype)
@@ -478,6 +480,7 @@
             this.delayTask()//过期修改状态
           }
         }
+
         console.log("hhhhhhhhh")
         console.log(this.ifstart)
         // console.log(this.currentStarttime + "aaaa");
