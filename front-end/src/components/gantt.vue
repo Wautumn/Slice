@@ -26,12 +26,12 @@
 
         showtasks: {
           data: [
-            {id: 1, text: "111create test", start_date: "12-05-2019", duration: 5, progress: 0},
-            {id: 2, text: 'Task #2', start_date: '19-05-2019', duration: 5, progress: 1},
+            // {id: 1, text: "111create test", start_date: "12-05-2019", duration: 5, progress: 0},
+            // {id: 2, text: 'Task #2', start_date: '19-05-2019', duration: 5, progress: 1},
 
           ],
           links: [
-            {id: 1, source: 1, target: 2, type: '0'},
+            // {id: 1, source: 1, target: 2, type: '0'},
 
           ]
         },
@@ -39,8 +39,8 @@
 
         tasks: {
           data: [
-            {id: 1, text: 'Task #1', start_date: '15-05-2019', duration: 2, progress: 0},
-            {id: 2, text: 'Task #2', start_date: '19-05-2019', duration: 5, progress: 1}
+            // {id: 1, text: 'Task #1', start_date: '15-05-2019', duration: 2, progress: 0},
+            // {id: 2, text: 'Task #2', start_date: '19-05-2019', duration: 5, progress: 1}
           ],
           links: [
             // {id: 1, source: 1, target: 2, type: '0'}
