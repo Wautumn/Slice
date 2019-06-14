@@ -59,7 +59,7 @@
         },
         articles: [],
         showArticles: [],
-        userid: sessionStorage.userid,
+        userid:localStorage.userid,
         loading: false,
         complete:null,
         tags:
@@ -104,7 +104,7 @@
       }
     },
     mounted() {
-      this.userID = sessionStorage.userid;
+      this.userID =localStorage.userid;
       for (var i = 0; i < 20; i++) {
 
         this.articles.push(this.article)
@@ -112,7 +112,7 @@
       // Lambda写法
       this.$http
         .get(this.getArticleurl, {
-          params: {userid:  sessionStorage.userid}
+          params: {userid:localStorage.userid}
         })
         .then(
           res => {

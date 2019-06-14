@@ -142,9 +142,9 @@ export default {
               //console.log(this.email)
 
 
-              sessionStorage.username=this.username
-              sessionStorage.userid=this.userid
-              sessionStorage.password=this.password
+              localStorage.username=this.username
+              localStorage.userid=this.userid
+              localStorage.password=this.password
               //sessionStorage.email=this.email
               // var userID = code;
               // this.logInSuccess(code);

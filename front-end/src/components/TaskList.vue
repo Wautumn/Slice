@@ -106,7 +106,7 @@ export default {
       this.$emit("transferTask", null);
     },
     handleCurrentChange(val) {
-      if (sessionStorage.listLock == "false") {
+      if (localStorage.listLock == "false") {
         this.currentRow = val;
         this.$emit("transferTask", this.currentRow);
         console.log(this.tableData);
@@ -216,7 +216,7 @@ export default {
             //starttime:this.newTaskTime[0],
             starttime:this.newTaskTime[0],
             finishtime:this.newTaskTime[1],
-            userid:sessionStorage.userid
+            userid:localStorage.userid
         },)
 
         .then(response => {

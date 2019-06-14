@@ -133,16 +133,16 @@ export default {
   mounted() {
     debugger;
     console.log("header重载");
-    if (sessionStorage.userId) {
+    if (localStorage.userid) {
       this.$emit("reload");
     }
 
-    this.userId = sessionStorage.userId;
+    this.userId = localStorage.userid;
     // if (this.userId == undefined) {
     //   debugger;
     //   this.$emit("reload");
     // }
-    this.username = sessionStorage.username;
+    this.username = localStorage.username;
     // this.email = sessionStorage.email;
     // this.dayGoal = parseInt(sessionStorage.dayGoal);
     // this.weekGoal = parseInt(sessionStorage.weekGoal);
@@ -204,8 +204,8 @@ export default {
     logOut() {
       this.$emit("logOut");
       delCookie("userid");
-      sessionStorage.userId = "";
-      this.$router.push({ name: "FrontPage" });
+      localStorage.userid = "";
+      this.$router.push("/");
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
