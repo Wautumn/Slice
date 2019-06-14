@@ -308,7 +308,7 @@
         response => {
         };
 
-      sessionStorage.listLock = "false";
+      localStorage.listLock = "false";
       console.log(this.getcurrentTime);
       this.getSummary();
 
@@ -325,7 +325,7 @@
         }
         this.$http
           .get(this.currentTaskUrl, {
-            params: {userid: sessionStorage.userid}
+            params: {userid: localStorage.userid}
           })
           .then(response => {
             this.taskData = response.data;
@@ -351,8 +351,8 @@
           });
           return;
         }
-        if (sessionStorage.tomoLength) {
-          var TIME_COUNT = parseInt(sessionStorage.tomoLength) * 60;
+        if (localStorage.tomoLength) {
+          var TIME_COUNT = parseInt(localStorage.tomoLength) * 60;
         } else {
           var TIME_COUNT = 5;
         }
@@ -433,7 +433,7 @@
         //this.currentFinishedPomo--;
         this.$http.get(this.tomatoBreakUrl, {
           params: {
-            userid: sessionStorage.userid,
+            userid: localStorage.userid,
             breakTime: new Date().format("yyyy-MM-dd hh:mm:ss"),
             startTime: this.tomoStartTime
           }
@@ -449,7 +449,7 @@
           this.$http
             .get(this.currentTaskUrl, {
               // params: { userId: sessionStorage.userId }
-              params: {userid: sessionStorage.userid}
+              params: {userid: localStorage.userid}
             })
             .then(response => {
               this.taskData = response.data;
@@ -748,7 +748,7 @@
                 //重新加载页面
                 this.$http
                   .get(this.currentTaskUrl, {
-                    params: {userid: sessionStorage.userid}
+                    params: {userid: localStorage.userid}
                   })
                   .then(response => {
                     this.taskData = response.data;
@@ -782,7 +782,7 @@
         this.$http
           .post(this.modifyTaskUrl, {
 
-            id: sessionStorage.userid,
+            id: localStorage.userid,
             // taskName: this.taskData[this.currentTask].name,
             description: "description",
             // value: this.currentTaskDetail
@@ -791,7 +791,7 @@
           .then(() => {
             this.$http
               .get(this.currentTaskUrl, {
-                params: {userid: sessionStorage.userid}
+                params: {userid: localStorage.userid}
               })
               .then(response => {
                 this.taskData = response.data;
@@ -847,7 +847,7 @@
             .post(this.dailySummaryUrl, {
 
               // userid: sessionStorage.userId,
-              userid: sessionStorage.userId,
+              userid: localStorage.userId,
               content: this.dailySummary,
               // date: this.getcurrentTime,
               score: this.selfRating
@@ -857,7 +857,7 @@
               this.currentSummaryId = response.data
               this.$http
                 .get(this.currentTaskUrl, {
-                  params: {userid: sessionStorage.userid}
+                  params: {userid: localStorage.userid}
                 })
                 .then(response => {
                   this.taskData = response.data;
@@ -892,7 +892,7 @@
           .then(() => {
             this.$http
               .get(this.currentTaskUrl, {
-                params: {userid: sessionStorage.userid}
+                params: {userid: localStorage.userid}
               })
               .then(response => {
                 this.taskData = response.data;
@@ -915,7 +915,7 @@
       getSummary() {
         this.$http
           .get(this.summaryRequestUrl, {
-            params: {userid: sessionStorage.userId}
+            params: {userid: localStorage.userId}
           })
           .then(response => {
             //如果有小结
@@ -1043,7 +1043,7 @@
         this.$http
           .get(this.currentTaskUrl, {
             // params: { userId: sessionStorage.userId }
-            params: {userid: sessionStorage.userid}
+            params: {userid: localStorage.userid}
           })
           .then(response => {
             this.taskData = response.data;
