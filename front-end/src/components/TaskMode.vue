@@ -44,24 +44,26 @@
 
             <div style="text-align: center">
               <div
-                style="font-size: 15px; line-height: 100px; color: slategrey;"
+                style="font-size: 25px; line-height: 100px; color: slategrey;"
               >当前时间：{{date.format("yyyy-MM-dd hh:mm:ss")}}
               </div>
               <clock :time="clocktime"></clock>
               <br>
-              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left" v-if="ifstart==0&&currentStatus<3">距离任务开始:
+              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left"
+                      v-if="ifstart==0&&currentStatus<3">距离任务开始:
                 {{endstart1}}天 {{endstart2}}时 {{endstart3}}分 {{endstart4}}秒</strong>
-              <strong style="font-size: 20px;line-height: 80px; color: slategrey ;text-align: left" v-else-if="ifstart==1">距离任务结束:
+              <strong style="font-size: 20px;line-height: 80px; color: slategrey ;text-align: left"
+                      v-else-if="ifstart==1">距离任务结束:
                 {{endfinish1}}天 {{endfinish2}}时 {{endfinish3}}分 {{endfinish4}}秒</strong>
-              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left" v-else-if="ifstart==2">任务已结束</strong>
-              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left" v-else-if="currentStatus==5">任务已过期</strong>
-
-
+              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left"
+                      v-else-if="ifstart==2">任务已结束</strong>
+              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left"
+                      v-else-if="currentStatus==5">任务已过期</strong>
               <br>
 
               <el-button
                 :type="countButtonType"
-                :disabled="isTaskFinish==0"
+                :disabled="isTaskFinish==0||cannotstart==1"
                 @click="finishTask"
               >完成任务
               </el-button>
@@ -71,16 +73,29 @@
                 @click="breakTask"
               >废弃任务
               </el-button>
-              <!-- <el-button
-                type="success"
-                v-show="currentCondition"
-                :disabled="currentStatus == 2"
-                @click="finishTask"
-              >完成任务
-              </el-button> -->
+              <!--<el-button-->
+              <!--type="info"-->
+              <!--v-show="tasktype==1"-->
+              <!--@click="putoff"-->
+              <!--&gt;推迟任务-->
+              <!--</el-button>-->
               <br>
             </div>
             <div v-show="selected" style="margin-left: 20px; margin-right: 20px;">
+              <div v-if="cannotstart==1" style="margin-top: 50px; margin-bottom:20px;color: #dd3e3a">
+                <!--<h1>当前任务前置任务未完成！此任务无法完成！</h1>-->
+                <!--<h1>请到团队任务视图修改当前团队任务计划</h1>-->
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+
+                    <!--<el-button style="float: right; padding: 3px 0" type="text"></el-button>-->
+                  </div>
+                  <h1>当前任务前置任务未完成！此任务无法完成！</h1>
+                  <h1>请到团队任务视图修改当前团队任务计划</h1>
+                </el-card>
+
+              </div>
+
               <div style="margin-top: 20px; margin-bottom:20px;">
                 <h1>{{currentTaskName}}</h1>
               </div>
@@ -91,6 +106,27 @@
               <h1 v-show="selected" style="margin-top: 10px;">任务时间</h1>
               <div style="margin-top: 10px; margin-bottom: 10px; margin-left: 20px;">
                 <h2>{{currentStarttime}}至{{currentDeadline}}</h2>
+              </div>
+              <div v-if="tasktype==1">
+                <h1 v-show="selected" style="margin-top: 10px;">前置任务</h1>
+                <div style="margin-top: 10px; margin-bottom: 10px; margin-left: 20px;">
+
+                  <h2 v-if="currentpretaskname!=null">{{currentpretaskname}}</h2>
+                  <h2 v-else>无</h2>
+                </div>
+              </div>
+
+              <div v-if="tasktype==1">
+                <h1 v-show="selected" style="margin-top: 10px;">前置任务状态</h1>
+                <div style="margin-top: 10px; margin-bottom: 10px; margin-left: 20px;">
+
+                  <h2 v-if="currentpretasksta!=null">
+                    <div v-if="currentpretasksta==5">已过期</div>
+                    <div v-if="currentpretasksta==1">未开始</div>
+                    <div v-if="currentpretasksta==2">进行中</div>
+                  </h2>
+                  <h2 v-else>无</h2>
+                </div>
               </div>
               <h1 v-show="selected">任务详情</h1>
               <div style="margin-top: 20px">
@@ -199,6 +235,10 @@
         taskData: [],
         currentSummaryId: null,
         radio: 3,
+
+        currentpretaskname: null,
+        currentpretasksta: null,
+        cannotstart: 0,
         // taskRequestUrl: "http://localhost:8080/task/getTask",
         // taskStartUrl: "http://localhost:8080/task/startTask",
         // tomatoStartUrl: "http://localhost:8080/startTomato",
@@ -231,9 +271,13 @@
         endTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/finishTask",
         delayTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/delayTask",
 
+
         endProjectTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/finishProjectTask",
         startProjectTaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/startProjectTask",
         delayProjectTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/delayTask1",
+
+
+        findpretaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findPreTask"
 
 
       };
@@ -243,7 +287,6 @@
       var _this = this; //声明一个变量指向vue实例this,保证作用域一致
       this.timer = setInterval(function () {
         _this.date = new Date();//修改数据date
-
 
       }, 1000);
 
@@ -438,134 +481,272 @@
         // this.currentFinishedPomo = msg.tomatoCompleted;
         // this.currentTotalPomo = parseInt(msg.expectedTomato);
         this.currentTaskDetail = msg.description;
-        this.currentStatus=msg.status
+        this.currentStatus = msg.status
+
         console.log("what is message")
         console.log(msg)
         console.log(this.tasktype)
+
         if (this.tasktype == 1) {
           this.currentDeadline = msg.endtime;
+          this.$http.get(this.findpretaskurl, {
+            params: {
+              taskid: msg.id
+            }
+          }).then(response => {
+            console.log(response.data.length)
+            if (response.data.length > 0) {
+              this.currentpretasksta = response.data[0].status
+              this.currentpretaskname = response.data[0].name
+            }
+            this.currentStarttime = msg.starttime;
+            console.log(this.currentStarttime)
+
+            this.currentStatus = msg.status;
+            this.currentTaskid = msg.id;
+            this.currentCondition = false;
+            if (msg.status == 3) {
+              this.isTaskFinish = 0
+            } else if (msg.status == 4 || msg.status == 5) {
+              this.isTaskFinish = 0
+            } else if (msg.status == 1 || msg.status == 2) {
+              this.isTaskFinish = 1
+            }
+            console.log(this.currentStarttime + "is fucking ok!")
+            console.log(this.currentDeadline + "is working normally")
+
+
+            if (msg.status == 1 || msg.status == 2) {
+              if (Date.parse(this.date) < Date.parse(this.currentStarttime.replace(/-/g, "/"))) {
+                this.ifstart = 0//还没开始
+                console.log("1")
+                this.endstart = Date.parse(this.currentStarttime - this.date)
+              } else if ((Date.parse(this.date) > Date.parse(this.currentStarttime.replace(/-/g, "/"))) && (Date.parse(this.date) < Date.parse(this.currentDeadline.replace(/-/g, "/")))) {
+                this.ifstart = 1;//进行中
+                console.log("2")
+                this.starttask()//任务开始修改状态
+                this.endfinish = Date.parse(this.currentDeadline) - Date.parse(this.date);
+              } else {
+                console.log("3")
+                this.ifstart = 2;//已经结束
+                this.delayTask()//过期修改状态
+              }
+            }
+
+            console.log(this.ifstart)
+            var _this = this;
+
+
+            //前置任务未完成,此任务不能开始,需要对前置任务进行操作
+            if (this.tasktype === 1 && (this.currentpretasksta !== null) && (this.currentpretasksta !== 3)) {
+              this.cannotstart = 1
+            } else {
+              //时钟定时器
+              this.timer = setInterval(function () {
+                var start = new Date(_this.currentStarttime.replace(/-/g, "/"));
+                var now = new Date()
+                var finish = new Date(_this.currentDeadline.replace(/-/g, "/"))
+                var nowstate = msg.status
+                if (nowstate == 1) {
+                  console.log("未开始")
+                  console.log("rtt" + _this.currentTaskid)
+                  console.log(now)
+                  console.log(start)
+                  var ddd = start.getTime() - now.getTime();
+                  console.log(ddd)
+                  if (ddd <= 0) {
+                    console.log("到达开始时间")
+                    console.log("aa" + _this)
+                    _this.$http.get(_this.startTaskurl, {
+                      params: {
+                        id: _this.currentTaskid,
+                      }
+                    }).then(res => {
+                      console.log("aaa")
+                      var a = res.data
+                      _this.currentStatus = 2
+                    });
+
+                  }
+                } else if (nowstate == 2) {
+                  console.log("进行中")
+
+                }
+                var dateDiff1 = start.getTime() - now.getTime();//未开始
+                var dayDiff = Math.floor(dateDiff1 / (24 * 3600 * 1000));//计算出相差天数
+                var leave1 = dateDiff1 % (24 * 3600 * 1000)    //计算天数后剩余的毫秒数
+                var hours = Math.floor(leave1 / (3600 * 1000))//计算出小时数
+                //计算相差分钟数
+                var leave2 = leave1 % (3600 * 1000)    //计算小时数后剩余的毫秒数
+                var minutes = Math.floor(leave2 / (60 * 1000))//计算相差分钟数
+                //计算相差秒数
+                var leave3 = leave2 % (60 * 1000)      //计算分钟数后剩余的毫秒数
+                var seconds = Math.floor(leave3 / 1000)
+
+
+                // console.log(" 相差 "+dayDiff+"天 "+hours+"小时 "+minutes+" 分钟"+seconds+" 秒")
+                _this.endstart1 = dayDiff
+                _this.endstart2 = hours
+                _this.endstart3 = minutes
+                _this.endstart4 = seconds
+
+                var dateDiff2 = finish.getTime() - now.getTime();//进行中
+                var dayDiff2 = Math.floor(dateDiff2 / (24 * 3600 * 1000));//计算出相差天数
+                var leave21 = dateDiff2 % (24 * 3600 * 1000)    //计算天数后剩余的毫秒数
+                var hours2 = Math.floor(leave21 / (3600 * 1000))//计算出小时数
+                // //计算相差分钟数
+                var leave22 = leave21 % (3600 * 1000)    //计算小时数后剩余的毫秒数
+                var minutes2 = Math.floor(leave22 / (60 * 1000))//计算相差分钟数
+                // //计算相差秒数
+                var leave23 = leave22 % (60 * 1000)      //计算分钟数后剩余的毫秒数
+                var seconds2 = Math.round(leave23 / 1000)
+                // console.log(" 相差 "+dayDiff2+"天 "+hours2+"小时 "+minutes2+" 分钟"+seconds2+" 秒")
+                _this.endfinish1 = dayDiff2
+                _this.endfinish2 = hours2
+                _this.endfinish3 = minutes2
+                _this.endfinish4 = seconds2
+
+              }, 1000)
+            }
+
+            console.log(this.ifstart)
+
+            // if(this.currentStarttime)
+            // if (
+            //   this.taskData[this.currentTask].tomatoCompleted ==
+            //   this.taskData[this.currentTask].expectedTomato
+            // )
+            //   this.currentCondition = true;
+            // else this.currentCondition = false;
+
+
+          })
+
         } else if (this.tasktype == 0) {
           this.currentDeadline = msg.finishtime;
-        }
-        this.currentStarttime = msg.starttime;
-        console.log("gagagagaga")
-        console.log(this.currentStarttime)
+          this.currentStarttime = msg.starttime;
+          console.log(this.currentStarttime)
 
-        this.currentStatus = msg.status;
-        this.currentTaskid = msg.id;
-        this.currentCondition = false;
-        if (msg.status == 3) {
-          this.isTaskFinish = 0
-        } else if (msg.status == 4 || msg.status == 5) {
-          this.isTaskFinish = 0
-        } else if (msg.status == 1 || msg.status == 2) {
-          this.isTaskFinish = 1
-        }
-        console.log(this.currentStarttime + "is fucking ok!")
-        console.log(this.currentDeadline + "is working normally")
-
-        if (msg.status == 1 || msg.status == 2) {
-          if (Date.parse(this.date) < Date.parse(this.currentStarttime.replace(/-/g, "/"))) {
-            this.ifstart = 0//还没开始
-            console.log("1")
-            this.endstart = Date.parse(this.currentStarttime - this.date)
-          } else if ((Date.parse(this.date) > Date.parse(this.currentStarttime.replace(/-/g, "/"))) && (Date.parse(this.date) < Date.parse(this.currentDeadline.replace(/-/g, "/")))) {
-            this.ifstart = 1;//进行中
-            console.log("2")
-            this.starttask()//任务开始修改状态
-            this.endfinish = Date.parse(this.currentDeadline) - Date.parse(this.date);
-          } else {
-            console.log("3")
-            this.ifstart = 2;//已经结束
-            this.delayTask()//过期修改状态
+          this.currentStatus = msg.status;
+          this.currentTaskid = msg.id;
+          this.currentCondition = false;
+          if (msg.status == 3) {
+            this.isTaskFinish = 0
+          } else if (msg.status == 4 || msg.status == 5) {
+            this.isTaskFinish = 0
+          } else if (msg.status == 1 || msg.status == 2) {
+            this.isTaskFinish = 1
           }
-        }
-
-        console.log("hhhhhhhhh")
-        console.log(this.ifstart)
-        // console.log(this.currentStarttime + "aaaa");
-        var _this = this;
-        console.log("bbb" + _this)
+          console.log(this.currentStarttime + "is fucking ok!")
+          console.log(this.currentDeadline + "is working normally")
 
 
-        //时钟定时器
-        this.timer = setInterval(function () {
-          var start = new Date(_this.currentStarttime.replace(/-/g, "/"));
-          var tt = _this.currentStarttime
-          console.log("kk" + _this.currentTaskid)
-          var now = new Date()
-          var finish = new Date(_this.currentDeadline.replace(/-/g, "/"))
-          var nowstate = msg.status
-          if (nowstate == 1) {
-            console.log("未开始")
-            console.log("rtt" + _this.currentTaskid)
-            console.log(now)
-            console.log(start)
-            var ddd = start.getTime() - now.getTime();
-            console.log(ddd)
-            if (ddd <= 0) {
-              console.log("到达开始时间")
-              console.log("aa" + _this)
-              _this.$http.get(_this.startTaskurl, {
-                params: {
-                  id: _this.currentTaskid,
-                }
-              }).then(res => {
-                console.log("aaa")
-                var a = res.data
-                _this.currentStatus = 2
-              });
-
+          if (msg.status == 1 || msg.status == 2) {
+            if (Date.parse(this.date) < Date.parse(this.currentStarttime.replace(/-/g, "/"))) {
+              this.ifstart = 0//还没开始
+              console.log("1")
+              this.endstart = Date.parse(this.currentStarttime - this.date)
+            } else if ((Date.parse(this.date) > Date.parse(this.currentStarttime.replace(/-/g, "/"))) && (Date.parse(this.date) < Date.parse(this.currentDeadline.replace(/-/g, "/")))) {
+              this.ifstart = 1;//进行中
+              console.log("2")
+              this.starttask()//任务开始修改状态
+              this.endfinish = Date.parse(this.currentDeadline) - Date.parse(this.date);
+            } else {
+              console.log("3")
+              this.ifstart = 2;//已经结束
+              this.delayTask()//过期修改状态
             }
-          } else if (nowstate == 2) {
-            console.log("进行中")
-
           }
-          var dateDiff1 = start.getTime() - now.getTime();//未开始
-          var dayDiff = Math.floor(dateDiff1 / (24 * 3600 * 1000));//计算出相差天数
-          var leave1 = dateDiff1 % (24 * 3600 * 1000)    //计算天数后剩余的毫秒数
-          var hours = Math.floor(leave1 / (3600 * 1000))//计算出小时数
-          //计算相差分钟数
-          var leave2 = leave1 % (3600 * 1000)    //计算小时数后剩余的毫秒数
-          var minutes = Math.floor(leave2 / (60 * 1000))//计算相差分钟数
-          //计算相差秒数
-          var leave3 = leave2 % (60 * 1000)      //计算分钟数后剩余的毫秒数
-          var seconds = Math.floor(leave3 / 1000)
+
+          console.log(this.ifstart)
+          var _this = this;
 
 
-          // console.log(" 相差 "+dayDiff+"天 "+hours+"小时 "+minutes+" 分钟"+seconds+" 秒")
-          _this.endstart1 = dayDiff
-          _this.endstart2 = hours
-          _this.endstart3 = minutes
-          _this.endstart4 = seconds
+          //前置任务未完成,此任务不能开始,需要对前置任务进行操作
+          if (this.tasktype === 1 && (this.currentpretasksta !== null) && (this.currentpretasksta !== 3)) {
+            this.cannotstart = 1
 
-          var dateDiff2 = finish.getTime() - now.getTime();//进行中
-          var dayDiff2 = Math.floor(dateDiff2 / (24 * 3600 * 1000));//计算出相差天数
-          var leave21 = dateDiff2 % (24 * 3600 * 1000)    //计算天数后剩余的毫秒数
-          var hours2 = Math.floor(leave21 / (3600 * 1000))//计算出小时数
-          // //计算相差分钟数
-          var leave22 = leave21 % (3600 * 1000)    //计算小时数后剩余的毫秒数
-          var minutes2 = Math.floor(leave22 / (60 * 1000))//计算相差分钟数
-          // //计算相差秒数
-          var leave23 = leave22 % (60 * 1000)      //计算分钟数后剩余的毫秒数
-          var seconds2 = Math.round(leave23 / 1000)
-          // console.log(" 相差 "+dayDiff2+"天 "+hours2+"小时 "+minutes2+" 分钟"+seconds2+" 秒")
-          _this.endfinish1 = dayDiff2
-          _this.endfinish2 = hours2
-          _this.endfinish3 = minutes2
-          _this.endfinish4 = seconds2
+          } else {
 
-        }, 1000),
+            //时钟定时器
+            this.timer = setInterval(function () {
+              var start = new Date(_this.currentStarttime.replace(/-/g, "/"));
+              var now = new Date()
+              var finish = new Date(_this.currentDeadline.replace(/-/g, "/"))
+              var nowstate = msg.status
+              if (nowstate == 1) {
+                console.log("未开始")
+                console.log("rtt" + _this.currentTaskid)
+                console.log(now)
+                console.log(start)
+                var ddd = start.getTime() - now.getTime();
+                console.log(ddd)
+                if (ddd <= 0) {
+                  console.log("到达开始时间")
+                  console.log("aa" + _this)
+                  _this.$http.get(_this.startTaskurl, {
+                    params: {
+                      id: _this.currentTaskid,
+                    }
+                  }).then(res => {
+                    console.log("aaa")
+                    var a = res.data
+                    _this.currentStatus = 2
+                  });
+
+                }
+              } else if (nowstate == 2) {
+                console.log("进行中")
+
+              }
+              var dateDiff1 = start.getTime() - now.getTime();//未开始
+              var dayDiff = Math.floor(dateDiff1 / (24 * 3600 * 1000));//计算出相差天数
+              var leave1 = dateDiff1 % (24 * 3600 * 1000)    //计算天数后剩余的毫秒数
+              var hours = Math.floor(leave1 / (3600 * 1000))//计算出小时数
+              //计算相差分钟数
+              var leave2 = leave1 % (3600 * 1000)    //计算小时数后剩余的毫秒数
+              var minutes = Math.floor(leave2 / (60 * 1000))//计算相差分钟数
+              //计算相差秒数
+              var leave3 = leave2 % (60 * 1000)      //计算分钟数后剩余的毫秒数
+              var seconds = Math.floor(leave3 / 1000)
+
+
+              // console.log(" 相差 "+dayDiff+"天 "+hours+"小时 "+minutes+" 分钟"+seconds+" 秒")
+              _this.endstart1 = dayDiff
+              _this.endstart2 = hours
+              _this.endstart3 = minutes
+              _this.endstart4 = seconds
+
+              var dateDiff2 = finish.getTime() - now.getTime();//进行中
+              var dayDiff2 = Math.floor(dateDiff2 / (24 * 3600 * 1000));//计算出相差天数
+              var leave21 = dateDiff2 % (24 * 3600 * 1000)    //计算天数后剩余的毫秒数
+              var hours2 = Math.floor(leave21 / (3600 * 1000))//计算出小时数
+              // //计算相差分钟数
+              var leave22 = leave21 % (3600 * 1000)    //计算小时数后剩余的毫秒数
+              var minutes2 = Math.floor(leave22 / (60 * 1000))//计算相差分钟数
+              // //计算相差秒数
+              var leave23 = leave22 % (60 * 1000)      //计算分钟数后剩余的毫秒数
+              var seconds2 = Math.round(leave23 / 1000)
+              // console.log(" 相差 "+dayDiff2+"天 "+hours2+"小时 "+minutes2+" 分钟"+seconds2+" 秒")
+              _this.endfinish1 = dayDiff2
+              _this.endfinish2 = hours2
+              _this.endfinish3 = minutes2
+              _this.endfinish4 = seconds2
+
+            }, 1000)
+          }
 
           console.log(this.ifstart)
 
-        // if(this.currentStarttime)
-        // if (
-        //   this.taskData[this.currentTask].tomatoCompleted ==
-        //   this.taskData[this.currentTask].expectedTomato
-        // )
-        //   this.currentCondition = true;
-        // else this.currentCondition = false;
+          // if(this.currentStarttime)
+          // if (
+          //   this.taskData[this.currentTask].tomatoCompleted ==
+          //   this.taskData[this.currentTask].expectedTomato
+          // )
+          //   this.currentCondition = true;
+          // else this.currentCondition = false;
+        }
+
       },
       deleteTask() {
         this.$confirm("此操作将永久删除该任务, 是否继续?", "提示", {
@@ -801,8 +982,8 @@
         });
         // }
       },
-      finishTask() {//完成
-        console.log("task" + this.currentTask)
+      finishTask() {//完成任务
+        console.log("task" + this.tasktype)
         //个人任务
         if (this.tasktype == 0) {
           this.$http.get(this.endTaskUrl, {
@@ -820,7 +1001,8 @@
             });
 
           });
-        } else if (tasktype == 1) {
+        } else if (this.tasktype == 1) {
+          console.log("铁狮门 ")
           //团队任务
           this.$http.get(this.endProjectTaskUrl, {
             params: {
@@ -838,6 +1020,10 @@
 
           });
         }
+      },
+      //推迟团队任务
+      putoff() {
+
       },
       breakTask() {//中断
         this.$http.get(this.breakTaskUrl, {
