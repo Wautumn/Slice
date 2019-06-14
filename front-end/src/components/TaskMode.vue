@@ -622,10 +622,12 @@
 
           })
 
-        } else if (this.tasktype == 0) {
+        }
+        else if (this.tasktype == 0) {
           this.currentDeadline = msg.finishtime;
           this.currentStarttime = msg.starttime;
           console.log(this.currentStarttime)
+          console.log(this.currentDeadline)
 
           this.currentStatus = msg.status;
           this.currentTaskid = msg.id;
@@ -651,7 +653,7 @@
               console.log("2")
               this.starttask()//任务开始修改状态
               this.endfinish = Date.parse(this.currentDeadline) - Date.parse(this.date);
-            } else {
+            } else  {
               console.log("3")
               this.ifstart = 2;//已经结束
               this.delayTask()//过期修改状态
@@ -660,14 +662,6 @@
 
           console.log(this.ifstart)
           var _this = this;
-
-
-          //前置任务未完成,此任务不能开始,需要对前置任务进行操作
-          if (this.tasktype === 1 && (this.currentpretasksta !== null) && (this.currentpretasksta !== 3)) {
-            this.cannotstart = 1
-
-          } else {
-
             //时钟定时器
             this.timer = setInterval(function () {
               var start = new Date(_this.currentStarttime.replace(/-/g, "/"));
@@ -676,20 +670,15 @@
               var nowstate = msg.status
               if (nowstate == 1) {
                 console.log("未开始")
-                console.log("rtt" + _this.currentTaskid)
-                console.log(now)
-                console.log(start)
                 var ddd = start.getTime() - now.getTime();
                 console.log(ddd)
                 if (ddd <= 0) {
                   console.log("到达开始时间")
-                  console.log("aa" + _this)
                   _this.$http.get(_this.startTaskurl, {
                     params: {
                       id: _this.currentTaskid,
                     }
                   }).then(res => {
-                    console.log("aaa")
                     var a = res.data
                     _this.currentStatus = 2
                   });
@@ -735,19 +724,8 @@
 
             }, 1000)
           }
-
           console.log(this.ifstart)
-
-          // if(this.currentStarttime)
-          // if (
-          //   this.taskData[this.currentTask].tomatoCompleted ==
-          //   this.taskData[this.currentTask].expectedTomato
-          // )
-          //   this.currentCondition = true;
-          // else this.currentCondition = false;
-        }
-
-      },
+        },
       deleteTask() {
         this.$confirm("此操作将永久删除该任务, 是否继续?", "提示", {
           confirmButtonText: "确定",
@@ -869,7 +847,7 @@
             .post(this.dailySummaryUrl, {
 
               // userid: sessionStorage.userId,
-              userid: "8",
+              userid: sessionStorage.userId,
               content: this.dailySummary,
               // date: this.getcurrentTime,
               score: this.selfRating
@@ -937,7 +915,7 @@
       getSummary() {
         this.$http
           .get(this.summaryRequestUrl, {
-            params: {userid: 8}
+            params: {userid: sessionStorage.userId}
           })
           .then(response => {
             //如果有小结
@@ -1065,7 +1043,7 @@
         this.$http
           .get(this.currentTaskUrl, {
             // params: { userId: sessionStorage.userId }
-            params: {userid: "10"}
+            params: {userid: sessionStorage.userid}
           })
           .then(response => {
             this.taskData = response.data;
