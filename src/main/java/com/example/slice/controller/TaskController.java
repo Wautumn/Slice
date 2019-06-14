@@ -119,4 +119,10 @@ public class TaskController {
        taskService.delayTask(id);
 
     }
+
+    @RequestMapping(value = "/getAnaly", method = RequestMethod.GET)
+    public List getAnaly(int userid){
+        return taskService.getAnaly(userid);
+
+    }
 }
