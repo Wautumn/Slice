@@ -114,7 +114,7 @@ export default {
     //--------------
     storedTaskYear: [],
       date: [monthAgo, nowTime],//[当月1日，当前日期]
-      userID: 1,
+      userID: sessionStorage.userid,
       description:[],
       taskurl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTasksByUserid",
     //--------------
@@ -308,7 +308,7 @@ export default {
       this.$http
         .get(this.taskurl, {
           params: {
-            userid: "10",       
+            userid: sessionStorage.userid,       
           }
         })
         .then(res => {
@@ -491,7 +491,7 @@ export default {
       this.$http
         .get(this.taskurl, {
           params: {
-            userid: this.userID,       
+            userid: sessionStorage.userid,       
           }
         })
         .then(res => {
