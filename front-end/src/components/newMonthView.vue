@@ -7,8 +7,27 @@
       @change="saveState">
 
       <template slot="title">
-        DaySpan
+        Slice
       </template>
+      <template slot="title">
+          <v-btn icon @click="jumpToHome()">
+        <v-icon>home</v-icon>
+      </v-btn>
+      </template>
+       <template slot="title">
+
+      <v-btn-toggle v-model="icon" @change="changeType">
+              <v-btn flat value="personal" color="info">
+                <span>个人</span>
+                <v-icon>person</v-icon>
+              </v-btn>
+              <v-btn flat value="peoples" color="info">
+                <span>团队</span>
+                <v-icon>people</v-icon>
+              </v-btn>
+            </v-btn-toggle>
+        </template>
+
 
 
       <template slot="eventPopover" slot-scope="slotData">
@@ -17,6 +36,7 @@
           :read-only="readOnly"
           @finish="saveState"
         ></ds-calendar-event-popover>
+        
       </template>
 
       <template slot="eventCreatePopover" slot-scope="{placeholder, calendar, close}">
@@ -39,7 +59,10 @@
           </v-icon>
           <strong class="ds-ev-title">{{ details.title }}</strong>
         </div>
-        <div class="ds-ev-description">{{ getCalendarTime( calendarEvent ) }}</div>
+        <div class="ds-ev-description">{{ getCalendarTime( calendarEvent ) }}
+
+        </div>
+        
       </template>
 
       <template slot="drawerBottom">
@@ -82,6 +105,12 @@ export default {
     storeKey: 'dayspanState',
     calendar: Calendar.months(),
     readOnly: false,
+    row: null,
+    // text: 'center',
+    icon: "personal",
+    // toggle_none: null,
+    // toggle_exclusive: 2,
+    // toggle_multiple: [0, 1, 2],
     //--------------
     storedTaskYear: [],
       date: [monthAgo, nowTime],//[当月1日，当前日期]
@@ -105,7 +134,121 @@ export default {
   },
 
   methods:
+  { changeType()
   {
+    console.log("icon"+this.icon)
+   if(this.icon=="personal"){
+     this.taskurl="http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTasksByUserid"
+     this.statechange()
+   }
+   else{
+     this.taskurl="http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getAllTasks"
+      this.statechange()  
+   }
+   console.log("url"+this.taskurl)
+  },
+    statechange(ttype)
+    {
+      let state={}
+        console.log("requestData function");
+      this.$http
+        .get(this.taskurl, {
+          params: {
+            userid: "10",       
+          }
+        })
+        .then(res => {
+          this.defaultEvents=[];
+            console.log("default data1:")
+            console.log(this.defaultEvents)
+            console.log("res data1")
+          console.log(res.data)
+          let selectedData=res.data
+        for (let i = 0; i < selectedData.length; i++) {
+        let item = selectedData[i];
+          var ccolor='#4CAF50';
+          switch (item.status) {
+            case 1:
+              ccolor ='#FFF68F'; //"waiting";
+              break;
+            case 4:
+              ccolor ='#ffd4d4';// "abandoned";
+              break;
+            case 2:
+              ccolor = '#4CAF50';//"running";
+              break;
+            case 3:
+              ccolor = '#2196F3';//"completed";
+              break;
+            case 5:
+              ccolor = '#000000';//"break";
+              break;
+            default:
+              break;
+          }
+          let tmpdefaultdata=new Object()
+          if(ttype==0)
+          {
+          tmpdefaultdata={
+           data: {
+          title: item.name,
+          color: ccolor
+          //color: '#4CAF50'
+        },
+        schedule: {
+          // weekspanOfMonth: [0],
+          //dayOfWeek: [Weekday.FRIDAY],
+          // month: [Month.JUNE],
+          // dayOfMonth: [20],
+          // duration: 3,
+          // durationUnit: 'days'
+          start:item.starttime,
+          end:item.finishtime,
+        }}
+          }
+          else{
+            tmpdefaultdata={
+           data: {
+          title: item.name,
+          color: ccolor
+          //color: '#4CAF50'
+        },
+        schedule: {
+          // weekspanOfMonth: [0],
+          //dayOfWeek: [Weekday.FRIDAY],
+          // month: [Month.JUNE],
+          // dayOfMonth: [20],
+          // duration: 3,
+          // durationUnit: 'days'
+          start:item.starttime,
+          end:item.endtime,
+        }}
+          }
+        JSON.stringify(tmpdefaultdata)
+        this.defaultEvents.push(tmpdefaultdata)
+      }
+      console.log("executed")
+        state.events = this.defaultEvents;
+        console.log(this.defaultEvents)
+        
+        state.events.forEach(ev =>
+            {
+                console.log("here for each")
+                let defaults = this.$dayspan.getDefaultEventDetails();
+                console.log(defaults)
+                ev.data = Vue.util.extend( defaults, ev.data );
+            });
+
+            this.$refs.app.setState( state );
+
+
+
+        });
+    },
+    jumpToHome()
+    {
+      this.$router.push("/TaskMode");
+    },
     getCalendarTime(calendarEvent)
     {
       let sa = calendarEvent.start.format('a');
@@ -135,7 +278,7 @@ export default {
     },
 
     loadState()
-    {
+    { console.log("loadstate")
       let state = {};
 
       try
@@ -159,20 +302,7 @@ export default {
 
 
         //---------------------
-          //----------test---------
-       
-         var foo={
-        data: {
-          title: 'Inauguration Day',
-          color: '#2196F3',
-          calendar: 'US Holidays'
-        },
-        schedule: {
-          month: [Month.JANUARY],
-          dayOfMonth: [20]
-        }
-      }
-      console.log(JSON.stringify(foo))
+     
      
       console.log("requestData function");
       this.$http

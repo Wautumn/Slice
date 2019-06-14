@@ -13,7 +13,7 @@
       </a>
 
       <el-menu-item v-if="isVerified" index="/TaskMode"><i class="icon-glyph-156"></i><strong>日视图</strong></el-menu-item>
-      <el-menu-item v-if="isVerified" index="/Month"><i class="icon-glyph-17"></i><strong>月视图</strong></el-menu-item>
+      <el-menu-item v-if="isVerified" index="/newMonthView"><i class="icon-glyph-17"></i><strong>月视图</strong></el-menu-item>
       <el-menu-item v-if="isVerified" index="/Project"><i class="icon-glyph-265"></i><strong>团队任务</strong></el-menu-item>
       <el-menu-item v-if="isVerified" index="/WeekAdvice"><i class="icon-glyph-173"></i><strong>分析</strong></el-menu-item>
       <el-menu-item v-if="isVerified" index="/Recom"><i class="icon-glyph-142"></i><strong>推荐</strong></el-menu-item>
