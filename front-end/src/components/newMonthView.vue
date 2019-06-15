@@ -123,13 +123,13 @@ export default {
 //--------------------------------
  //该组件在mounted之前就调用了TimeChange所以一些操作需要提前到created来做
   created() {
-    localStorage.clear();
+    //localStorage.clear();
   },
 //--------------------------------
   mounted()
   {
     window.app = this.$refs.app;
-
+    console.log("mounted")
     this.loadState();
   },
 
@@ -139,22 +139,24 @@ export default {
     console.log("icon"+this.icon)
    if(this.icon=="personal"){
      this.taskurl="http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTasksByUserid"
-     this.statechange()
+     this.statechange(0)
    }
    else{
      this.taskurl="http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getAllTasks"
-      this.statechange()  
+      this.statechange(1)  
    }
    console.log("url"+this.taskurl)
   },
     statechange(ttype)
-    {
+    { console.log("!!!!!!!!!!!!!")
+      console.log(localStorage.userid)
+      console.log("！！！！！！！！")
       let state={}
         console.log("requestData function");
       this.$http
         .get(this.taskurl, {
           params: {
-            userid: "10",       
+            userid: localStorage.userid,       
           }
         })
         .then(res => {

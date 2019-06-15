@@ -284,6 +284,7 @@
     },
     //加载
     mounted() {
+      console.log("localStorage"+localStorage.userid)
       var _this = this; //声明一个变量指向vue实例this,保证作用域一致
       this.timer = setInterval(function () {
         _this.date = new Date();//修改数据date
@@ -295,7 +296,7 @@
       this.getcurrentTime = this.currentTime();
       this.getcurrentTime = this.getcurrentTime.substring(0, 19);
       this.$http
-        .get(this.currentTaskUrl, {params: {userid: sessionStorage.userid}})
+        .get(this.currentTaskUrl, {params: {userid: localStorage.userid}})
         .then(response => {
           this.taskData = response.data;
           var nlist = [];
@@ -360,14 +361,14 @@
         if (!this.timer) {
           this.count = TIME_COUNT;
           this.countOn = true;
-          sessionStorage.listLock = "true";
+           localStorage.listLock = "true";
           this.countButtonType = "danger";
           this.seconds = this.count % 60;
           this.minutes = parseInt(this.count / 60);
           if (this.taskData[this.currentTask].status == 0) {
             this.$http.get(this.taskStartUrl, {
               params: {
-                userid: sessionStorage.userid,
+                userid: localStorage.userid,
                 taskName: this.taskData[this.currentTask].name
               }
             });
@@ -376,7 +377,7 @@
           this.tomoStartTime = new Date().format("yyyy-MM-dd hh:mm:ss");
           this.$http.get(this.tomatoStartUrl, {
             params: {
-              userid: sessionStorage.userid,
+              userid: localStorage.userid,
               taskName: this.currentTaskName,
               startTime: this.tomoStartTime
             }
@@ -391,13 +392,13 @@
               this.countButtonType = "success";
               clearInterval(this.timer);
               this.timer = null;
-              sessionStorage.listLock = "false";
+              localStorage.listLock = "false";
               if (this.count == 0) {
                 this.currentFinishedPomo++;
                 this.taskData[this.currentTask].tomatoCompleted++;
                 this.$http.get(this.tomatoEndUrl, {
                   params: {
-                    userid: sessionStorage.userid,
+                    userid: localStorage.userid,
                     needAssociation: true,
                     taskName: this.currentTaskName,
                     startTime: this.tomoStartTime,
@@ -406,7 +407,7 @@
                 });
                 this.$http.get(this.modifyTaskUrl, {
                   params: {
-                    userid: sessionStorage.userid,
+                    userid: localStorage.userid,
                     taskName: this.currentTaskName,
                     property: "tomatoCompleted",
                     value: this.currentFinishedPomo
@@ -444,6 +445,7 @@
       //！！！！！！！！！！！！！！！！！！
       getTasksByUserid(msg) {
         console.log("----------------------msg")
+        console.log("local")
         console.log(msg)
         if (msg == "new") {
           this.$http

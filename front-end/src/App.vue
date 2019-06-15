@@ -36,7 +36,7 @@ export default {
         console.log(userid);
         //清空前用户的数据
         console.log("delete user message")
-        // localStorage.clear();
+        localStorage.clear();
         deleteDB("weekDB");
         deleteDB("daySumDB");
         deleteDB("dayTaskDB");
