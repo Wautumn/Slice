@@ -139,12 +139,15 @@ public class TaskService {
 
     public List getAnaly(int userid) {
         List<Task> tasks = taskDAO.findTaskByUserid(userid);
-      for(int i=0;i<tasks.size();i++){
-          System.out.println(tasks.get(i).getId());
-          System.out.println(tasks.get(i).getRealfinish());
-          if(tasks.get(i).getRealfinish()!=null)System.out.println(dateConvert.StringToLD(tasks.get(i).getRealfinish()));
+        List<Task> task2=new LinkedList<>();
+        task2.addAll(tasks);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(tasks.get(i).getId());
+            System.out.println(tasks.get(i).getRealfinish());
+            if (tasks.get(i).getRealfinish() != null)
+                System.out.println(dateConvert.StringToLD(tasks.get(i).getRealfinish()));
 
-      }
+        }
         LocalDate now = LocalDate.now();//现在日期
         LocalDate before = now.minusWeeks(1);//前一周的日期
 
@@ -161,23 +164,42 @@ public class TaskService {
             arr3[i] = 0;
         }
         List<HashMap<String, Object>> result = new LinkedList<>();
+
+
+        for (Task task : tasks) {
+            if (task.getRealfinish() == null) {
+                String finish = task.getFinishtime();
+                for (int j = 0; j < 7; j++) {
+                    System.out.println(dateConvert.StringToLD(finish));
+                    System.out.println("aaa" + before.plusDays(j));
+
+                    if (dateConvert.StringToLD(finish).equals(before.plusDays(j))) {
+                        if (task.getStatus() == 5)
+                            arr3[j]++;
+                        else
+                            arr2[j]++;
+                    }
+                }
+                task2.remove(task);
+            }
+
+        }
+
         for (int i = 0; i < 7; i++) {
             LocalDate current = before.plusDays(i);
-            System.out.println(current);
-            for (Task task : tasks) {
-                if (task.getRealfinish() == null) {
-                    arr3[i]++;
-                } else {
-                    if (dateConvert.StringToLD(task.getRealfinish()).equals( current) ){
+            if (task2 != null) {
+
+                System.out.println(current);
+                for (Task task : task2) {
+                    if (dateConvert.StringToLD(task.getRealfinish()).equals(current)) {
                         if (task.getStatus() == 3) {
                             arr[i]++;
                         }
                         if (task.getStatus() == 4)
                             arr2[i]++;
-                        if (task.getStatus() == 5) {
-                            arr3[i]++;
-                        }
+
                     }
+
                 }
             }
 
@@ -188,6 +210,7 @@ public class TaskService {
             oneday.put("过期", arr3[i]);
 
             result.add(oneday);
+
 
         }
 
