@@ -10,23 +10,24 @@
     
     <el-table-column
       align="right">
+      <i class="el-icon-delete"  @click="createTodoModal = true"></i>
       <template slot="header" slot-scope="scope">
-       <!-- <el-row> -->
-            <!-- <el-col :span="18"> -->
-               <el-button
+       <el-row>
+            <el-col :span="21">
+               <!-- <el-button
                     size="mini"
-                    @click="createTodoModal = true">新建</el-button>
+                    @click="createTodoModal = true">新建</el-button> -->
+                    <!-- <i class="el-icon-delete"  @click="createTodoModal = true"></i> -->
                <el-input
                     v-model="search"
                     size="mini"
                     placeholder="输入关键字搜索"/>
-                    <!-- </el-col> -->
-            <!-- <el-col :span="6"> 
-              <el-button
-                    size="mini"
-                    @click="createTodoModal = true">新建</el-button>
                     </el-col>
-          </el-row> -->
+            <el-col :span="3"> 
+                <i class="el-icon-edit"  @click="createTodoModal = true"></i>
+      
+            </el-col>
+          </el-row>
      </template>
 
       <template slot-scope="scope">
@@ -213,3 +214,8 @@
     },
   }
 </script>
+<style>
+.el-col {
+    border-radius: 4px;
+  }
+  </style>
