@@ -37,5 +37,8 @@ public class UserService {
         return userDAO.findToken(userid);
     }
 
+    public int changePassword(int id, String old_password, String new_password){
+        return userDAO.changePassword(id, old_password, new_password);
+    }
 
 }

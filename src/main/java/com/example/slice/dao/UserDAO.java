@@ -27,16 +27,16 @@ public class UserDAO {
             String sql = "INSERT INTO user(username, password, email) VALUES(?, ?, ?)";
             KeyHolder holder = new GeneratedKeyHolder();
             jdbcTemplate.update(new PreparedStatementCreator() {
-                                    @Override
-                                    public PreparedStatement createPreparedStatement(Connection con)
-                                            throws SQLException {
-                                        PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-                                        ps.setString(1, user.getUsername());
-                                        ps.setString(2, user.getPassword());
-                                        ps.setString(3, user.getEmail());
-                                        return ps;
-                                    }
-                                }, holder);
+                @Override
+                public PreparedStatement createPreparedStatement(Connection con)
+                        throws SQLException {
+                    PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+                    ps.setString(1, user.getUsername());
+                    ps.setString(2, user.getPassword());
+                    ps.setString(3, user.getEmail());
+                    return ps;
+                }
+            }, holder);
 //            int id = holder.getKey().intValue();
         } catch (DuplicateKeyException exception) {
             return 2;   //user already exists
@@ -97,13 +97,13 @@ public class UserDAO {
         }
     }
 
-    public String findNameById(int id){
-        try{
+    public String findNameById(int id) {
+        try {
             Object[] params = new Object[]{id};
             String sql = "SELECT username FROM user WHERE id = ?";
             String username = jdbcTemplate.queryForObject(sql, params, String.class);
             return username;
-        }catch (Exception exception){
+        } catch (Exception exception) {
             return null;
         }
     }
@@ -142,5 +142,21 @@ public class UserDAO {
         }
     }
 
+    public int changePassword(int id, String old_password, String new_password) {
+        try {
+            Object[] params = new Object[]{id};
+            String select_sql = "SELECT password FROM user WHERE id = ?";
+            String real_old_password = jdbcTemplate.queryForObject(select_sql, params, String.class);
+            if (!old_password.equals(real_old_password)) {
+                return -2;
+            }
 
+            params = new Object[]{new_password, id};
+            String update_sql = "UPDATE user SET password = ? WHERE id = ?";
+            jdbcTemplate.update(update_sql, params);
+            return 1;
+        } catch (Exception exception) {
+            return -1;
+        }
+    }
 }

@@ -23,4 +23,32 @@ public class UserServiceTest {
         int i = user.getId();
         System.out.println(i);
     }
+
+    @Test
+    public void createUser1() {
+    }
+
+    @Test
+    public void findUserByName() {
+    }
+
+    @Test
+    public void findUserByEmail() {
+    }
+
+    @Test
+    public void findIdByName() {
+    }
+
+    @Test
+    public void findNameById() {
+    }
+
+    @Test
+    public void deleteUser() {
+    }
+
+    @Test
+    public void findTokenById() {
+    }
 }

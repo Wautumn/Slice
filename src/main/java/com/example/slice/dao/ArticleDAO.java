@@ -50,7 +50,14 @@ public class ArticleDAO {
             }
             return result;
         }catch (Exception exception){
-            return null;
+            Article article = new Article();
+            article.setId(-1);
+            article.setTitle(exception.toString());
+            article.setContent(exception.getMessage());
+            article.setAuthor("null");
+            article.setImage("null");
+            result.add(article);
+            return result;
         }
     }
 }

@@ -86,4 +86,14 @@ public class UserController {
     public int deleteUser(String username) {
         return userService.deleteUser(username);
     }
+
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    @ResponseBody
+    public int changePassword(@RequestBody JSONObject jsonObject){
+        int id = jsonObject.getInteger("id");
+        String old_password = jsonObject.getString("old");
+        String new_password = jsonObject.getString("new");
+
+        return userService.changePassword(id, old_password, new_password);
+    }
 }
