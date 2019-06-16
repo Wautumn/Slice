@@ -110,7 +110,10 @@
       </el-form-item>
     </el-form>
 
+
   </div>
+
+
 </template>
 
 <script>
@@ -124,6 +127,8 @@
         setpretaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/setPreTask",
         findprojecttaskid: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/findProjectTaskId",
 
+
+        dialogVisible: false,
         form: {
           name: '',
           description: '',
@@ -134,7 +139,7 @@
         },
 
 
-        userid:  localStorage.userid,
+        userid: localStorage.userid,
         nowpeople: '',//当前添加的人员
         nowsubtask: {
           name: '',
@@ -159,85 +164,98 @@
       onSubmit() {
         console.log('submit!');
         console.log(this.form)
-        this.$http
-          .post(this.newprojecturl, {
-            userid: localStorage.userid,//this.userid,
-            name: this.form.name,
-            description: this.form.description,
-            members: this.form.joiner,
-            subtasks: [],
-            starttime: this.form.starttime,
-            endtime: this.form.finishtime
-          },).then(response => {
-          console.log(response.data);
-          if (response.data == -1) {
-            this.$alert('添加失败', {
-              confirmButtonText: '确定',
-            });
-          } else {
-            console.log("添加项目成功")
-            var nowprojectid = response.data
-            console.log("项目id" + nowprojectid)
-            //添加子任务
-            console.log("下面是添加子任务啦")
 
-            for (let i = 0; i < this.form.subtask.length; i++) {
-              console.log("添加子任务" + this.form.subtask[i].name)
-              var before=new Object()
-              before = this.form.subtask[i].beforetask
-              Object.freeze(before)
-              console.log("看看前置任务有没有" + before + i );
-              this.$http
-                .post(this.addsubtaskurl,
-                  {
-                    name: this.form.subtask[i].name,
-                    description: this.form.subtask[i].description,
-                    starttime: this.form.subtask[i].starttime,
-                    endtime: this.form.subtask[i].finishtime,
-                    projectid: nowprojectid,
-                    usernames: this.form.subtask[i].subtaskuser
-                  }).then(response => {
-                var subtaskid = response.data;
-                console.log("增加的子任务成功");
-                console.log(subtaskid);
-                //增加前置任务
-                console.log("看看前置任务有没有2" + this.form.subtask[i].beforetask+i);
-                if (this.form.subtask[i].beforetask != null) {
-                  //根据名字去找前置任务的id
-                  console.log("现在是添加前置任务")
-                  var beforetaskname = this.form.subtask[i].beforetask;//前置任务的名字
-                  var beforetaskid;//前置任务的id
-                  this.$http.get(this.findprojecttaskid, {
-                    params: {
+        var start = new Date(this.form.starttime.replace(/-/g, "/"));
+        var finish = new Date(this.form.finishtime.replace(/-/g, "/"));
+
+
+        if (start.getTime() > finish.getTime()) {
+          this.$message('添加团队任务失败！任务起始时间应早于任务结束时间！');
+        } else if (start.getTime() < new Date().getTime()) {
+          this.$message('添加团队任务失败！任务开始时间应晚于当前');
+        } else if (this.form.name == "" || this.form.starttime === "" || this.form.finishtime === "" || this.form.joiner.length === 0) {
+          this.$message('添加团队任务失败！请正确填写相关信息！');
+        } else {
+          this.$http
+            .post(this.newprojecturl, {
+              userid: localStorage.userid,//this.userid,
+              name: this.form.name,
+              description: this.form.description,
+              members: this.form.joiner,
+              subtasks: [],
+              starttime: this.form.starttime,
+              endtime: this.form.finishtime
+            },).then(response => {
+            console.log(response.data);
+            if (response.data == -1) {
+              this.$alert('添加失败', {
+                confirmButtonText: '确定',
+              });
+            } else {
+              console.log("添加项目成功")
+              var nowprojectid = response.data
+              console.log("项目id" + nowprojectid)
+              //添加子任务
+              console.log("下面是添加子任务啦")
+
+              for (let i = 0; i < this.form.subtask.length; i++) {
+                console.log("添加子任务" + this.form.subtask[i].name)
+                var before = new Object()
+                before = this.form.subtask[i].beforetask
+                Object.freeze(before)
+                console.log("看看前置任务有没有" + before + i);
+                this.$http
+                  .post(this.addsubtaskurl,
+                    {
+                      name: this.form.subtask[i].name,
+                      description: this.form.subtask[i].description,
+                      starttime: this.form.subtask[i].starttime,
+                      endtime: this.form.subtask[i].finishtime,
                       projectid: nowprojectid,
-                      name: beforetaskname,
-                    }
-                  }).then(response => {
-                    beforetaskid = response.data
-                    console.log("找到子任务的id是" + beforetaskid)
-
-                    this.$http.get(this.setpretaskurl, {
-                      params:
-                        {
-                          projectid: nowprojectid,
-                          taskid: subtaskid,
-                          preid: beforetaskid
-
-                        }
+                      usernames: this.form.subtask[i].subtaskuser
                     }).then(response => {
-                      console.log("添加子任务的结果" + response.data)
+                  var subtaskid = response.data;
+                  console.log("增加的子任务成功");
+                  console.log(subtaskid);
+                  //增加前置任务
+                  console.log("看看前置任务有没有2" + this.form.subtask[i].beforetask + i);
+                  if (this.form.subtask[i].beforetask != null) {
+                    //根据名字去找前置任务的id
+                    console.log("现在是添加前置任务")
+                    var beforetaskname = this.form.subtask[i].beforetask;//前置任务的名字
+                    var beforetaskid;//前置任务的id
+                    this.$http.get(this.findprojecttaskid, {
+                      params: {
+                        projectid: nowprojectid,
+                        name: beforetaskname,
+                      }
+                    }).then(response => {
+                      beforetaskid = response.data
+                      console.log("找到子任务的id是" + beforetaskid)
+
+                      this.$http.get(this.setpretaskurl, {
+                        params:
+                          {
+                            projectid: nowprojectid,
+                            taskid: subtaskid,
+                            preid: beforetaskid
+
+                          }
+                      }).then(response => {
+                        console.log("添加子任务的结果" + response.data)
+                      })
                     })
-                  })
 
 
-                }
-              })
+                  }
+                })
+              }
+              this.$alert('新建成功', {
+                confirmButtonText: '确定',
+              });
             }
-            this.$alert('新建成功', {
-              confirmButtonText: '确定',
-            });
-          }
-        });
+          });
+        }
       },
 
 
@@ -300,10 +318,25 @@
       },
       //子任务添加到任务表单里面去
       addsubtask: function () {
+        console.log("a")
         var current = Object.assign({}, this.nowsubtask)
-        this.form.subtask.push(current)
-        console.log(this.nowsubtask)
-        console.log(this.form.subtask)
+        var start = new Date(current.starttime.replace(/-/g, "/"));
+        var finish = new Date(current.finishtime.replace(/-/g, "/"));
+        console.log(current)
+        console.log(start.getTime())
+
+
+        if (start.getTime() > finish.getTime()) {
+          this.$message('添加子任务失败！任务起始时间应早于任务结束时间！');
+        } else if (current.starttime === "" || current.finishtime === "" || current.subtaskuser.length === 0 || current.name === "") {
+          this.$message('添加子任务失败！请填写完整信息！');
+        } else if (start.getTime() < new Date().getTime()) {
+          this.$message('添加子任务失败！子任务开始时间应晚于当前');
+        } else {
+          this.form.subtask.push(current)
+          console.log(this.nowsubtask)
+          console.log(this.form.subtask)
+        }
       },
       handleClose(tag) {
         this.form.joiner.splice(this.form.joiner.indexOf(tag), 1);
