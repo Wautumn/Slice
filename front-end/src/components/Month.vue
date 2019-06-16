@@ -2,10 +2,10 @@
   <el-main>
   <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
     <el-tab-pane label="个人任务" name="first">
-      <monthview1></monthview1>
+      <newmonthview></newmonthview>
       </el-tab-pane>
     <el-tab-pane label="团队任务" name="second">
-      <monthview2></monthview2>
+      <newmonthview></newmonthview>
       </el-tab-pane>
   
   </el-tabs>
@@ -15,11 +15,14 @@
 <script>
  import MonthView1 from "@/components/MonthView1";
  import MonthView2 from "@/components/MonthView2";
+ import newMonthView from "@/components/newMonthView";
+
 
   export default {
     components: {
       monthview1:MonthView1,
-      monthview2:MonthView2
+      monthview2:MonthView2,
+      newmonthview:newMonthView
     },
     data() {
       return {

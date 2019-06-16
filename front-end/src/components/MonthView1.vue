@@ -131,35 +131,38 @@ export default {
         // let date = item.settime;
         // let dayEvents = item.tempResult;
         // for (let j = 0; j < dayEvents.length; j++) {
-          let ccolor;
+          var ccolor='cssyellow';
           console.log("status")
           console.log(item.status)
           switch (item.status) {
             case 1:
-              ccolor ="yellow"; //"waiting";
+              ccolor ='cssyellow'; //"waiting";
               break;
             case 4:
-              ccolor ="red";// "abandoned";
+              ccolor ='cssred';// "abandoned";
               break;
             case 2:
-              ccolor = "green";//"running";
+              ccolor = 'cssgreen';//"running";
               break;
             case 3:
-              ccolor = "blue";//"completed";
+              ccolor = 'cssblue';//"completed";
               break;
             case 5:
-              ccolor = "black";//"break";
+              ccolor = 'cssblack';//"break";
               break;
             default:
               break;
           }
+          console.log("ccolor")
+          console.log(ccolor)
           this.description=[]
           this.description.push(item.description)
           this.fcEvents.push({
             start: item.starttime,
             title: item.name,
             end:item.finishtime,
-            color:ccolor
+            // color:ccolor
+            cssClass:ccolor,
           });
        // }
       }
@@ -220,13 +223,28 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .comp-full-calendar {
   padding: 15px;
   background: #fff;
   max-width: none;
   margin: 0 auto;
   font-size: medium;
+}
+.cssyellow {
+  background: #FFF68F;
+}
+.cssred {
+  background: #ffd4d4;
+}
+.cssgreen {
+  background: #f0f9eb;;
+}
+.cssblue {
+  background: #F0FFFF;
+}
+.cssblack {
+  background: #000000;
 }
 </style>
 

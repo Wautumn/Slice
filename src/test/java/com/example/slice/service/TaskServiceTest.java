@@ -1,12 +1,18 @@
 package com.example.slice.service;
 
+import com.example.slice.dao.TaskDAO;
 import com.example.slice.entity.Task;
+import com.example.slice.utility.DateConvert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +25,9 @@ import java.util.List;
 public class TaskServiceTest {
     @Autowired
     TaskService taskService;
+
+    @Autowired
+    TaskDAO taskDAO;
 
 
     @Test
@@ -48,5 +57,23 @@ public class TaskServiceTest {
        taskService.deleteTask(1);
     }
 
+
+    @Test
+    public void test(){
+        taskService.startTask(41);
+        Date date=new Date();
+        SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
+        String now=sdf.format(date);
+        taskService.finishTask(1,now);
+//        taskService.breakTask(42,now);
+//        taskService.delayTask(39);
+    }
+    @Autowired
+    DateConvert dateConvert;
+    @Test
+    public void a(){
+        System.out.println(dateConvert.StringToLD("2019-06-13 02:58:31"));
+
+    }
 
 }

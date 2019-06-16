@@ -7,7 +7,9 @@ import com.example.slice.utility.DateConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class TaskService {
 
     @Autowired
     DateConvert dateConvert;
+
 
     public Task findTaskById(int id) {
         Task task = taskDAO.findTaskById(id);
@@ -94,6 +97,7 @@ public class TaskService {
             }
             LocalDate start = dateConvert.StringToLD(starttime);//开始的日期
             LocalDate end = dateConvert.StringToLD(endtime);//结束的日期
+            System.out.println(task.getName());
             System.out.println(start);
             System.out.println(end);
             System.out.println("now" + now);
@@ -108,27 +112,110 @@ public class TaskService {
     }
 
 
-    public void startTask(int id){
+    public void startTask(int id) {
         taskDAO.startTask(id);
     }
 
-    public void finishTask(int id,String time){
-        Task task=new Task();
+    public void finishTask(int id, String time) {
+        Task task = new Task();
         task.setId(id);
         task.setRealfinish(time);
         taskDAO.finishTask(task);
     }
 
-    public void breakTask(int id,String time){
-        Task task=new Task();
+    public void breakTask(int id, String time) {
+        Task task = new Task();
         task.setId(id);
         task.setRealfinish(time);
         taskDAO.breakTask(task);
     }
 
 
-    public void delayTask(int id){
+    public void delayTask(int id) {
         taskDAO.delayTask(id);
+
+    }
+
+
+    public List getAnaly(int userid) {
+        List<Task> tasks = taskDAO.findTaskByUserid(userid);
+        List<Task> task2=new LinkedList<>();
+        task2.addAll(tasks);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(tasks.get(i).getId());
+            System.out.println(tasks.get(i).getRealfinish());
+            if (tasks.get(i).getRealfinish() != null)
+                System.out.println(dateConvert.StringToLD(tasks.get(i).getRealfinish()));
+
+        }
+        LocalDate now = LocalDate.now();//现在日期
+        LocalDate before = now.minusWeeks(1);//前一周的日期
+
+        int arr[] = new int[7];//已完成
+        for (int i = 0; i < 7; i++) {
+            arr[i] = 0;
+        }
+        int arr2[] = new int[7];//已中断
+        for (int i = 0; i < 7; i++) {
+            arr2[i] = 0;
+        }
+        int arr3[] = new int[7];//已过期
+        for (int i = 0; i < 7; i++) {
+            arr3[i] = 0;
+        }
+        List<HashMap<String, Object>> result = new LinkedList<>();
+
+
+        for (Task task : tasks) {
+            if (task.getRealfinish() == null) {
+                String finish = task.getFinishtime();
+                for (int j = 0; j < 7; j++) {
+                    System.out.println(dateConvert.StringToLD(finish));
+                    System.out.println("aaa" + before.plusDays(j));
+
+                    if (dateConvert.StringToLD(finish).equals(before.plusDays(j))) {
+                        if (task.getStatus() == 5)
+                            arr3[j]++;
+                        else
+                            arr2[j]++;
+                    }
+                }
+                task2.remove(task);
+            }
+
+        }
+
+        for (int i = 0; i < 7; i++) {
+            LocalDate current = before.plusDays(i);
+            if (task2 != null) {
+
+                System.out.println(current);
+                for (Task task : task2) {
+                    if (dateConvert.StringToLD(task.getRealfinish()).equals(current)) {
+                        if (task.getStatus() == 3) {
+                            arr[i]++;
+                        }
+                        if (task.getStatus() == 4)
+                            arr2[i]++;
+
+                    }
+
+                }
+            }
+
+            HashMap<String, Object> oneday = new HashMap<>();
+            oneday.put("weekday", current);
+            oneday.put("已完成", arr[i]);
+            oneday.put("中断", arr2[i]);
+            oneday.put("过期", arr3[i]);
+
+            result.add(oneday);
+
+
+        }
+
+        return result;
+
 
     }
 

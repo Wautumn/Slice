@@ -150,25 +150,25 @@ public class ProjectTaskController {
         return projectTaskService.getAllProjectTask(userid);
     }
 
-    @RequestMapping(value = "/startTask", method = RequestMethod.GET)
+    @RequestMapping(value = "/startProjectTask", method = RequestMethod.GET)
     @ResponseBody
     public int startTask(int taskid){
         return projectTaskService.startTask(taskid);
     }
 
-    @RequestMapping(value = "/finishTask", method = RequestMethod.GET)
+    @RequestMapping(value = "/finishProjectTask", method = RequestMethod.GET)
     @ResponseBody
     public int finishTask(int taskid, String time){
         return projectTaskService.finishTask(taskid, time);
     }
 
-    @RequestMapping(value = "/discardTask", method = RequestMethod.GET)
+    @RequestMapping(value = "/discardProjectTask", method = RequestMethod.GET)
     @ResponseBody
     public int discardTask(int taskid, String time){
         return projectTaskService.discardTask(taskid, time);
     }
 
-    @RequestMapping(value = "/delayTask", method = RequestMethod.GET)
+    @RequestMapping(value = "/delayTask1", method = RequestMethod.GET)
     @ResponseBody
     public int delayTask(int taskid){
         return projectTaskService.delayTask(taskid);

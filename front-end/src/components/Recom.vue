@@ -17,23 +17,48 @@
       </div>
     </div>
     <div class="section-container">
-      <el-card class="box-card" v-for="i in articles" :key="i.id">
-        <img :src="i.image" class="image">
-        <div class="article">
-          <div class="article-container">
-            <a :href="i.url">
-              <h3>{{i.title}}</h3>
-            </a>
-            <p style="width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{i.content}}</p>
-          </div>
-          <div class="article-footer">
-            <p class="aurthor">{{i.author}}</p>
-            <!-- <p class="click-count">{{i.clickcount}}</p> -->
-            <p class="tag">{{numToTag[i.tags]}}</p>
-          </div>
-        </div>
+      <el-card class="box-card" v-for="(i,index) in articles" :key="i.id" style="width: 350px;">
+        <img :src="i.image" style="height: 280px">
+        <h3>{{i.title}}</h3>
+        <p class="aurthor">{{i.author}}</p>
+        <el-collapse v-model="activeNames" @change="handleChange">
+          <el-collapse-item>
+            <template slot="title">
+              全文
+            </template>
+            {{i.content}}
+          </el-collapse-item>
+
+
+        </el-collapse>
+        <!--<img :src="i.image" class="image">-->
+        <!--<div class="article">-->
+        <!--<div class="article-container">-->
+        <!--<a :href="i.url">-->
+        <!--<h3>{{i.title}}</h3>-->
+        <!--</a>-->
+        <!--<div class="article-footer">-->
+        <!--<p class="aurthor">{{i.author}}</p>-->
+        <!--&lt;!&ndash; <p class="click-count">{{i.clickcount}}</p> &ndash;&gt;-->
+        <!--<p class="tag">{{numToTag[i.tags]}}</p>-->
+        <!--</div>-->
+
+
+        <!--</div> <p id="article" style="width:280px;">{{i.content}}</p>-->
+
+        <!--</div>-->
       </el-card>
     </div>
+    <!--<el-collapse v-model="activeNames" @change="handleChange" v-for="(i,index) in articles" :key="i.id">-->
+    <!--<el-collapse-item > <template slot="title">-->
+    <!--{{i.title}}-->
+    <!--</template>-->
+    <!--<div>{{i.content}}</div>-->
+
+    <!--</el-collapse-item>-->
+
+
+    <!--</el-collapse>-->
   </div>
 </template>
 
@@ -44,6 +69,8 @@
     data() {
 
       return {
+        activeNames: ['1'],
+
         getArticleurl: "http://101.132.194.45:8081//slice-0.0.1-SNAPSHOT//getArticle",
 
 
@@ -56,8 +83,9 @@
         },
         articles: [],
         showArticles: [],
-        userid: 8,
+        userid: localStorage.userid,
         loading: false,
+        complete: null,
         tags:
           [
             {name: "标签一", type: ""},
@@ -71,34 +99,18 @@
       }
         ;
     },
-    methods: {
-      handleClose(tag) {
-        this.tags.splice(this.tags.indexOf(tag), 1);
-        console.log(tag.name);
-        for (let i = 0; i < this.showArticles.length; i++) {
-          let tagNum = this.showArticles[i].tags;
-          let tagName = this.numToTag[tagNum];
-          //debugger;
-          if (tagName == tag.name) {
-            //删除对应位置article后，需要保持游标位置不变
-            this.showArticles.splice(i--, 1);
-          }
-        }
-        this.showArticles = this.showArticles.sort(function () {
-          return 0.5 - Math.random();
-        });
-      }
-    },
-    mounted() {
-      this.userID = sessionStorage.userId;
+    created() {
+      console.log("Asasa")
+      this.complete = document.getElementById("article")
+      console.log(this.complete)
+      this.userID = localStorage.userid;
       for (var i = 0; i < 20; i++) {
-
         this.articles.push(this.article)
       }
       // Lambda写法
       this.$http
         .get(this.getArticleurl, {
-          params: {userid: this.userid}
+          params: {userid: localStorage.userid}
         })
         .then(
           res => {
@@ -130,7 +142,34 @@
         .catch(() => {
           console.log("fail2");
         });
-    }
+    },
+    methods: {
+      completearticle: function (index) {
+        console.log(index)
+        console.log(this.articles[index].content)
+        this.complete.innerText = this.articles[index].content
+        // this.complete.style.textOverflow=null
+
+
+      },
+      handleClose(tag) {
+        this.tags.splice(this.tags.indexOf(tag), 1);
+        console.log(tag.name);
+        for (let i = 0; i < this.showArticles.length; i++) {
+          let tagNum = this.showArticles[i].tags;
+          let tagName = this.numToTag[tagNum];
+          //debugger;
+          if (tagName == tag.name) {
+            //删除对应位置article后，需要保持游标位置不变
+            this.showArticles.splice(i--, 1);
+          }
+        }
+        this.showArticles = this.showArticles.sort(function () {
+          return 0.5 - Math.random();
+        });
+      }
+    },
+
   };
 </script>
 

@@ -1,7 +1,6 @@
 package com.example.slice.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.slice.dao.TaskDAO;
 import com.example.slice.entity.Task;
 import com.example.slice.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,7 @@ public class TaskController {
         if (taskService.ifExistSameNameTask(userid, name) == 0) {
             return -1;//插入失败
         } else {
-            int status = 0;
+            int status = 1;
             task.setStarttime(starttime);
             task.setFinishtime(finishtime);
             task.setUserid(userid);
@@ -100,25 +99,30 @@ public class TaskController {
 
     }
 
-
-    @RequestMapping(value = "/startTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/startTask", method = RequestMethod.GET)
     public void startTask(int id){
        taskService.startTask(id);
     }
 
-    @RequestMapping(value = "/finishTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/finishTask", method = RequestMethod.GET)
     public void finishTask(int id,String time){
       taskService.finishTask(id,time);
     }
 
-    @RequestMapping(value = "/breakTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/breakTask", method = RequestMethod.GET)
     public void breakTask(int id,String time){
        taskService.breakTask(id,time);
     }
 
-    @RequestMapping(value = "/delayTask", method = RequestMethod.POST)
+    @RequestMapping(value = "/delayTask", method = RequestMethod.GET)
     public void delayTask(int id){
        taskService.delayTask(id);
+
+    }
+
+    @RequestMapping(value = "/getAnaly", method = RequestMethod.GET)
+    public List getAnaly(int userid){
+        return taskService.getAnaly(userid);
 
     }
 }

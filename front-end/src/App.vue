@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      userId: sessionStorage.userId,
+      userId: localStorage.userid,
       isVerified: false,
       load: true
       // isVerified:true,
@@ -28,10 +28,12 @@ export default {
   },
   methods: {
     //子组件(login)将用户名传过来
-    userSignIn(userID) {
+    userSignIn(userid) {
+      console.log("isVerified Change")
       //设置用户ID
-      if (sessionStorage.userId && parseInt(sessionStorage.userId) !== userID) {
-        console.log(userID);
+      console.log("清空缓存数据")
+      // if (localStorage.userid && parseInt(localStorage.userid) !== userid) {
+        console.log(userid);
         //清空前用户的数据
         console.log("delete user message")
         localStorage.clear();
@@ -39,18 +41,22 @@ export default {
         deleteDB("daySumDB");
         deleteDB("dayTaskDB");
         deleteDB("dayTomoDB");
-      }
+      // }
       // localStorage.clear();
-      sessionStorage.userId = userID;
-      this.userId = sessionStorage.userId;
-      sessionStorage.isVerified = true;
+      // sessionStorage.userId = userID;
+      // this.userId = sessionStorage.userId;
+      localStorage.isVerified = true;
       this.isVerified = true;
       this.loading();
+      console.log(this.isVerified)
+
     },
     logOut() {
       console.log("logOut");
       // sessionStorage.isVerified = false;
+      console.log("输出看一眼")
       this.isVerified = false;
+      this.$router.push("/Welcome");
     },
     loading() {
       this.load = false;
@@ -61,6 +67,8 @@ export default {
     reload() {
       console.log("header重载反馈");
       this.isVerified = true;
+      console.log("输出看一眼")
+      console.log(this.isVerified)
     }
   }
 };

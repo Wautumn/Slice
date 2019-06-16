@@ -2,11 +2,11 @@
   <div class="container">
     <el-card class="box-card-his">
       <div slot="header" class="clearfix">
-        <span>最近一月工作情况</span>
-        <el-button @click="navToDayView" style="float: right; padding: 3px 0" type="text">查看详细数据</el-button>
+        <span>最近一周工作情况</span>
+        <!-- <el-button @click="navToDayView" style="float: right; padding: 3px 0" type="text">查看详细数据</el-button> -->
       </div>
       <ve-line :data="chartData" :settings="chartSettings"></ve-line>
-      <p class="align-center">您的最佳工作日是{{bestDay}}</p>
+      <!-- <p class="align-center">您的最佳工作日是{{bestDay}}</p> -->
     </el-card>
 
   </div>
@@ -82,7 +82,7 @@ export default {
     };
 
     return {
-      userID: 2,
+      userID: localStorage.userid,
       bestDay: "周三",
       bestTime: "上午",
       pieData: {
@@ -90,10 +90,10 @@ export default {
         rows: []
       },
       chartData: {
-        columns: ["weekday", "总数", "进行中","已完成"],
+        columns: ["weekday", "中断", "过期","已完成"],
         rows: []
       },
-      taskRequestUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTasksByUserid",
+      taskRequestUrl:"http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getAnaly",
       taskData:[],
       currentData:[]
     };
@@ -102,75 +102,7 @@ export default {
     navToDayView() {
       this.$router.push({ path: "DayView1" });
     },
-      //获取所有任务及状态
-      getTasksByUserid() {
-     
-        //获取所有任务
-          this.$http
-            .get(this.taskRequestUrl, {
-              // params: { userId: sessionStorage.userId }
-              params: {userid: "1"}
-            })
-            .then(response => {
-              this.taskData = response.data;
-             console.log(this.taskData)
-               //这周任务的切片
-          let now = new Date(); //当前时刻
-          let finishDate = now.format("yyyy-MM-dd");//当前日期
-          let date = new Date();
-          let beginDate = date.setDate(date.getDate()-7);//一周前
-          let begindate = new Date(beginDate)
-          begindate=begindate.format("yyyy-MM-dd")
-            console.log(begindate)
-          let tmpData = date_slice(begindate,finishDate,this.taskData);
-          console.log(tmpData)
 
-          for(let k=0;k<7;k++)
-          {
-              var j={"weekday":"2019/5/22","总数":0,"进行中":0,"已完成":0}
-              let today=new Date()
-              let nowDate = today.setDate(today.getDate()-7+k);
-              let nowdate=new Date(nowDate);
-              j.weekday=nowdate.format("yyyy-MM-dd");
-              this.currentData.push(j)
-
-          }
-            console.log(this.currentData)
-        //统计数量
-        for(let i of tmpData){
-        
-            //对每一个数据
-            for(let j of this.currentData)
-            {
-                if(j.weekday==i.settime)
-                {  
-                    if(i.status==2)
-                    {   
-                        j.doingcount=j.doingcount+1
-                        j.allcount=j.allcount+1
-                    }
-                    else if(i.status==3)
-                    {
-                        j.finishcount=j.finishcount+1
-                        j.allcount=j.allcount+1
-                    }
-                }
-            }
-          
-        }
-
-        console.log(this.currentData)
-            }),
-            response => {
-              console.log("failed");
-            };
-
-      
-
-        
-   
-      
-  }
   },
   mounted() {
 
@@ -178,13 +110,22 @@ export default {
   
    
           
-    this.userID = sessionStorage.userId;
+    this.userID = localStorage.userid;
     //获取数据
-    this.getTasksByUserid()
-
-
-
-          this.chartData.rows = this.currentData;
+  
+          console.log("输出看一眼"+localStorage.userid)
+          this.$http.get(
+            this.taskRequestUrl,{
+              params:{userid:localStorage.userid}
+            }
+          ).then(
+            res=>{
+              console.log("输出看两眼"+res)
+               this.chartData.rows = res.data;
+            }
+          )
+         
+          
           // var totalNum = weekdata.map(item => {
           //   return item.allcount;
           // });

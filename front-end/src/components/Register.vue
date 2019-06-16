@@ -108,7 +108,7 @@ export default {
              email: this.mailAddress
            },).then(res => {
           console.log(res);
-          if (res.data !== -1) {
+          if (res.data == 1) {
             this.tishi = "注册成功";
             this.showTishi = true;
             this.username = "";
@@ -123,7 +123,7 @@ export default {
               1000
             );
           } else {
-            this.tishi = "注册失败";
+            this.tishi = "注册失败,用户名已存在";
             this.showTishi = true;
           }
         });

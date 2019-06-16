@@ -14,8 +14,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "dhtmlx-gantt": "^6.1.6",
+    "dayspan-vuetify": "^0.4.0",
     "echarts": "^4.2.1",
+    "vuetify": "1.1.9",
+    "moment": "^2.24.0",
+    "babel-loader": "^7.1.5",
+    "dhtmlx-gantt": "^6.1.6",
     "element-ui": "^2.0.4",
     "iview": "^3.1.5",
     "v-charts": "^1.19.0",
