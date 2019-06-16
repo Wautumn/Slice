@@ -58,7 +58,7 @@
         <TabPane label="账号安全" name="name1">
           <div>
             <label class="one-line">昵称：</label>  
-              <span>{{username}}</span>
+              <span>{{this.username}}</span>
           </div>
           <br>
           <div>原密码:
@@ -103,12 +103,13 @@ var passurl = "http://localhost:8080/changePassword ";
 var changeDayGoal = "http://localhost:8080/changeDayGoal ";
 var changeWeekGoal = "http://localhost:8080/changeWeekGoal ";
 var changeMonthGoal = "http://localhost:8080/changeMonthGoal ";
+var changePasswordUrl="http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/changePassword";
 
 export default {
   data() {
     return {
       imageUrl: "",
-      username: "",
+      username:"",
       email: "",
       activeIndex: "1",
       activeIndex2: "2",
@@ -184,10 +185,21 @@ export default {
         };
         /*接口请求*/
         this.$http
-          .post(passurl, data, { emulateJSON: true })
+          .post(changePasswordUrl,{
+            id:localStorage.userid,
+            old:this.this.originalPW,
+            new:this.newPW,
+          },)
           .then(res => {
-            if (res.body == true) {
+            if (res.body == 1) {
               this.$Message.info("密码修改成功");
+            }
+            else if(res.body==-2)
+            {
+              this.$Message.info("旧密码错误");
+            }
+            else{
+              this.$Message.info("密码修改失败");
             }
           })
           .catch(res => {
@@ -311,30 +323,49 @@ export default {
       }
     },
     nameChange() {
-      console.log("changeName");
-      if (this.nameValue) {
-        this.$http
-          .get(nameurl, {
-            params: {
-              userId: this.userId,
-              username: this.nameValue
-            }
-          })
-          .then(res => {
-            // 响应成功回调
-            //console.log(res.body);
-            this.$Message.info("昵称修改成功");
-          })
-          .catch(() => {
-            console.log("昵称修改失败");
-            this.$Message.info("昵称修改失败");
-          });
-      } else {
-        this.$Message.info("请输入有效的昵称");
-      }
+    
+     
     },
     ok() {
-      this.$Message.info("确认提交");
+      var _this=this
+       if (this.newPW && this.originalPW) {
+        console.log("id"+localStorage.userid)
+        /*接口请求*/
+        this.$http
+          .post(changePasswordUrl,{
+            id:localStorage.userid,
+            old:this.originalPW,
+            new:this.newPW,
+          },)
+          .then(res => {
+            if (res.body == 1) {
+              this.$Message.info("密码修改成功");
+            }
+            else if(res.body==-2)
+            {
+              this.$alert('旧密码错误', '出错了！', {
+                confirmButtonText: '确定',
+                callback: action => {
+                this.$message({
+                    type: 'info',
+                    message: "修改失败！"
+            });
+              }
+          })
+             
+            }
+            else{
+              this.$Message.info("密码修改失败");
+            }
+          })
+          .catch(res => {
+            console.log("fail");
+            this.$Message.info("密码修改失败");
+          });
+      } else {
+        this.$Message.info("请输入密码");
+      }
+     // this.$Message.info("确认提交");
     },
     cancel() {},
     ToReg() {

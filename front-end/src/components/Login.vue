@@ -89,10 +89,10 @@ export default {
       console.log("register");
       this.$router.push({ name: "Reg" });
     },
-    logInSuccess(userID) {
+    logInSuccess(userid) {
       /*向父组件传值*/
-      this.$emit("userSignIn", userID);
-      setCookie("userid", userID, 1000 * 60);
+      this.$emit("userSignIn", userid);
+      // setCookie("userid", userID, 1000 * 60);
       setTimeout(
         function() {
           this.$router.push("/TaskMode");

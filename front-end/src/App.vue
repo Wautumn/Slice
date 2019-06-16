@@ -32,11 +32,10 @@ export default {
       console.log("isVerified Change")
       //设置用户ID
       console.log("清空缓存数据")
-      // if (localStorage.userid && parseInt(localStorage.userid) !== userid) {
         console.log(userid);
         //清空前用户的数据
         console.log("delete user message")
-        localStorage.clear();
+        //localStorage.clear();
         deleteDB("weekDB");
         deleteDB("daySumDB");
         deleteDB("dayTaskDB");

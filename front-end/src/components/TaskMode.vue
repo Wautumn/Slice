@@ -82,17 +82,30 @@
               <br>
             </div>
             <div v-show="selected" style="margin-left: 20px; margin-right: 20px;">
-              <div v-if="cannotstart==1" style="margin-top: 50px; margin-bottom:20px;color: #dd3e3a">
+              <div v-if="cannotstart==1&&tasktype==1" style="margin-top: 50px; margin-bottom:20px;color: #dd3e3a">
                 <!--<h1>当前任务前置任务未完成！此任务无法完成！</h1>-->
                 <!--<h1>请到团队任务视图修改当前团队任务计划</h1>-->
-                <el-card class="box-card">
+                  <el-alert
+    title="当前任务前置任务未完成,此任务无法完成！"
+    type="error"
+     :closable="false"
+     show-icon
+     center>
+  </el-alert>
+  <br>
+    <el-alert
+    title="请到团队任务视图修改当前团队任务计划"
+    type="warning"
+     :closable="false"
+     show-icon
+     center>
+  </el-alert>
+                <!-- <el-card class="box-card">
                   <div slot="header" class="clearfix">
-
-                    <!--<el-button style="float: right; padding: 3px 0" type="text"></el-button>-->
                   </div>
                   <h1>当前任务前置任务未完成！此任务无法完成！</h1>
                   <h1>请到团队任务视图修改当前团队任务计划</h1>
-                </el-card>
+                </el-card> -->
 
               </div>
 
@@ -135,8 +148,8 @@
                     <el-input type="textarea" v-model="currentTaskDetail" :disabled="currentCondition"></el-input>
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="onSubmit">保存</el-button>
-                    <el-button type="danger" style="float: right;" @click="deleteTask">删除记录</el-button>
+                    <el-button type="primary" @click="onSubmit" style="float: right;">保存</el-button>
+                    <!-- <el-button type="danger" style="float: right;" @click="deleteTask">删除记录</el-button> -->
                     <!-- <el-button
                       type="warning"
                       style="float: right;"
@@ -960,6 +973,7 @@
           var a = res.data
           this.currentStatus = 2
         });
+        this.refreshTask()
         // }
       },
       finishTask() {//完成任务
@@ -1000,6 +1014,8 @@
 
           });
         }
+                this.refreshTask()
+
       },
       //推迟团队任务
       putoff() {
@@ -1017,6 +1033,8 @@
           this.getCurrentTaskList()
 
         });
+                this.refreshTask()
+
       },
       delayTask() {//过期
         if (this.tasktype == 0) {//个人
@@ -1040,6 +1058,8 @@
             this.getCurrentTaskList()
           });
         }
+        this.refreshTask()
+
       },
       getCurrentTaskList() {//重新获取任务列表
         this.$http
@@ -1062,12 +1082,21 @@
         console.log(this.taskData);
         return;
       },
-      getJoinedProjectTask() {
-        //先获取今天的团队任务
-
-      },
+      refreshTask() {
+          this.$http
+            .get(this.currentTaskUrl, {
+              // params: { userId: sessionStorage.userId }
+              params: {userid: localStorage.userid}
+            })
+            .then(response => {
+              this.taskData = response.data;
+      });
+     
+   
+    }
     }
   };
+      
 
 </script>
 

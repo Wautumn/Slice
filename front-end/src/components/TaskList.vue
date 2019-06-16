@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div style="margin-top: 10px; margin-bottom: 20px; text-align:center;">
-      <el-button size="medium" @click="createModal = true" v-if="currentmode==0">新建任务</el-button>
+    <div style="margin-top: 10px; margin-bottom: 10px; text-align:center;">
+      <el-button size="medium" @click="createModal = true" v-if="currentmode==0" type="primary" icon="el-icon-circle-plus-outline" plain>新建任务</el-button>
+      <!-- <i class="el-icon-delete" @click="createModal = true" v-if="currentmode==0"></i> -->
       <!-- <el-button size="medium" @click="refresh">刷新列表</el-button> -->
     </div>
 
