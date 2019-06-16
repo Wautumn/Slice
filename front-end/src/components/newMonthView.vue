@@ -130,7 +130,8 @@ export default {
   {
     window.app = this.$refs.app;
     console.log("mounted")
-    this.loadState();
+    //this.loadState();
+    this.changeType();
   },
 
   methods:
@@ -285,6 +286,7 @@ export default {
 
       try
       {
+        console.log("try")
         let savedState = JSON.parse(localStorage.getItem(this.storeKey));
 
         if (savedState)
@@ -295,6 +297,7 @@ export default {
       }
       catch (e)
       {
+        console.log("what")
         // eslint-disable-next-line
         console.log( e );
       }

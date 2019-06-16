@@ -30,7 +30,7 @@
     </el-menu>
     <Modal v-model="accountShow" @on-ok="ok" @on-cancel="cancel" width="400">
       <Tabs value="name1" @on-click="accountTab">
-        <!-- <TabPane label="账号" name="name1">
+        <!-- <TabPane label="账号" name="nam
           <div>
             <label class="one-line">昵称：</label>
             <div class="one-line" v-if="changeName">
@@ -110,7 +110,7 @@ export default {
       imageUrl: "",
       username: "",
       email: "",
-      activeIndex: "3",
+      activeIndex: "1",
       activeIndex2: "2",
       accountShow: false,
       changeName: false,
@@ -133,6 +133,8 @@ export default {
   mounted() {
     debugger;
     console.log("header重载");
+    console.log("router"+this.$router)
+    console.log("avtive"+this.activeIndex)
     if (localStorage.userid) {
       this.$emit("reload");
     }
@@ -153,6 +155,9 @@ export default {
   },
   props: ["isVerified"],
   methods: {
+    jumpToMonth(){
+         this.$router.push("/newMonthView");
+    },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
       debugger;
@@ -209,6 +214,7 @@ export default {
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+      console.log("Index"+this.activeIndex)
     },
     timeChange() {
       console.log("changeTime&Goal");

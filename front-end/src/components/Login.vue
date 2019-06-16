@@ -76,13 +76,13 @@ export default {
   props: ["isReg"],
   mounted() {
     /*页面挂载获取cookie，如果存在username的cookie，则跳转到主页，不需登录*/
-    var userId = getCookie("userid");
-    if (userId) {
-      //修改
-      this.$emit("userSignIn", userId);
-      this.$router.push("/TaskMode");
-      console.log("cookie exist");
-    }
+    // var userId = getCookie("userid");
+    // if (userId) {
+    //   //修改
+    //   this.$emit("userSignIn", userId);
+    //   this.$router.push("/TaskMode");
+    //   console.log("cookie exist");
+    // }
   },
   methods: {
     ToRegister() {
@@ -103,9 +103,11 @@ export default {
     login() {
       if (this.username == "" || this.password == "") {
         alert("请输入用户名或密码");
-      } else if (this.username == "admin") {
-        this.$router.push("/Admin");
-      } else {
+      }
+      //  else if (this.username == "admin") {
+      //   this.$router.push("/Admin");
+      // } 
+      else {
         let data = { password: this.password, username: this.username };
         /*接口请求*/
         this.$http
@@ -116,6 +118,19 @@ export default {
               console.log("now data is");
               console.log(this.userid);
               console.log(response.data);
+              if(response.data==-1)
+              {
+               this.$alert('用户名不存在', '出错了！', {
+                confirmButtonText: '确定',
+                callback: action => {
+                this.$message({
+                    type: 'info',
+                    message: "登陆失败！"
+            });
+          }
+          })
+              }
+              else{
               this.$http.post(this.getTokenUrl, 
            {
             username:this.username,
@@ -127,6 +142,19 @@ export default {
              console.log(response);
              console.log("now token is");
              console.log(this.token);
+             if(response.data==null)
+             {
+               this.$alert('密码错误', '出错了！', {
+                confirmButtonText: '确定',
+                callback: action => {
+                this.$message({
+                    type: 'info',
+                    message: "登陆失败！"
+            });
+              }
+          })
+             }
+             else{
               this.$http.post(this.loginurl, 
            {
             userid:this.userid,
@@ -160,9 +188,10 @@ export default {
 
            );
              }
+             }
 
              
-           );
+           );}
 
           
               });
