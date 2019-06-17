@@ -30,31 +30,6 @@
     </el-menu>
     <Modal v-model="accountShow" @on-ok="ok" @on-cancel="cancel" width="400">
       <Tabs value="name1" @on-click="accountTab">
-        <!-- <TabPane label="账号" name="nam
-          <div>
-            <label class="one-line">昵称：</label>
-            <div class="one-line" v-if="changeName">
-              <Input v-model="nameValue" placeholder="Enter something..." style="width: 200px"/>
-              <Button @click="nameChange">保存</Button>
-            </div>
-            <div class="one-line" v-else>
-              <span>{{username}}</span>
-              <Button type="text" @click="changeName = true">更换</Button>
-            </div>
-          </div>
-          <br>
-          <div>
-            <label class="one-line">邮箱：</label>
-            <div class="one-line" v-if="changeMail">
-              <Input v-model="mailValue" placeholder="Enter something..." style="width: 200px"/>
-              <Button @click="mailChange">保存</Button>
-            </div>
-            <div class="one-line" v-else>
-              <span>{{email}}</span>
-              <Button type="text" @click="changeMail = true">更换</Button>
-            </div>
-          </div>
-        </TabPane> -->
         <TabPane label="账号安全" name="name1">
           <div>
             <label class="one-line">昵称：</label>  
@@ -69,18 +44,6 @@
             <Input v-model="newPW" type="password" placeholder="请输入新密码" class="input-item"/>
           </div>
         </TabPane>
-        <!-- <TabPane label="修改头像" name="name3">
-          <el-upload
-            class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-          >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </TabPane> -->
       </Tabs>
       <div slot="footer" v-if="changePass">
      
@@ -111,7 +74,7 @@ export default {
       imageUrl: "",
       username:"",
       email: "",
-      activeIndex: "1",
+      activeIndex: "/TaskMode",
       activeIndex2: "2",
       accountShow: false,
       changeName: false,
@@ -226,7 +189,13 @@ export default {
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
-      console.log("Index"+this.activeIndex)
+      console.log(key)
+      // if(key=="/newMonthView")
+      // {
+      // this.activeIndex="/TaskMode"
+      // console.log("yes")
+      // }
+      // console.log("Index"+this.activeIndex)
     },
     timeChange() {
       console.log("changeTime&Goal");
