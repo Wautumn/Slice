@@ -167,6 +167,7 @@
 
         var start = new Date(this.form.starttime.replace(/-/g, "/"));
         var finish = new Date(this.form.finishtime.replace(/-/g, "/"));
+        console.log(start.getDay())
 
 
         if (start.getTime() > finish.getTime()) {
@@ -250,12 +251,15 @@
                   }
                 })
               }
+              this.$router.push('/Empty')
               this.$alert('新建成功', {
                 confirmButtonText: '确定',
               });
+
             }
           });
         }
+
       },
 
 

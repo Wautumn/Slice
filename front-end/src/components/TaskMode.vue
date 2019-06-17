@@ -59,6 +59,8 @@
                       v-else-if="ifstart==2">任务已结束</strong>
               <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left"
                       v-else-if="currentStatus==5">任务已过期</strong>
+              <strong style="font-size: 20px; line-height: 80px; color: slategrey ;text-align: left"
+                      v-else-if="currentStatus==4">任务已废弃</strong>
               <br>
 
               <el-button
@@ -108,7 +110,7 @@
                 </el-card> -->
 
               </div>
-
+              <h1 v-show="selected" style="margin-top: 10px;">任务名</h1>
               <div style="margin-top: 20px; margin-bottom:20px;">
                 <h1>{{currentTaskName}}</h1>
               </div>
