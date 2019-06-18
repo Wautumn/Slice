@@ -69,7 +69,7 @@
               v-for="item in form.subtask"
               :key="item.name"
               :label="item.name"
-              :value="item.name">
+              :value="item">
             </el-option>
           </el-select>
         </el-form-item>
@@ -101,13 +101,16 @@
             label="结束时间" width="180">
           </el-table-column>
           <el-table-column
-            label="操作">
-            <template slot-scope="scope">
-              <el-button @click="handleClose(scope.row)" type="text">删除任务</el-button>
-
-              <br>
-            </template>
+            prop="beforetask.name"
+            label="前置任务" width="180">
           </el-table-column>
+          <!--<el-table-column-->
+            <!--label="操作">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-button @click="deleteaa(scope.row)" type="text">删除任务</el-button>-->
+              <!--<br>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
         </el-table>
         <!--<el-tag-->
         <!--v-for="subtask in form.subtask" :key="people" closable :disable-transitions="false" @close="handleClose(subtask)">-->
@@ -260,10 +263,6 @@
 
               for (let i = 0; i < this.form.subtask.length; i++) {
                 console.log("添加子任务" + this.form.subtask[i].name)
-                var before = new Object()
-                before = this.form.subtask[i].beforetask
-                Object.freeze(before)
-                console.log("看看前置任务有没有" + before + i);
                 this.$http
                   .post(this.addsubtaskurl,
                     {
@@ -281,8 +280,9 @@
                   console.log("看看前置任务有没有2" + this.form.subtask[i].beforetask + i);
                   if (this.form.subtask[i].beforetask != null) {
                     //根据名字去找前置任务的id
+
                     console.log("现在是添加前置任务")
-                    var beforetaskname = this.form.subtask[i].beforetask;//前置任务的名字
+                    var beforetaskname = this.form.subtask[i].beforetask.name;//前置任务的名字
                     var beforetaskid;//前置任务的id
                     this.$http.get(this.findprojecttaskid, {
                       params: {
@@ -302,6 +302,9 @@
 
                           }
                       }).then(response => {
+                        if (response.data === -5) {
+                          this.$message.error("添加任务" + this.form.subtask[i].name + "前置任务失败！时间冲突！")
+                        }
                         console.log("添加子任务的结果" + response.data)
                       })
                     })
@@ -320,7 +323,6 @@
         }
 
       },
-
 
       //添加前置任务的
       addpre: function () {
@@ -414,47 +416,107 @@
         console.log(current)
         console.log(start.getTime())
 
+        var beforeend = null
+        if (current.beforetask != null) {
+          beforeend = current.beforetask.finishtime
+          var compare = new Date(beforeend.replace(/-/g, "/"));
+          if (compare.getTime() > start.getTime()) {
+            this.$message.error('添加子任务失败！前置任务时间冲突！');
+            return
+          }
+        }
 
         if (start.getTime() > finish.getTime()) {
           this.$message.error('添加子任务失败！任务起始时间应早于任务结束时间！');
         } else if (current.starttime === "" || current.finishtime === "" || current.subtaskuser.length === 0 || current.name === "") {
           this.$message.error('添加子任务失败！请填写完整信息！');
 
-
         } else if (start.getTime() < new Date().getTime()) {
           this.$message.error('添加子任务失败！子任务开始时间应晚于当前');
+          return
         } else if (this.form.subtask.length > 0) {
           var flag = 0
           for (var i = 0; i < this.form.subtask.length; i++) {
             if (this.form.subtask[i].name == current.name) {
               flag = 1
             }
-            if (flag === 1) {
-              this.$message.error('添加子任务失败！当前存在同名子任务！');
-            }
+          }
+          if (flag === 1) {
+            this.$message.error('添加子任务失败！当前存在同名子任务！');
+            console.log("fanafnnnn")
+            return
+            console.log("fanafnnnn")
+          } else {
+            console.log("jinlai")
+            this.form.subtask.push(current)
+            console.log(this.nowsubtask)
+            console.log(this.form.subtask)
+            this.$message('添加子任务成功！');
           }
 
+
         } else {
+          console.log("jinlai")
           this.form.subtask.push(current)
           console.log(this.nowsubtask)
           console.log(this.form.subtask)
           this.$message('添加子任务成功！');
 
         }
-        this.nowsubtask.name = null
-        this.nowsubtask.description = null
-        this.nowsubtask.finishtime = null
-        this.nowsubtask.starttime = null
-        this.nowsubtask.subtaskuser = null
+        // this.nowsubtask.name = null
+        // this.nowsubtask.description = null
+        // this.nowsubtask.finishtime = null
+        // this.nowsubtask.starttime = null
+        // this.nowsubtask.subtaskuser = null
         this.nowsubtask.beforetask = null
 
 
       },
 
-      handleClose(tag) {
+      handleClose2(task) {
         console.log("删除")
-        this.form.subtask.splice(this.form.subtask.indexOf(tag), 1);
+        console.log(task, "a删除的名字")
+        // for(var i=0;i<this.form.subtask.length;i++){
+        //   if(this.form.subtask[i]!==null) {
+        //     if (this.form.subtask[i].beforetask.name === task.name) {
+        //       this.$message.error("此任务存在后置任务，请级联删除！")
+        //       return
+        //     }
+        //   }
+        // }
+
+        console.log("删除")
+        console.log(task)
+
+        this.form.subtask.splice(this.form.subtask.indexOf(task), 1);
       },
+      deleteaa(row) {
+
+        window.console.log(row.name)
+        for (var i = 0; i < this.form.subtask.length; i++) {
+          if (this.form.subtask[i].name === row.name) {
+
+          }
+        }
+        this.$alert('任务名' + row.name, '确认删除', {
+          confirmButtonText: '确定',
+          callback: action => {
+            for (var i = 0; i < this.form.subtask.length; i++) {
+              if (this.form.subtask[i].beforetask !== null) {
+                // if (this.form.subtask[i].beforetask.name === row.name) {
+                  this.$message.error("删除错误！！！")
+                // }
+              } else {
+                this.$message("删除成功！！！")
+                this.form.subtask.splice(this.form.subtask.indexOf(row), 1);
+              }
+            }
+
+          }
+        });
+
+        window.console.log("dsds")
+      }
 
 
     }

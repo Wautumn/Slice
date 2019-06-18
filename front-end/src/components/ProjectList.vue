@@ -285,9 +285,18 @@
       },
 
       addsubtask: function () {
-        if (this.addtask.name == null || this.addtask.description == null || this.addtask.username == null || this.addtask.starttime == null || this.addtask.endtime == null) {
+        if (this.addtask.name == null || this.addtask.description == null  || this.addtask.starttime == null || this.addtask.endtime == null) {
           //为空的提示
+          this.$message.error("请输入全部数据！")
+          return
         }
+        var start=new Date(this.addtask.starttime.replace(/-/g, "/"))
+        var end=new Date(this.addtask.endtime.replace(/-/g, "/"))
+        if(start.getTime()>end.getTime()){
+          this.$message.error("任务时间冲突！")
+          return
+        }
+
         console.log(this.addtask)
         this.dialogVisible1 = false
         this.$http.post(this.addsubtaskurl, {
@@ -317,15 +326,16 @@
 
                 }
               }).then(response => {
-                this.$message("子任务添加成功")
+                this.$message("前置任务添加成功")
                 this.alltasks.push(this.addtask)
+
               })
             }
 
 
           }
         })
-
+        this.getTasks()
       },
 
 
@@ -401,7 +411,7 @@
               confirmButtonText: '确定',
             })
             // location.reload()
-            this.$router.push('/Empty')
+          this.getTasks()
 
           }
         })
@@ -474,6 +484,7 @@
           }
         })
         if (ifcandey === 1) {
+
           this.$http.get(this.delaytaskurl, {
             params: {
               taskid: task.id,
