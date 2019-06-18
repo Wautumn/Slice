@@ -448,6 +448,11 @@ public class ProjectTaskDAO {
 
     public int delayTask(int taskid){
         try {
+            List<ProjectTask> postTask = findPostTask(taskid);
+            if(postTask.size() != 0){
+                return -4;
+            }
+
             ProjectTask pt = findTasksById(taskid);
             int status = pt.getStatus();
 
