@@ -81,10 +81,38 @@
 
       <el-form-item label="当前子任务">
         <el-col :span="11"></el-col>
-        <el-tag
-          v-for="subtask in form.subtask" :key="people" closable :disable-transitions="false" @close="handleClose(tag)">
-          {{subtask.name}}
-        </el-tag>
+        <el-table
+          :data="form.subtask"
+          height="250"
+          border
+          style="width: 100%">
+          <el-table-column
+            prop="name"
+            label="名称"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="starttime"
+            label="开始时间"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="finishtime"
+            label="结束时间" width="180">
+          </el-table-column>
+          <el-table-column
+            label="操作">
+            <template slot-scope="scope">
+              <el-button @click="handleClose(scope.row)" type="text">删除任务</el-button>
+
+              <br>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!--<el-tag-->
+        <!--v-for="subtask in form.subtask" :key="people" closable :disable-transitions="false" @close="handleClose(subtask)">-->
+        <!--{{subtask.name}} 开始时间{{subtask.starttime}} 结束时间{{subtask.finishtime}}-->
+        <!--</el-tag>-->
       </el-form-item>
 
       <el-form-item label="开始时间">
@@ -168,6 +196,37 @@
         var start = new Date(this.form.starttime.replace(/-/g, "/"));
         var finish = new Date(this.form.finishtime.replace(/-/g, "/"));
         console.log(start.getDay())
+
+        var projectstart = this.form.starttime
+        var projectend = this.form.finishtime
+        var start = new Date(projectstart.replace(/-/g, "/"));//项目开始时间
+        var end = new Date(projectend.replace(/-/g, "/"));//项目结束时间
+
+        var minstart = null;
+        var maxend = 0;
+
+        // var flag=0
+        for (var i = 0; i < this.form.subtask.length; i++) {
+          let substart = new Date(this.form.subtask[i].starttime.replace(/-/g, "/"));
+          let subend = new Date(this.form.subtask[i].finishtime.replace(/-/g, "/"));
+          if (minstart === null)
+            minstart = substart.getTime()
+          else {
+            if (substart < minstart)
+              minstart = substart.getTime()
+          }
+          if (maxend === null)
+            maxend = subend.getTime()
+          else {
+            if (subend > maxend)
+              maxend = subend.getTime()
+          }
+
+        }
+        if (start.getTime() > minstart || end.getTime() < maxend) {
+          this.$message.error('添加团队任务失败！任务与子任务时间冲突！');
+          return
+        }
 
 
         if (start.getTime() > finish.getTime()) {
@@ -301,26 +360,52 @@
 
 
       addpeople: function () {
-        this.$http
-          .get(this.fingpeopleurl, {params: {username: this.nowpeople}})
-          .then(response => {
-            console.log(response.data)
-            if (response.data == -1) {
-              this.$alert('此用户不存在！', '添加失败', {
-                confirmButtonText: '确定',
-              });
-            } else {
-              this.$alert('已添加' + this.nowpeople, '添加成功', {
-                confirmButtonText: '确定',
-              });
-              this.joinerid.push(response.data)
-              this.form.joiner.push(this.nowpeople)
-            }
-          }),
-
+        console.log("xianzai de")
+        console.log(this.form.joiner)
+        console.log(this.nowpeople)
+        var flag = 1
+        for (var a = 0; a < this.form.joiner.length; a++) {
+          console.log("wsha")
+          console.log(a)
           console.log(this.nowpeople)
+          console.log("bbbbb")
+
+          if (this.form.joiner[a] === this.nowpeople) {
+            console.log("aaa")
+            flag = 0
+          }
+        }
+        if (flag === 0) {
+          this.$alert('此用户已经存在！', '添加失败', {
+            confirmButtonText: '确定',
+          })
+          this.nowpeople = null
+        } else {
+          this.$http
+            .get(this.fingpeopleurl, {params: {username: this.nowpeople}})
+            .then(response => {
+              console.log(response.data)
+              if (response.data == -1) {
+                this.$alert('此用户不存在！', '添加失败', {
+                  confirmButtonText: '确定',
+                })
+                this.nowpeople = null;
+              } else {
+                this.$alert('已添加' + this.nowpeople, '添加成功', {
+                  confirmButtonText: '确定',
+                });
+                this.joinerid.push(response.data)
+                this.form.joiner.push(this.nowpeople)
+                this.nowpeople = null
+              }
+            }),
+
+            console.log(this.nowpeople)
+        }
+
       },
       //子任务添加到任务表单里面去
+
       addsubtask: function () {
         console.log("a")
         var current = Object.assign({}, this.nowsubtask)
@@ -331,20 +416,46 @@
 
 
         if (start.getTime() > finish.getTime()) {
-          this.$message('添加子任务失败！任务起始时间应早于任务结束时间！');
+          this.$message.error('添加子任务失败！任务起始时间应早于任务结束时间！');
         } else if (current.starttime === "" || current.finishtime === "" || current.subtaskuser.length === 0 || current.name === "") {
-          this.$message('添加子任务失败！请填写完整信息！');
+          this.$message.error('添加子任务失败！请填写完整信息！');
+
+
         } else if (start.getTime() < new Date().getTime()) {
-          this.$message('添加子任务失败！子任务开始时间应晚于当前');
+          this.$message.error('添加子任务失败！子任务开始时间应晚于当前');
+        } else if (this.form.subtask.length > 0) {
+          var flag = 0
+          for (var i = 0; i < this.form.subtask.length; i++) {
+            if (this.form.subtask[i].name == current.name) {
+              flag = 1
+            }
+            if (flag === 1) {
+              this.$message.error('添加子任务失败！当前存在同名子任务！');
+            }
+          }
+
         } else {
           this.form.subtask.push(current)
           console.log(this.nowsubtask)
           console.log(this.form.subtask)
+          this.$message('添加子任务成功！');
+
         }
+        this.nowsubtask.name = null
+        this.nowsubtask.description = null
+        this.nowsubtask.finishtime = null
+        this.nowsubtask.starttime = null
+        this.nowsubtask.subtaskuser = null
+        this.nowsubtask.beforetask = null
+
+
       },
+
       handleClose(tag) {
-        this.form.joiner.splice(this.form.joiner.indexOf(tag), 1);
+        console.log("删除")
+        this.form.subtask.splice(this.form.subtask.indexOf(tag), 1);
       },
+
 
     }
   }
