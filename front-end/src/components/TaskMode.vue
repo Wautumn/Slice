@@ -685,7 +685,7 @@
               var now = new Date()
               var finish = new Date(_this.currentDeadline.replace(/-/g, "/"))
               var nowstate = msg.status
-              if (nowstate == 1) {
+              if (nowstate == 1&&nowstate!=4&&nowstate!=5) {
                 console.log("未开始")
                 var ddd = start.getTime() - now.getTime();
                 console.log(ddd)
@@ -1085,6 +1085,8 @@
         return;
       },
       refreshTask() {
+        console.log("refreshTask")
+        console.log(this.currentTaskUrl)
           this.$http
             .get(this.currentTaskUrl, {
               // params: { userId: sessionStorage.userId }
