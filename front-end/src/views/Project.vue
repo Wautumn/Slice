@@ -1,7 +1,7 @@
 <template>
   <el-container style="height: 500px; border: 1px solid #eee">
     <el-aside width="250px" style="background-color: rgb(238, 241, 246)">
-      <el-menu >
+      <el-menu>
 
         <el-submenu index="1" @click="cli">
           <template slot="title">
@@ -18,7 +18,7 @@
             <i class="el-icon-tickets" style="color: #9b59b6"></i>我创建的团队项目
           </template>
           <el-menu-item-group v-for="task in createdProject">
-            <el-menu-item @click='taskDetail(task)' style="color: black">{{task.name}}
+            <el-menu-item @click='taskDetail(task,0)' style="color: black">{{task.name}}
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
@@ -28,7 +28,7 @@
             <i class="el-icon-date" style="color: #dd3e3a"></i>我参与的团队项目
           </template>
           <el-menu-item-group v-for="task in joinedProject">
-            <el-menu-item @click="taskDetail(task)" style="color: black">{{task.name}}</el-menu-item>
+            <el-menu-item @click="taskDetail(task,1)" style="color: black">{{task.name}}</el-menu-item>
           </el-menu-item-group>
 
         </el-submenu>
@@ -93,10 +93,12 @@
 
         createdProject: [],//当前用户创建的任务
         joinedProject: [],//参与的任务
-        userid:localStorage.userid,
+        userid: localStorage.userid,
         currentProject: 0,//选中的任务
         typeitem: ["新建"],
         type: 0,
+
+        taskbelong: 0,//0是我创建的，1是我参与的
       }
     },
     created() {
@@ -105,14 +107,14 @@
     },
     methods: {
       getCreateProject: function () {
-        this.$http.get(this.myCreateProjecturl, {params: {userid:localStorage.userid}}).then(response => {
+        this.$http.get(this.myCreateProjecturl, {params: {userid: localStorage.userid}}).then(response => {
           this.createdProject = response.data
           console.log(this.createdProject.length)
         })
       },
 
       getJoinedProject: function () {
-        this.$http.get(this.myjoinedProjecturl, {params: {userid:localStorage.userid}}).then(response => {
+        this.$http.get(this.myjoinedProjecturl, {params: {userid: localStorage.userid}}).then(response => {
           this.joinedProject = response.data
           console.log("获取" + this.joinedProject.length)
         })
@@ -128,10 +130,13 @@
         this.type = 1
       },
       //任务详情
-      taskDetail: function (message) {
+      taskDetail: function (message, index) {
         console.log(message)
+        console.log(index)
+        this.taskbelong = index
         this.type = 1
         this.currentProject = message
+        this.currentProject["taskbelong"] = index
         console.log("当前" + this.currentProject.name)
 
       },

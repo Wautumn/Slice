@@ -169,6 +169,7 @@ export default {
           let selectedData=res.data
         for (let i = 0; i < selectedData.length; i++) {
         let item = selectedData[i];
+     
           var ccolor='#4CAF50';
           switch (item.status) {
             case 1:
@@ -192,6 +193,42 @@ export default {
           let tmpdefaultdata=new Object()
           if(ttype==0)
           {
+          
+   //-------------------------------------------------------------------
+        console.log("itemname"+item.name)
+        console.log("itemStart"+item.starttime)
+        console.log("itemEnd"+item.finishtime)
+       // let ddate=Date.parse(item.finishtime.replace(/-/g, "/")) - Date.parse(item.starttime.replace(/-/g, "/"))
+        let fdate=Date.parse(item.finishtime.replace(/-/g, "/"))
+        let sdate=Date.parse(item.starttime.replace(/-/g, "/"))
+        //console.log(new Date(fdate).format("yyyy-mm-dd"))
+        let fday=new Date(fdate).getDate()
+        let sday=new Date(sdate).getDate()
+        console.log("fday"+fday)
+        console.log("sday"+sday)
+
+        if(fday==sday)
+        {
+          fdate=new Date(sdate)
+          console.log(fdate.getDate())
+          fdate.setDate(new Date(sdate).getDate()+1);
+          console.log("fdate"+fdate)
+          item.finishtime=fdate.format("yyyy-MM-dd hh:mm:ss")
+          console.log("fdate2"+item.finishtime)
+
+        }
+        else{
+          sdate=new Date(sdate)
+          console.log("sdfs"+new Date(sdate.toLocaleDateString()).format("yyyy-MM-dd hh:mm:ss"))
+          // console.log(sdate.getDate())
+          // fdate.setDate(new Date(sdate).getDate()+1);
+          // console.log("fdate"+fdate)
+          item.starttime=new Date(sdate.toLocaleDateString()).format("yyyy-MM-dd hh:mm:ss")
+          // console.log("fdate2"+item.finishtime)
+        }
+
+        //--------------------------------------------------
+
           tmpdefaultdata={
            data: {
           title: item.name,
@@ -199,17 +236,51 @@ export default {
           //color: '#4CAF50'
         },
         schedule: {
-          // weekspanOfMonth: [0],
-          //dayOfWeek: [Weekday.FRIDAY],
-          // month: [Month.JUNE],
-          // dayOfMonth: [20],
-          // duration: 3,
-          // durationUnit: 'days'
           start:item.starttime,
           end:item.finishtime,
         }}
           }
           else{
+        console.log("itemname"+item.name)
+        console.log("itemStart"+item.starttime)
+        console.log("itemEnd"+item.endtime)
+
+   //-------------------------------------------------------------------
+        console.log("itemname"+item.name)
+        console.log("itemStart"+item.starttime)
+        console.log("itemEnd"+item.endtime)
+       // let ddate=Date.parse(item.finishtime.replace(/-/g, "/")) - Date.parse(item.starttime.replace(/-/g, "/"))
+        let fdate=Date.parse(item.endtime.replace(/-/g, "/"))
+        let sdate=Date.parse(item.starttime.replace(/-/g, "/"))
+        //console.log(new Date(fdate).format("yyyy-mm-dd"))
+        let fday=new Date(fdate).getDate()
+        let sday=new Date(sdate).getDate()
+        console.log("fday"+fday)
+        console.log("sday"+sday)
+
+        if(fday==sday)
+        {
+          fdate=new Date(sdate)
+          console.log(fdate.getDate())
+          fdate.setDate(new Date(sdate).getDate()+1);
+          console.log("fdate"+fdate)
+          item.finishtime=fdate.format("yyyy-MM-dd hh:mm:ss")
+          console.log("fdate2"+item.endtime)
+
+        }
+        else{
+          sdate=new Date(sdate)
+          console.log("sdfs"+new Date(sdate.toLocaleDateString()).format("yyyy-MM-dd hh:mm:ss"))
+          // console.log(sdate.getDate())
+          // fdate.setDate(new Date(sdate).getDate()+1);
+          // console.log("fdate"+fdate)
+          item.starttime=new Date(sdate.toLocaleDateString()).format("yyyy-MM-dd hh:mm:ss")
+          // console.log("fdate2"+item.finishtime)
+        }
+
+        //--------------------------------------------------
+
+
             tmpdefaultdata={
            data: {
           title: item.name,
@@ -217,12 +288,6 @@ export default {
           //color: '#4CAF50'
         },
         schedule: {
-          // weekspanOfMonth: [0],
-          //dayOfWeek: [Weekday.FRIDAY],
-          // month: [Month.JUNE],
-          // dayOfMonth: [20],
-          // duration: 3,
-          // durationUnit: 'days'
           start:item.starttime,
           end:item.endtime,
         }}

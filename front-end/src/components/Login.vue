@@ -89,10 +89,10 @@ export default {
       console.log("register");
       this.$router.push({ name: "Reg" });
     },
-    logInSuccess(userID) {
+    logInSuccess(userid) {
       /*向父组件传值*/
-      this.$emit("userSignIn", userID);
-      setCookie("userid", userID, 1000 * 60);
+      this.$emit("userSignIn", userid);
+      // setCookie("userid", userID, 1000 * 60);
       setTimeout(
         function() {
           this.$router.push("/TaskMode");
@@ -142,8 +142,8 @@ export default {
              console.log(response);
              console.log("now token is");
              console.log(this.token);
-             if(response.data==null)
-             {
+             if(response.bodyText=="")
+             {console.log("response data is null")
                this.$alert('密码错误', '出错了！', {
                 confirmButtonText: '确定',
                 callback: action => {
@@ -162,7 +162,7 @@ export default {
             },)
            .then(
              response => {
-               if(response.data==2)
+               if(response.data==1)
               {this.tishi = "登录成功";
               this.showTishi = true;
 

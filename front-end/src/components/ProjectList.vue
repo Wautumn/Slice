@@ -51,9 +51,9 @@
         <template slot-scope="scope">
           <!--<el-button @click="addpeople(scope.row)" type="text">添加成员</el-button>-->
           <!--<br>-->
-          <el-button @click="handleClick(scope.row)" type="text">推迟任务</el-button>
+          <el-button @click="handleClick(scope.row)" type="text" v-show="project.taskbelong===0" >推迟任务</el-button>
           <br>
-          <el-button @click="deletesubtask(scope.row)" type="text">删除任务</el-button>
+          <el-button @click="deletesubtask(scope.row)" type="text" v-show="project.taskbelong===0" >删除任务</el-button>
           <br>
         </template>
       </el-table-column>
@@ -75,7 +75,7 @@
       <el-date-picker type="datetime" placeholder="选择时间" style="width: 100%;" v-model="delaytaskendtime"
                       value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
       <br><br>
-      <span>影响任务：</span>
+      <span>影响任务(请级联修改）：</span>
       <div v-for="(before,index) in currentbeforetask" class="content">
         {{before.name}}
         <br>
@@ -199,6 +199,8 @@
       }
     },
     created() {
+      console.log("获得")
+      console.log("获得",this.project)
       this.projectid = this.project.id
       console.log(this.projectid)
 
@@ -295,18 +297,24 @@
               confirmButtonText: '确定',
             });
           } else {
-            if (this.addtask.pretask != null) {
+            this.$message("子任务添加成功")
+            if (this.addtask.pretask === null) {
               console.log(this.addtask.pretask + "qian")
-            }
-            var taskid = response.data
-            this.$http.get(this.setpretaskurl, {
-              params: {
-                projectid: this.projectid,
-                taskid: taskid,
-                preid: this.addtask.pretask
 
-              }
-            })
+            }else {
+              var taskid = response.data
+              this.$http.get(this.setpretaskurl, {
+                params: {
+                  projectid: this.projectid,
+                  taskid: taskid,
+                  preid: this.addtask.pretask
+
+                }
+              }).then(response => {
+                this.$message("子任务添加成功")
+                this.alltasks.push(this.addtask)
+              })
+            }
 
 
           }

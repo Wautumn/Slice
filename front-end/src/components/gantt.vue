@@ -1,8 +1,8 @@
 <template>
   <div>
-    <input value="Export to PDF" type="button" onclick='gantt.exportToPDF()' style="color: #6b6b6b">
-    <input value="Export to PNG" type="button" onclick='gantt.exportToPNG()' style="color: #6b6b6b">
-    <input value="Export to Excel" type="button" onclick='gantt.exportToExcel()' style="color: #6b6b6b">
+    <input value="Export to PDF" type="button" onclick='gantt.exportToPDF()' style="background-color: #cecece">
+    <input value="Export to PNG" type="button" onclick='gantt.exportToPNG()' style="background-color: #cecece">
+    <input value="Export to Excel" type="button" onclick='gantt.exportToExcel()' style="background-color: #cecece">
     <div id="gantt_here" style="margin-top: 10px;height: 1000px">
     </div>
   </div>

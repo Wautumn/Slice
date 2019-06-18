@@ -173,7 +173,7 @@
     <!--<br>-->
 
 
-    <el-button type="danger" plain @click="deletetask">删除当前任务</el-button>
+    <el-button type="danger" plain @click="deletetask" v-show="this.project.taskbelong===0">删除当前任务</el-button>
 
 
   </div>
@@ -342,6 +342,7 @@
 
       },
       deletetask: function () {
+
         //删除的逻辑
         this.$http.get(this.deleteurl, {
           params: {
