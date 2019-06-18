@@ -65,7 +65,7 @@
 
               <el-button
                 :type="countButtonType"
-                :disabled="isTaskFinish==0||cannotstart==1"
+                :disabled="isTaskNotStart==0||isTaskFinish==0||cannotstart==1"
                 @click="finishTask"
               >完成任务
               </el-button>
@@ -139,6 +139,7 @@
                     <div v-if="currentpretasksta==5">已过期</div>
                     <div v-if="currentpretasksta==1">未开始</div>
                     <div v-if="currentpretasksta==2">进行中</div>
+                    <div v-if="currentpretasksta==4">已完成</div>
                   </h2>
                   <h2 v-else>无</h2>
                 </div>
@@ -206,6 +207,7 @@
       return {
         tasktype: 0,
         isTaskFinish: 1,
+        isTaskNotStart:1,
         currentTaskUrl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/getTodayTasksByUserid",
         date: new Date(),
         // clocktime:null,
@@ -524,10 +526,16 @@
             this.currentCondition = false;
             if (msg.status == 3) {
               this.isTaskFinish = 0
+              this.isTaskNotStart=1
             } else if (msg.status == 4 || msg.status == 5) {
               this.isTaskFinish = 0
-            } else if (msg.status == 1 || msg.status == 2) {
+              this.isTaskNotStart=1
+            } else if (msg.status == 2) {
               this.isTaskFinish = 1
+              this.isTaskNotStart= 1
+            } else if(msg.status == 1)
+            { this.isTaskFinish = 1
+              this.isTaskNotStart= 0
             }
             console.log(this.currentStarttime + "is fucking ok!")
             console.log(this.currentDeadline + "is working normally")
@@ -649,13 +657,28 @@
           this.currentStatus = msg.status;
           this.currentTaskid = msg.id;
           this.currentCondition = false;
+          // if (msg.status == 3) {
+          //   this.isTaskFinish = 0
+          // } else if (msg.status == 4 || msg.status == 5) {
+          //   this.isTaskFinish = 0
+          // } else if ( msg.status == 2) {
+          //   this.isTaskFinish = 1
+          // } else if(msg.status == 1){
+          //   this.isTaskNotStart=0
+          // }
           if (msg.status == 3) {
-            this.isTaskFinish = 0
-          } else if (msg.status == 4 || msg.status == 5) {
-            this.isTaskFinish = 0
-          } else if (msg.status == 1 || msg.status == 2) {
-            this.isTaskFinish = 1
-          }
+              this.isTaskFinish = 0
+              this.isTaskNotStart=1
+            } else if (msg.status == 4 || msg.status == 5) {
+              this.isTaskFinish = 0
+              this.isTaskNotStart=1
+            } else if (msg.status == 2) {
+              this.isTaskFinish = 1
+              this.isTaskNotStart= 1
+            } else if(msg.status == 1)
+            { this.isTaskFinish = 1
+              this.isTaskNotStart= 0
+            }
           console.log(this.currentStarttime + "is fucking ok!")
           console.log(this.currentDeadline + "is working normally")
 
