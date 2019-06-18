@@ -51,9 +51,9 @@
         <template slot-scope="scope">
           <!--<el-button @click="addpeople(scope.row)" type="text">添加成员</el-button>-->
           <!--<br>-->
-          <el-button @click="handleClick(scope.row)" type="text" v-show="project.taskbelong===0" >推迟任务</el-button>
+          <el-button @click="handleClick(scope.row)" type="text" v-show="project.taskbelong===0">推迟任务</el-button>
           <br>
-          <el-button @click="deletesubtask(scope.row)" type="text" v-show="project.taskbelong===0" >删除任务</el-button>
+          <el-button @click="deletesubtask(scope.row)" type="text" v-show="project.taskbelong===0">删除任务</el-button>
           <br>
         </template>
       </el-table-column>
@@ -79,22 +79,26 @@
       <div v-for="(before,index) in currentbeforetask" class="content">
         {{before.name}}
         <br>
-        <el-col :span="12">
-          <el-date-picker type="datetime" placeholder="修改开始时间" style="width: 100%;" v-model="addtask.endtime"
-                          value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-        </el-col>
+        <!--<el-col :span="12">-->
+        <!--<el-date-picker type="datetime" placeholder="修改开始时间" style="width: 100%;" v-model="addtask.endtime"-->
+        <!--value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
+        <!--</el-col>-->
+        <div v-show="before.status===6" class="content">任务{{before.name}}已推迟</div>
+        <div v-show="before.status!==6">
+          <el-col :span="12">
+            <el-date-picker type="datetime" placeholder="修改结束时间" style="width: 100%;" v-model="affectendtime"
+                            value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+            <el-button type="primary" @click="delayeffectedtask(before)">确 定</el-button>
+          </el-col>
+        </div>
 
-        <el-col :span="12">
-          <el-date-picker type="datetime" placeholder="修改结束时间" style="width: 100%;" v-model="addtask.endtime"
-                          value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-        </el-col>
 
       </div>
 
       <br>
 
       <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible1 = false">取 消</el-button>
+            <el-button @click="delayvisible  = false">取 消</el-button>
             <el-button type="primary" @click="delaytask">确 定</el-button>
           </span>
     </el-dialog>
@@ -166,6 +170,8 @@
         setpretaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT/setPreTask",
         deleteprojecttaskurl: "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//deleteProjectTask",
 
+        delayendtime: null,
+        affectendtime: null,
 
         alltasks: [],
         addtask: {
@@ -200,7 +206,7 @@
     },
     created() {
       console.log("获得")
-      console.log("获得",this.project)
+      console.log("获得", this.project)
       this.projectid = this.project.id
       console.log(this.projectid)
 
@@ -301,7 +307,7 @@
             if (this.addtask.pretask === null) {
               console.log(this.addtask.pretask + "qian")
 
-            }else {
+            } else {
               var taskid = response.data
               this.$http.get(this.setpretaskurl, {
                 params: {
@@ -354,6 +360,9 @@
           this.currentbeforetask = post
           console.log(post)//找到以其为前置任务的任务
           console.log(response.data[0])
+          // for (var task in currentbeforetask){
+          //
+          // }
 
         })
 
@@ -374,9 +383,11 @@
       deletesubtask(row) {
         var taskid = row.id
         var projectid = row.projectid
-        this.$http.get(this.deleteprojecttaskurl,{params:{
-          id:taskid
-          }}).then(response=>{
+        this.$http.get(this.deleteprojecttaskurl, {
+          params: {
+            id: taskid
+          }
+        }).then(response => {
           if (response.data == -1) {
             this.$alert('任务删除失败！', '删除失败', {
               confirmButtonText: '确定',
@@ -392,7 +403,8 @@
             // location.reload()
             this.$router.push('/Empty')
 
-          }})
+          }
+        })
 
       },
 
@@ -416,9 +428,77 @@
             endtime: this.delaytaskendtime
           }
         }).then(response => {
+          if (response.data === -4) {
+            this.$message("此任务存在后置任务，请级联修改！")
+          } else {
+            this.$message("修改成功")
+            this.currentrow.status = "推迟中"
+          }
           console.log(response.data)
         })
         this.delayvisible = false
+
+
+      },
+      delayeffectedtask: function (task) {
+        console.log("修改影响任务")
+        console.log(task)
+        var ifcandey = 0;
+        var posturl = "http://101.132.194.45:8081/slice-0.0.1-SNAPSHOT//findPostTask"
+        this.$http.get(posturl, {
+          params: {
+            taskid: task.id
+          }
+        }).then(response => {
+          var posttasks = response.data
+          console.log(posttasks)
+          if (posttasks.size === 0) {
+            console.log("无后置任务的子任务，可以直接推迟")
+            ifcandey = 1
+          } else {
+            var flag = 0;
+            for (var ta in posttasks) {
+              if (ta.status !== 6)
+                flag = 1
+            }
+
+            if (flag === 0) {
+              this.$message("此任务后置任务已经推迟，可修改！")
+              ifcandey = 1
+            } else {
+              this.$message.error("此任务存在后置任务未推迟，请级联修改！")
+              this.delayvisible = false
+
+              ifcandey = 0
+            }
+          }
+        })
+        if (ifcandey === 1) {
+          this.$http.get(this.delaytaskurl, {
+            params: {
+              taskid: task.id,
+              endtime: this.affectendtime
+            }
+          }).then(response => {
+            if (response.data === 1) {
+              this.$message("修改成功")
+            }
+          })
+        }
+        // this.$http.get(this.delaytaskurl, {
+        //   params: {
+        //     taskid: task.id,
+        //     endtime: this.affectendtime
+        //   }
+        // }).then(response => {
+        //   if (response.data === -4) {
+        //     this.$message("此任务存在后置任务，请级联修改！")
+        //   } else {
+        //     this.$message("修改成功")
+        //     this.affectendtime = null
+        //   }
+        //   console.log(response.data)
+        // })
 
 
       }
