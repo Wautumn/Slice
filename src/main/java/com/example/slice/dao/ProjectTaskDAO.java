@@ -546,6 +546,14 @@ public class ProjectTaskDAO {
         Object[] params = new Object[]{taskid};
         String sql_pre = "SELECT pretaskid FROM pre_task WHERE taskid = ?";
 
+        ProjectTask task = findTasksById(taskid);
+        ProjectTask pre = findTasksById(preid);
+        String start = task.getStarttime();
+        String finish = pre.getEndtime();
+        if(DateUtil.compareDate(finish, start) > 0){
+            return -4;
+        }
+
         String pre_id = "";
         List<Integer> pre_tasks = new ArrayList<>();
         try {
