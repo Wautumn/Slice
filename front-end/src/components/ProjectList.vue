@@ -315,7 +315,7 @@
             this.$message("子任务添加成功")
             if (this.addtask.pretask === null) {
               console.log(this.addtask.pretask + "qian")
-
+              this.getTasks()
             } else {
               var taskid = response.data
               this.$http.get(this.setpretaskurl, {
@@ -328,6 +328,7 @@
               }).then(response => {
                 this.$message("前置任务添加成功")
                 this.alltasks.push(this.addtask)
+                this.getTasks()
 
               })
             }
